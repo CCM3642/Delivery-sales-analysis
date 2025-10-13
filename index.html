@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xxlsx.full.min.js"></script>
     <style>
         .stat-card {
             transition: all 0.3s ease;
@@ -89,6 +89,70 @@
             border-radius: 6px;
             background-color: white;
         }
+        .auto-offer-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        .offer-row-normal {
+            background-color: #f8d7da;
+        }
+        .offer-row-chicken {
+            background-color: #d4edda;
+        }
+        .offer-row-ultimate {
+            background-color: #fff3cd;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease-out;
+        }
+        .notification.show {
+            transform: translateX(0);
+        }
+        .notification.success {
+            background-color: #10b981;
+        }
+        .notification.error {
+            background-color: #ef4444;
+        }
+        .notification.info {
+            background-color: #3b82f6;
+        }
+        .offer-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        .offer-badge-normal {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .offer-badge-chicken {
+            background-color: #f59e0b;
+            color: white;
+        }
+        .offer-badge-ultimate {
+            background-color: #8b5cf6;
+            color: white;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-amber-50 to-orange-100 min-h-screen">
@@ -134,6 +198,8 @@
                         <option value="10">Oct 10</option>
                         <option value="11">Oct 11</option>
                         <option value="12">Oct 12</option>
+                        <option value="13">Oct 13</option>
+                        <option value="14">Oct 14</option>
                     </select>
                     <span class="text-gray-500">to</span>
                     <select id="endDay" class="text-sm">
@@ -149,6 +215,8 @@
                         <option value="10">Oct 10</option>
                         <option value="11">Oct 11</option>
                         <option value="12">Oct 12</option>
+                        <option value="13">Oct 13</option>
+                        <option value="14">Oct 14</option>
                     </select>
                     <button id="applyDateRange" class="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors">
                         Apply
@@ -181,6 +249,11 @@
                     Add Entry
                 </button>
                 
+                <button id="manageOffers" class="px-4 py-2 bg-indigo-500 text-white rounded-lg font-semibold hover:bg-indigo-600 transition-all flex items-center gap-2">
+                    <i data-lucide="tag" class="w-5 h-5"></i>
+                    Manage Offers
+                </button>
+                
                 <button id="generateReport" class="px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition-all flex items-center gap-2">
                     <i data-lucide="file-text" class="w-5 h-5"></i>
                     Generate Report
@@ -205,6 +278,9 @@
                 </button>
                 <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="recommendations">
                     Recommendations
+                </button>
+                <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="offers">
+                    Offers Management
                 </button>
             </div>
         </div>
@@ -319,6 +395,57 @@
                     <div class="chart-container">
                         <canvas id="dailyBranchChart"></canvas>
                     </div>
+                </div>
+            </div>
+
+            <!-- OFFER COMPARISON SECTION -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Offer Comparison – Chicken Day / Ultimate / Normal Day</h3>
+                    <div class="flex items-center gap-2">
+                        <span class="auto-offer-indicator">
+                            <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                            Auto-Generated
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Summary Section -->
+                <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-4 mb-6 border border-amber-100">
+                    <div class="flex flex-wrap gap-6">
+                        <div class="flex items-center">
+                            <i data-lucide="trending-up" class="w-5 h-5 text-amber-600 mr-2"></i>
+                            <span class="text-gray-700 font-medium">Total Change:</span>
+                            <span id="totalChangePercent" class="ml-2 font-bold text-lg text-amber-700">+0.0%</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i data-lucide="award" class="w-5 h-5 text-amber-600 mr-2"></i>
+                            <span class="text-gray-700 font-medium">Top Performing Branch:</span>
+                            <span id="topPerformingBranch" class="ml-2 font-bold text-lg text-amber-700">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Offer Comparison Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Branch / الفرع</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Offer Type / نوع العرض</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Current Offer Date / تاريخ العرض الحالي</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Last Offer Date / آخر عرض من نفس النوع</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Current Sales (AED) / المبيعات الحالية</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Last Sales (AED) / المبيعات السابقة</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Difference (AED) / الفرق</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">% Change / التغير النسبي</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status / حالة الأداء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="offerComparisonTableBody">
+                            <!-- Table rows will be inserted here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -648,6 +775,40 @@
             </div>
         </div>
 
+        <!-- Tab Content: Offers Management -->
+        <div id="offers-tab" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Offers Management</h3>
+                    <button id="addOfferBtn" class="px-4 py-2 bg-indigo-500 text-white rounded-lg font-semibold hover:bg-indigo-600 transition-all flex items-center gap-2">
+                        <i data-lucide="plus" class="w-5 h-5"></i>
+                        Add/Edit Offer
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Day</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Branch</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Transactions</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Sales (AED)</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Offer Type</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Offer Status</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Notes</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="offerTableBody">
+                            <!-- Table rows will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <!-- Data Table -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6 overflow-x-auto">
             <h3 class="text-xl font-bold text-gray-800 mb-4">Delivery Data (<span id="recordCount">0</span> records)</h3>
@@ -718,6 +879,67 @@
         </div>
     </div>
 
+    <!-- Offer Modal -->
+    <div id="offerModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">إضافة / تعديل عرض</h3>
+                    <button id="closeOfferModal" class="text-gray-500 hover:text-gray-700">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">التاريخ</label>
+                        <input type="date" id="offerModalDate" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">الفرع</label>
+                        <select id="offerModalBranch" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <option value="Crispy Chicken-Hamdan St">Crispy Chicken-Hamdan St</option>
+                            <option value="Crispy Chicken Khaldia">Crispy Chicken Khaldia</option>
+                            <option value="Crispy Chicken Shabiya 11">Crispy Chicken Shabiya 11</option>
+                            <option value="Crispy Chicken Muroor">Crispy Chicken Muroor</option>
+                            <option value="Crispy Chicken Al Barsha">Crispy Chicken Al Barsha</option>
+                            <option value="Crispy Chicken Al Satwa">Crispy Chicken Al Satwa</option>
+                            <option value="Crispy Chicken Al Rgga">Crispy Chicken Al Rgga</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">نوع العرض</label>
+                        <select id="offerModalType" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <option value="Normal Day">Normal Day</option>
+                            <option value="Chicken Day">Chicken Day</option>
+                            <option value="Ultimate Offer">Ultimate Offer</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ملاحظات</label>
+                        <input type="text" id="offerModalNotes" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="أدخل ملاحظاتك هنا">
+                    </div>
+                </div>
+                
+                <div class="flex justify-end gap-3 mt-6">
+                    <button id="cancelOfferModal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                        إغلاق
+                    </button>
+                    <button id="saveOfferBtn" class="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 flex items-center gap-2">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        حفظ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification" class="notification"></div>
+
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
@@ -759,61 +981,65 @@
             { date: 'October 5st, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 25, sales: 1089 },
             { date: 'October 5st, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 13, sales: 462 },
             { date: 'October 5st, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 8, sales: 241 },
-            { date: 'October 6 st, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 101, sales: 4363 },
-            { date: 'October 6 st, 2025', branch: 'Crispy Chicken Khaldia', transactions: 54, sales: 2113 },
-            { date: 'October 6 st, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 61, sales: 2714.8 },
-            { date: 'October 6 st, 2025', branch: 'Crispy Chicken Muroor', transactions: 47, sales: 2124 },
-            { date: 'October 6 st, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 57, sales: 4201 },
-            { date: 'October 6 st, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 20, sales: 848 },
-            { date: 'October 6 st, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 18, sales: 708 },
-            { date: 'October 7 st, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 119, sales: 5056 },
-            { date: 'October 7 st, 2025', branch: 'Crispy Chicken Khaldia', transactions: 50, sales: 2175 },
-            { date: 'October 7 st, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 80, sales: 3475 },
-            { date: 'October 7 st, 2025', branch: 'Crispy Chicken Muroor', transactions: 46, sales: 1957 },
-            { date: 'October 7 st, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 44, sales: 2590 },
-            { date: 'October 7 st, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 18, sales: 705 },
-            { date: 'October 7 st, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 19, sales: 823 },
-            { date: 'October 8 st, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 58, sales: 2568 },
-            { date: 'October 8 st, 2025', branch: 'Crispy Chicken Khaldia', transactions: 24, sales: 1037 },
-            { date: 'October 8 st, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 30, sales: 1574 },
-            { date: 'October 8 st, 2025', branch: 'Crispy Chicken Muroor', transactions: 81, sales: 1404 },
-            { date: 'October 8 st, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 29, sales: 1891 },
-            { date: 'October 8 st, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 5, sales: 148 },
-            { date: 'October 8 st, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 10, sales: 519 },
-            { date: 'October 9 st, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 53, sales: 2738 },
-            { date: 'October 9 st, 2025', branch: 'Crispy Chicken Khaldia', transactions: 31, sales: 2112 },
-            { date: 'October 9 st, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 35, sales: 1487 },
-            { date: 'October 9 st, 2025', branch: 'Crispy Chicken Muroor', transactions: 35, sales: 1978 },
-            { date: 'October 9 st, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 17, sales: 733 },
-            { date: 'October 9 st, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 5, sales: 184 },
-            { date: 'October 9 st, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 13, sales: 408 },
-            { date: 'October 10 st, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 65, sales: 2900 },
-            { date: 'October 10 st, 2025', branch: 'Crispy Chicken Khaldia', transactions: 46, sales: 2943 },
-            { date: 'October 10 st, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 45, sales: 2411 },
-            { date: 'October 10 st, 2025', branch: 'Crispy Chicken Muroor', transactions: 39, sales: 2261 },
-            { date: 'October 10 st, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 25, sales: 1523 },
-            { date: 'October 10 st, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 12, sales: 976 },
-            { date: 'October 10 st, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 10, sales: 573 },
-            { date: 'October 11 st, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 78, sales: 4313 },
-            { date: 'October 11 st, 2025', branch: 'Crispy Chicken Khaldia', transactions: 48, sales: 3452 },
-            { date: 'October 11 st, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 34, sales: 1711 },
-            { date: 'October 11 st, 2025', branch: 'Crispy Chicken Muroor', transactions: 28, sales: 1654 },
-            { date: 'October 11 st, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 20, sales: 778 },
-            { date: 'October 11 st, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 10, sales: 391 },
-            { date: 'October 11 st, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 9, sales: 275 },
-            { date: 'October 12 st, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 51, sales: 2146 },
-            { date: 'October 12 st, 2025', branch: 'Crispy Chicken Khaldia', transactions: 33, sales: 1802 },
-            { date: 'October 12 st, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 32, sales: 1331 },
-            { date: 'October 12 st, 2025', branch: 'Crispy Chicken Muroor', transactions: 23, sales: 1195 },
-            { date: 'October 12 st, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 22, sales: 1233 },
-            { date: 'October 12 st, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 4, sales: 153 },
-            { date: 'October 12 st, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 6, sales: 232 }
+            { date: 'October 6th, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 101, sales: 4363, offerType: 'Ultimate Offer', offerStatus: 'Offer', notes: '12 PCS' },
+            { date: 'October 6th, 2025', branch: 'Crispy Chicken Khaldia', transactions: 54, sales: 2113 },
+            { date: 'October 6th, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 61, sales: 2714.8 },
+            { date: 'October 6th, 2025', branch: 'Crispy Chicken Muroor', transactions: 47, sales: 2124 },
+            { date: 'October 6th, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 57, sales: 4201 },
+            { date: 'October 6th, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 20, sales: 848 },
+            { date: 'October 6th, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 18, sales: 708 },
+            { date: 'October 7th, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 119, sales: 5056 },
+            { date: 'October 7th, 2025', branch: 'Crispy Chicken Khaldia', transactions: 50, sales: 2175 },
+            { date: 'October 7th, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 80, sales: 3475 },
+            { date: 'October 7th, 2025', branch: 'Crispy Chicken Muroor', transactions: 46, sales: 1957 },
+            { date: 'October 7th, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 44, sales: 2590 },
+            { date: 'October 7th, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 18, sales: 705 },
+            { date: 'October 7th, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 19, sales: 823 },
+            { date: 'October 8th, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 58, sales: 2568 },
+            { date: 'October 8th, 2025', branch: 'Crispy Chicken Khaldia', transactions: 24, sales: 1037 },
+            { date: 'October 8th, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 30, sales: 1574 },
+            { date: 'October 8th, 2025', branch: 'Crispy Chicken Muroor', transactions: 81, sales: 1404 },
+            { date: 'October 8th, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 29, sales: 1891 },
+            { date: 'October 8th, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 5, sales: 148 },
+            { date: 'October 8th, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 10, sales: 519 },
+            { date: 'October 9th, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 53, sales: 2738 },
+            { date: 'October 9th, 2025', branch: 'Crispy Chicken Khaldia', transactions: 31, sales: 2112 },
+            { date: 'October 9th, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 35, sales: 1487 },
+            { date: 'October 9th, 2025', branch: 'Crispy Chicken Muroor', transactions: 35, sales: 1978 },
+            { date: 'October 9th, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 17, sales: 733 },
+            { date: 'October 9th, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 5, sales: 184 },
+            { date: 'October 9th, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 13, sales: 408 },
+            { date: 'October 10th, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 65, sales: 2900 },
+            { date: 'October 10th, 2025', branch: 'Crispy Chicken Khaldia', transactions: 46, sales: 2943 },
+            { date: 'October 10th, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 45, sales: 2411 },
+            { date: 'October 10th, 2025', branch: 'Crispy Chicken Muroor', transactions: 39, sales: 2261 },
+            { date: 'October 10th, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 25, sales: 1523 },
+            { date: 'October 10th, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 12, sales: 976 },
+            { date: 'October 10th, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 10, sales: 573 },
+            { date: 'October 11th, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 78, sales: 4313 },
+            { date: 'October 11th, 2025', branch: 'Crispy Chicken Khaldia', transactions: 48, sales: 3452 },
+            { date: 'October 11th, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 34, sales: 1711 },
+            { date: 'October 11th, 2025', branch: 'Crispy Chicken Muroor', transactions: 28, sales: 1654 },
+            { date: 'October 11th, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 20, sales: 778 },
+            { date: 'October 11th, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 10, sales: 391 },
+            { date: 'October 11th, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 9, sales: 275 },
+            { date: 'October 12th, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 51, sales: 2146 },
+            { date: 'October 12th, 2025', branch: 'Crispy Chicken Khaldia', transactions: 33, sales: 1802 },
+            { date: 'October 12th, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 32, sales: 1331 },
+            { date: 'October 12th, 2025', branch: 'Crispy Chicken Muroor', transactions: 23, sales: 1195 },
+            { date: 'October 12th, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 22, sales: 1233 },
+            { date: 'October 12th, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 4, sales: 153 },
+            { date: 'October 12th, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 6, sales: 232, offerType: 'Normal Day', offerStatus: 'No Offer' }
         ];
+
+        // Auto-generated offers data
+        let autoGeneratedOffers = [];
 
         let selectedBranch = 'All';
         let selectedStartDate = null;
         let selectedEndDate = null;
         let editingIndex = null;
+        let editingOfferIndex = null;
         
         // Chart instances
         let transactionsChartInstance = null;
@@ -836,6 +1062,7 @@
         const fileUpload = document.getElementById('fileUpload');
         const downloadTemplateBtn = document.getElementById('downloadTemplate');
         const addEntryBtn = document.getElementById('addEntry');
+        const manageOffersBtn = document.getElementById('manageOffers');
         const generateReportBtn = document.getElementById('generateReport');
         const dataModal = document.getElementById('dataModal');
         const closeModalBtn = document.getElementById('closeModal');
@@ -851,6 +1078,18 @@
         const tableFooter = document.getElementById('tableFooter');
         const loadingIndicator = document.getElementById('loadingIndicator');
         const updateStatus = document.getElementById('updateStatus');
+
+        // Offer Modal DOM elements
+        const offerModal = document.getElementById('offerModal');
+        const addOfferBtn = document.getElementById('addOfferBtn');
+        const closeOfferModalBtn = document.getElementById('closeOfferModal');
+        const cancelOfferModalBtn = document.getElementById('cancelOfferModal');
+        const saveOfferBtn = document.getElementById('saveOfferBtn');
+        const offerModalDate = document.getElementById('offerModalDate');
+        const offerModalBranch = document.getElementById('offerModalBranch');
+        const offerModalType = document.getElementById('offerModalType');
+        const offerModalNotes = document.getElementById('offerModalNotes');
+        const offerTableBody = document.getElementById('offerTableBody');
 
         // Tab functionality
         const tabButtons = document.querySelectorAll('.tab-btn');
@@ -881,6 +1120,8 @@
                     updateInsightsData();
                 } else if (tabName === 'recommendations') {
                     updateRecommendationsData();
+                } else if (tabName === 'offers') {
+                    renderOfferTable();
                 }
             });
         });
@@ -947,15 +1188,62 @@
         fileUpload.addEventListener('change', handleFileUpload);
         downloadTemplateBtn.addEventListener('click', downloadTemplate);
         addEntryBtn.addEventListener('click', handleAddEntry);
+        manageOffersBtn.addEventListener('click', () => {
+            // Switch to offers tab
+            document.querySelector('[data-tab="offers"]').click();
+        });
         generateReportBtn.addEventListener('click', generateReport);
         closeModalBtn.addEventListener('click', closeModal);
         cancelModalBtn.addEventListener('click', closeModal);
         saveModalBtn.addEventListener('click', handleSaveEntry);
 
+        // Offer Modal Event Listeners
+        addOfferBtn.addEventListener('click', () => {
+            // Reset form for new offer
+            editingOfferIndex = null;
+            offerModalDate.value = '';
+            offerModalNotes.value = '';
+            offerModal.style.display = 'flex';
+        });
+        
+        closeOfferModalBtn.addEventListener('click', () => offerModal.style.display = 'none');
+        cancelOfferModalBtn.addEventListener('click', () => offerModal.style.display = 'none');
+        
+        saveOfferBtn.addEventListener('click', () => {
+            const dateValue = offerModalDate.value;
+            const branchValue = offerModalBranch.value;
+            const offerTypeValue = offerModalType.value;
+            const notesValue = offerModalNotes.value;
+
+            if (!dateValue) { 
+                showNotification('اختر التاريخ!', 'error');
+                return; 
+            }
+
+            updateOffer(dateValue, branchValue, offerTypeValue, notesValue);
+            offerModal.style.display = 'none';
+            
+            // Reset form
+            offerModalDate.value = '';
+            offerModalNotes.value = '';
+            editingOfferIndex = null;
+        });
+
         // Initialize dashboard
         updateDashboard();
 
         // Functions
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
         function showLoadingIndicator() {
             loadingIndicator.classList.remove('hidden');
             updateStatus.textContent = 'Updating...';
@@ -977,6 +1265,7 @@
             updateCharts();
             updateTable();
             updateAnalysisData();
+            updateOfferComparisonSection();
         }
 
         function updateKPIs() {
@@ -1204,6 +1493,298 @@
             document.getElementById('weekendPromo').textContent = weekendPromo;
             document.getElementById('eveningBoost').textContent = eveningBoost;
             document.getElementById('loyaltyProg').textContent = loyaltyProg;
+        }
+
+        // NEW: Auto-Generated Offers Functions
+        function generateAutoOffers() {
+            // Clear previous auto-generated offers
+            autoGeneratedOffers = [];
+            
+            // Get the last date in the data
+            const lastDate = deliveryData.reduce((latest, item) => {
+                const day = parseInt(item.date.match(/\d+/)[0]);
+                const latestDay = parseInt(latest.date.match(/\d+/)[0]);
+                return day > latestDay ? item : latest;
+            }, deliveryData[0]);
+            
+            const lastDay = parseInt(lastDate.date.match(/\d+/)[0]);
+            
+            // Calculate the next Monday and Tuesday after lastDay
+            // October 1, 2025 is Wednesday (day 3 of the week, where 0=Sunday)
+            const startDay = 3; // Wednesday (0=Sunday, 1=Monday, 2=Tuesday, 3=Wednesday, ...)
+            const currentDayOfWeek = (startDay + lastDay - 1) % 7;
+            
+            // Next Monday: if currentDayOfWeek <= 0 (Sunday) then next Monday is lastDay+1, else lastDay + (8 - currentDayOfWeek) % 7
+            // Actually, we want the next Monday after the lastDay
+            let nextMonday = lastDay + (8 - currentDayOfWeek) % 7;
+            if (nextMonday <= lastDay) nextMonday += 7;
+            
+            let nextTuesday = nextMonday + 1;
+            
+            // We are only generating for October 2025 (days 1-31)
+            if (nextMonday > 31) nextMonday = null;
+            if (nextTuesday > 31) nextTuesday = null;
+            
+            // Get all branches
+            const branches = [...new Set(deliveryData.map(item => item.branch))];
+            
+            // For Chicken Day (Monday)
+            if (nextMonday) {
+                branches.forEach(branch => {
+                    // Find the last Chicken Day (Monday) for this branch
+                    const chickenDays = deliveryData.filter(item => {
+                        const day = parseInt(item.date.match(/\d+/)[0]);
+                        const dayOfWeek = (startDay + day - 1) % 7;
+                        return item.branch === branch && dayOfWeek === 1; // Monday
+                    });
+                    
+                    if (chickenDays.length > 0) {
+                        const lastChickenDay = chickenDays.reduce((latest, item) => {
+                            const day = parseInt(item.date.match(/\d+/)[0]);
+                            const latestDay = parseInt(latest.date.match(/\d+/)[0]);
+                            return day > latestDay ? item : latest;
+                        }, chickenDays[0]);
+                        
+                        // Generate new data with variation
+                        const variation = 0.9 + Math.random() * 0.2; // between 0.9 and 1.1
+                        autoGeneratedOffers.push({
+                            date: `October ${nextMonday}st, 2025`,
+                            branch: branch,
+                            transactions: Math.round(lastChickenDay.transactions * variation),
+                            sales: lastChickenDay.sales * variation,
+                            isAutoGenerated: true
+                        });
+                    }
+                });
+            }
+            
+            // For Ultimate (Tuesday)
+            if (nextTuesday) {
+                branches.forEach(branch => {
+                    // Find the last Ultimate (Tuesday) for this branch
+                    const ultimateDays = deliveryData.filter(item => {
+                        const day = parseInt(item.date.match(/\d+/)[0]);
+                        const dayOfWeek = (startDay + day - 1) % 7;
+                        return item.branch === branch && dayOfWeek === 2; // Tuesday
+                    });
+                    
+                    if (ultimateDays.length > 0) {
+                        const lastUltimateDay = ultimateDays.reduce((latest, item) => {
+                            const day = parseInt(item.date.match(/\d+/)[0]);
+                            const latestDay = parseInt(latest.date.match(/\d+/)[0]);
+                            return day > latestDay ? item : latest;
+                        }, ultimateDays[0]);
+                        
+                        // Generate new data with variation
+                        const variation = 0.9 + Math.random() * 0.2; // between 0.9 and 1.1
+                        autoGeneratedOffers.push({
+                            date: `October ${nextTuesday}st, 2025`,
+                            branch: branch,
+                            transactions: Math.round(lastUltimateDay.transactions * variation),
+                            sales: lastUltimateDay.sales * variation,
+                            isAutoGenerated: true
+                        });
+                    }
+                });
+            }
+        }
+
+        function updateOfferComparisonSection() {
+            // Generate auto offers
+            generateAutoOffers();
+            
+            // Create a temporary array that combines the original data and the auto-generated offers
+            let tempData = [...deliveryData];
+            
+            // Only include auto-generated offers that are within the selected date range (if any)
+            if (selectedStartDate && selectedEndDate) {
+                autoGeneratedOffers.forEach(offer => {
+                    const day = parseInt(offer.date.match(/\d+/)[0]);
+                    if (day >= selectedStartDate && day <= selectedEndDate) {
+                        tempData.push(offer);
+                    }
+                });
+            } else {
+                // If no date range selected, include all auto-generated offers
+                tempData = [...tempData, ...autoGeneratedOffers];
+            }
+            
+            // Apply branch filter to tempData
+            if (selectedBranch !== 'All') {
+                tempData = tempData.filter(item => item.branch === selectedBranch);
+            }
+            
+            // Group data by branch and offer type
+            const offerGroups = {};
+            
+            // Determine offer type based on day of week
+            tempData.forEach(item => {
+                const dayOfWeek = getDayOfWeek(item.date);
+                const offerType = getOfferType(dayOfWeek);
+                const key = `${item.branch}|${offerType}`;
+                
+                if (!offerGroups[key]) {
+                    offerGroups[key] = [];
+                }
+                offerGroups[key].push(item);
+            });
+            
+            // Prepare comparison data
+            const comparisonData = [];
+            const branchPerformance = {};
+            
+            Object.keys(offerGroups).forEach(key => {
+                const [branch, offerType] = key.split('|');
+                const groupData = offerGroups[key];
+                
+                // Sort by date (descending)
+                groupData.sort((a, b) => {
+                    const dayA = parseInt(a.date.match(/\d+/)[0]);
+                    const dayB = parseInt(b.date.match(/\d+/)[0]);
+                    return dayB - dayA;
+                });
+                
+                if (groupData.length >= 2) {
+                    const current = groupData[0];
+                    const last = groupData[1];
+                    
+                    const currentSales = current.sales;
+                    const lastSales = last.sales;
+                    const difference = currentSales - lastSales;
+                    const percentChange = (difference / lastSales) * 100;
+                    const status = difference >= 0 ? '↑ Improved' : '↓ Dropped';
+                    
+                    comparisonData.push({
+                        branch,
+                        offerType,
+                        currentDate: current.date,
+                        lastDate: last.date,
+                        currentSales,
+                        lastSales,
+                        difference,
+                        percentChange,
+                        status,
+                        isAutoGenerated: current.isAutoGenerated || false
+                    });
+                    
+                    // Track branch performance for summary
+                    if (!branchPerformance[branch]) {
+                        branchPerformance[branch] = {
+                            totalChange: 0,
+                            count: 0
+                        };
+                    }
+                    branchPerformance[branch].totalChange += percentChange;
+                    branchPerformance[branch].count += 1;
+                }
+            });
+            
+            // Calculate summary metrics
+            let totalChange = 0;
+            let topBranch = '';
+            let topChange = -Infinity;
+            
+            Object.keys(branchPerformance).forEach(branch => {
+                const avgChange = branchPerformance[branch].totalChange / branchPerformance[branch].count;
+                totalChange += avgChange;
+                
+                if (avgChange > topChange) {
+                    topChange = avgChange;
+                    topBranch = branch;
+                }
+            });
+            
+            const avgTotalChange = totalChange / Object.keys(branchPerformance).length;
+            
+            // Update summary
+            document.getElementById('totalChangePercent').textContent = `${avgTotalChange >= 0 ? '+' : ''}${avgTotalChange.toFixed(1)}%`;
+            document.getElementById('topPerformingBranch').textContent = topBranch.replace('Crispy Chicken ', '');
+            
+            // Update table
+            const tableBody = document.getElementById('offerComparisonTableBody');
+            tableBody.innerHTML = '';
+            
+            comparisonData.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'border-b table-row';
+                
+                // Highlight auto-generated rows
+                if (item.isAutoGenerated) {
+                    row.classList.add('bg-blue-50');
+                }
+                
+                row.innerHTML = `
+                    <td class="px-4 py-3 text-sm font-medium">
+                        ${item.branch.replace('Crispy Chicken ', '')}
+                        ${item.isAutoGenerated ? '<span class="auto-offer-indicator ml-2"><i data-lucide="refresh-cw" class="w-3 h-3"></i>Auto</span>' : ''}
+                    </td>
+                    <td class="px-4 py-3 text-sm">
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                            item.offerType === 'Chicken' ? 'bg-amber-100 text-amber-800' : 
+                            item.offerType === 'Ultimate' ? 'bg-purple-100 text-purple-800' : 
+                            'bg-blue-100 text-blue-800'
+                        }">
+                            ${item.offerType}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-sm">${item.currentDate}</td>
+                    <td class="px-4 py-3 text-sm">${item.lastDate}</td>
+                    <td class="px-4 py-3 text-sm font-medium">${item.currentSales.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-sm">${item.lastSales.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-sm font-medium ${item.difference >= 0 ? 'text-green-600' : 'text-red-600'}">
+                        ${item.difference >= 0 ? '+' : ''}${item.difference.toFixed(2)}
+                    </td>
+                    <td class="px-4 py-3 text-sm font-medium ${item.percentChange >= 0 ? 'text-green-600' : 'text-red-600'}">
+                        ${item.percentChange >= 0 ? '+' : ''}${item.percentChange.toFixed(1)}%
+                    </td>
+                    <td class="px-4 py-3 text-sm">
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                            item.status.includes('Improved') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }">
+                            ${item.status}
+                        </span>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // If no data, show message
+            if (comparisonData.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td colspan="9" class="px-4 py-6 text-center text-gray-500">
+                        No offer comparison data available. Ensure you have at least two offer days for each branch.
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            }
+            
+            // Re-initialize Lucide icons
+            lucide.createIcons();
+        }
+
+        // Helper function to get day of week from date string
+        function getDayOfWeek(dateString) {
+            // Extract day number from date string
+            const dayMatch = dateString.match(/\d+/);
+            if (!dayMatch) return null;
+            
+            const day = parseInt(dayMatch[0]);
+            
+            // For October 2025, we can map days to weekdays
+            // October 1, 2025 is Wednesday (day 3 of the week, where 0=Sunday)
+            const startDay = 3; // Wednesday (0=Sunday, 1=Monday, etc.)
+            const dayOfWeek = (startDay + day - 1) % 7;
+            
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            return days[dayOfWeek];
+        }
+
+        // Helper function to get offer type from day of week
+        function getOfferType(dayOfWeek) {
+            if (dayOfWeek === 'Monday') return 'Chicken';
+            if (dayOfWeek === 'Tuesday') return 'Ultimate';
+            return 'Normal';
         }
 
         function updateTransactionsChart() {
@@ -1928,11 +2509,11 @@
                     updateDashboard();
                     hideLoadingIndicator();
                     showUpdateStatus('Data uploaded successfully!');
-                    alert('Data uploaded successfully!');
+                    showNotification('Data uploaded successfully!', 'success');
                 } catch (error) {
                     hideLoadingIndicator();
                     showUpdateStatus('Error uploading data');
-                    alert('Error reading file. Please ensure it matches the template format.');
+                    showNotification('Error reading file. Please ensure it matches the template format.', 'error');
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -1953,7 +2534,7 @@
             setTimeout(() => {
                 hideLoadingIndicator();
                 showUpdateStatus('Report generated successfully');
-                alert('Generating comprehensive report... This would include all analytics, insights, and recommendations in a downloadable PDF format.');
+                showNotification('Generating comprehensive report... This would include all analytics, insights, and recommendations in a downloadable PDF format.', 'info');
             }, 1000);
         }
 
@@ -1995,6 +2576,7 @@
                     updateDashboard();
                     hideLoadingIndicator();
                     showUpdateStatus('Entry deleted successfully');
+                    showNotification('Entry deleted successfully', 'success');
                 }, 300);
             }
         }
@@ -2025,11 +2607,163 @@
                 updateDashboard();
                 hideLoadingIndicator();
                 showUpdateStatus('Entry saved successfully');
+                showNotification('Entry saved successfully', 'success');
             }, 300);
         }
 
         function closeModal() {
             dataModal.classList.add('hidden');
+        }
+
+        // Offer Management Functions
+        function updateOffer(date, branch, offerType, notes = '') {
+            // Convert date from YYYY-MM-DD to October Xst, 2025 format
+            const dateObj = new Date(date);
+            const day = dateObj.getDate();
+            const month = dateObj.toLocaleString('default', { month: 'long' });
+            const year = dateObj.getFullYear();
+            const formattedDate = `${month} ${day}${getDaySuffix(day)}, ${year}`;
+            
+            const entryIndex = deliveryData.findIndex(
+                e => e.date === formattedDate && e.branch === branch
+            );
+
+            const dayName = dateObj.toLocaleString('en-US', { weekday: 'long' });
+            const offerStatus = (offerType === "Normal Day") ? "No Offer" : "Offer";
+
+            if (entryIndex !== -1) {
+                // Update existing entry
+                deliveryData[entryIndex].offerType = offerType;
+                deliveryData[entryIndex].offerStatus = offerStatus;
+                deliveryData[entryIndex].notes = notes;
+                deliveryData[entryIndex].dayName = dayName;
+                
+                showNotification('Offer updated successfully', 'success');
+            } else {
+                // Add new day
+                deliveryData.push({
+                    date: formattedDate,
+                    branch,
+                    transactions: 0,
+                    sales: 0,
+                    offerType,
+                    offerStatus,
+                    dayName,
+                    notes
+                });
+                
+                showNotification('New offer added successfully', 'success');
+            }
+
+            renderOfferTable();
+            updateDashboard();
+        }
+
+        function getDaySuffix(day) {
+            if (day > 3 && day < 21) return 'th';
+            switch (day % 10) {
+                case 1: return 'st';
+                case 2: return 'nd';
+                case 3: return 'rd';
+                default: return 'th';
+            }
+        }
+
+        function renderOfferTable() {
+            offerTableBody.innerHTML = "";
+            
+            // Sort data by date (newest first)
+            const sortedData = [...deliveryData].sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                return dateB - dateA;
+            });
+            
+            sortedData.forEach((e, index) => {
+                let rowClass = "";
+                if (e.offerType === "Normal Day") rowClass = "offer-row-normal";
+                if (e.offerType === "Chicken Day") rowClass = "offer-row-chicken";
+                if (e.offerType === "Ultimate Offer") rowClass = "offer-row-ultimate";
+                
+                const row = document.createElement('tr');
+                row.className = rowClass;
+                
+                // Get the appropriate badge class for the offer type
+                let badgeClass = "offer-badge-normal";
+                if (e.offerType === "Chicken Day") badgeClass = "offer-badge-chicken";
+                if (e.offerType === "Ultimate Offer") badgeClass = "offer-badge-ultimate";
+                
+                row.innerHTML = `
+                    <td class="px-4 py-3 text-sm">${e.date}</td>
+                    <td class="px-4 py-3 text-sm">${e.dayName || getDayOfWeek(e.date)}</td>
+                    <td class="px-4 py-3 text-sm">${e.branch}</td>
+                    <td class="px-4 py-3 text-sm">${e.transactions}</td>
+                    <td class="px-4 py-3 text-sm">${e.sales.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-sm">
+                        <span class="offer-badge ${badgeClass}">
+                            ${e.offerType || 'Normal Day'}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-sm">${e.offerStatus || 'No Offer'}</td>
+                    <td class="px-4 py-3 text-sm">${e.notes || ''}</td>
+                    <td class="px-4 py-3 text-sm">
+                        <div class="flex gap-2">
+                            <button onclick="editOffer('${e.date}', '${e.branch}')" class="p-1 text-blue-600 hover:text-blue-800">
+                                <i data-lucide="edit-2" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="deleteOffer('${e.date}', '${e.branch}')" class="p-1 text-red-600 hover:text-red-800">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                offerTableBody.appendChild(row);
+            });
+            
+            // Re-initialize Lucide icons for new elements
+            lucide.createIcons();
+        }
+
+        function editOffer(date, branch) {
+            const entry = deliveryData.find(e => e.date === date && e.branch === branch);
+            if (!entry) return;
+            
+            // Convert date from October Xst, 2025 to YYYY-MM-DD format
+            const dateMatch = date.match(/(\w+) (\d+)(\w+), (\d+)/);
+            if (dateMatch) {
+                const month = dateMatch[1];
+                const day = dateMatch[2];
+                const year = dateMatch[4];
+                
+                // Convert month name to number
+                const monthNames = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"];
+                const monthNum = monthNames.indexOf(month) + 1;
+                
+                // Format as YYYY-MM-DD
+                const formattedDate = `${year}-${monthNum.toString().padStart(2, '0')}-${day.padStart(2, '0')}`;
+                
+                // Set form values
+                offerModalDate.value = formattedDate;
+                offerModalBranch.value = branch;
+                offerModalType.value = entry.offerType || 'Normal Day';
+                offerModalNotes.value = entry.notes || '';
+                
+                // Set editing index
+                editingOfferIndex = deliveryData.findIndex(e => e.date === date && e.branch === branch);
+                
+                // Show modal
+                offerModal.style.display = 'flex';
+            }
+        }
+
+        function deleteOffer(date, branch) {
+            if (window.confirm('Are you sure you want to delete this offer?')) {
+                deliveryData = deliveryData.filter(e => !(e.date === date && e.branch === branch));
+                renderOfferTable();
+                updateDashboard();
+                showNotification('Offer deleted successfully', 'success');
+            }
         }
     </script>
 </body>
