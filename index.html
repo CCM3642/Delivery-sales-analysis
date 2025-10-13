@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crispy Chicken Delivery Analytics</title>
+    <title>Cispy Chicken Delivery Analytics</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -74,6 +74,21 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .date-range-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .date-range-selector select {
+            padding: 6px 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background-color: white;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-amber-50 to-orange-100 min-h-screen">
@@ -103,6 +118,45 @@
                     <option value="Crispy Chicken Al Satwa">Al Satwa</option>
                     <option value="Crispy Chicken Al Rgga">Al Rgga</option>
                 </select>
+                
+                <div class="date-range-selector">
+                    <span class="text-sm font-medium text-gray-700">Period:</span>
+                    <select id="startDay" class="text-sm">
+                        <option value="1">Oct 1</option>
+                        <option value="2">Oct 2</option>
+                        <option value="3">Oct 3</option>
+                        <option value="4">Oct 4</option>
+                        <option value="5">Oct 5</option>
+                        <option value="6">Oct 6</option>
+                        <option value="7">Oct 7</option>
+                        <option value="8">Oct 8</option>
+                        <option value="9">Oct 9</option>
+                        <option value="10">Oct 10</option>
+                        <option value="11">Oct 11</option>
+                        <option value="12">Oct 12</option>
+                    </select>
+                    <span class="text-gray-500">to</span>
+                    <select id="endDay" class="text-sm">
+                        <option value="1">Oct 1</option>
+                        <option value="2">Oct 2</option>
+                        <option value="3">Oct 3</option>
+                        <option value="4">Oct 4</option>
+                        <option value="5">Oct 5</option>
+                        <option value="6">Oct 6</option>
+                        <option value="7">Oct 7</option>
+                        <option value="8">Oct 8</option>
+                        <option value="9">Oct 9</option>
+                        <option value="10">Oct 10</option>
+                        <option value="11">Oct 11</option>
+                        <option value="12">Oct 12</option>
+                    </select>
+                    <button id="applyDateRange" class="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors">
+                        Apply
+                    </button>
+                    <button id="resetDateRange" class="px-3 py-1 bg-gray-500 text-white text-sm rounded hover:bg-gray-600 transition-colors">
+                        Reset
+                    </button>
+                </div>
                 
                 <select id="analysisType" class="px-4 py-2 border-2 border-blue-500 rounded-lg font-semibold bg-white">
                     <option value="performance">Performance Analysis</option>
@@ -181,7 +235,7 @@
                         <div>
                             <p class="text-gray-500 text-sm font-medium">Total Sales</p>
                             <p id="totalSales" class="text-3xl font-bold text-gray-800 mt-2">0 AED</p>
-                            <p class="text-sm text-gray-600 mt-1">October 1-12, 2025</p>
+                            <p class="text-sm text-gray-600 mt-1">Selected Period</p>
                         </div>
                         <div class="p-3 rounded-full bg-green-100">
                             <i data-lucide="dollar-sign" class="w-8 h-8 text-green-600"></i>
@@ -365,7 +419,7 @@
                         <i data-lucide="trending-up" class="w-5 h-5 text-green-500"></i>
                     </div>
                     <p id="growthRate" class="text-2xl font-bold text-green-600">+12.7%</p>
-                    <p class="text-sm text-gray-600 mt-1">vs last month</p>
+                    <p class="text-sm text-gray-600 mt-1">vs last period</p>
                 </div>
 
                 <div class="analysis-card rounded-lg shadow-md p-6">
@@ -757,6 +811,8 @@
         ];
 
         let selectedBranch = 'All';
+        let selectedStartDate = null;
+        let selectedEndDate = null;
         let editingIndex = null;
         
         // Chart instances
@@ -772,6 +828,10 @@
 
         // DOM elements
         const branchSelector = document.getElementById('branchSelector');
+        const startDay = document.getElementById('startDay');
+        const endDay = document.getElementById('endDay');
+        const applyDateRange = document.getElementById('applyDateRange');
+        const resetDateRange = document.getElementById('resetDateRange');
         const analysisType = document.getElementById('analysisType');
         const fileUpload = document.getElementById('fileUpload');
         const downloadTemplateBtn = document.getElementById('downloadTemplate');
@@ -837,6 +897,44 @@
             }, 500);
         });
 
+        startDay.addEventListener('change', function() {
+            // Ensure end day is not before start day
+            if (parseInt(endDay.value) < parseInt(this.value)) {
+                endDay.value = this.value;
+            }
+        });
+
+        endDay.addEventListener('change', function() {
+            // Ensure start day is not after end day
+            if (parseInt(startDay.value) > parseInt(this.value)) {
+                startDay.value = this.value;
+            }
+        });
+
+        applyDateRange.addEventListener('click', function() {
+            selectedStartDate = parseInt(startDay.value);
+            selectedEndDate = parseInt(endDay.value);
+            showLoadingIndicator();
+            setTimeout(() => {
+                updateDashboard();
+                hideLoadingIndicator();
+                showUpdateStatus(`Date range applied: Oct ${selectedStartDate} to Oct ${selectedEndDate}`);
+            }, 300);
+        });
+
+        resetDateRange.addEventListener('click', function() {
+            selectedStartDate = null;
+            selectedEndDate = null;
+            startDay.value = '1';
+            endDay.value = '12';
+            showLoadingIndicator();
+            setTimeout(() => {
+                updateDashboard();
+                hideLoadingIndicator();
+                showUpdateStatus('Date range reset to show all data');
+            }, 300);
+        });
+
         analysisType.addEventListener('change', function() {
             showLoadingIndicator();
             setTimeout(() => {
@@ -882,14 +980,15 @@
         }
 
         function updateKPIs() {
-            const filteredData = selectedBranch === 'All' 
-                ? deliveryData 
-                : deliveryData.filter(item => item.branch === selectedBranch);
+            const filteredData = getFilteredData();
             
             const totalTransactions = filteredData.reduce((sum, item) => sum + item.transactions, 0);
             const totalSales = filteredData.reduce((sum, item) => sum + item.sales, 0);
             const avgTransactionValue = totalSales / totalTransactions;
-            const dailyAvgTransactions = Math.round(totalTransactions / 12);
+            
+            // Calculate daily average based on selected date range
+            const dayCount = selectedEndDate ? (selectedEndDate - selectedStartDate + 1) : 12;
+            const dailyAvgTransactions = Math.round(totalTransactions / dayCount);
             
             const branches = [...new Set(deliveryData.map(item => item.branch))];
             
@@ -899,6 +998,25 @@
             document.getElementById('dailyAvgTransactions').textContent = `Daily Avg: ${dailyAvgTransactions}`;
             document.getElementById('activeBranches').textContent = branches.length;
             document.getElementById('branchSubtitle').textContent = selectedBranch === 'All' ? 'All branches' : selectedBranch.replace('Crispy Chicken ', '');
+        }
+
+        function getFilteredData() {
+            let filteredData = deliveryData;
+            
+            // Apply branch filter
+            if (selectedBranch !== 'All') {
+                filteredData = filteredData.filter(item => item.branch === selectedBranch);
+            }
+            
+            // Apply date range filter
+            if (selectedStartDate && selectedEndDate) {
+                filteredData = filteredData.filter(item => {
+                    const day = parseInt(item.date.match(/\d+/)[0]);
+                    return day >= selectedStartDate && day <= selectedEndDate;
+                });
+            }
+            
+            return filteredData;
         }
 
         function updateCharts() {
@@ -935,9 +1053,7 @@
         }
 
         function updatePerformanceMetricsData() {
-            const filteredData = selectedBranch === 'All' 
-                ? deliveryData 
-                : deliveryData.filter(item => item.branch === selectedBranch);
+            const filteredData = getFilteredData();
             
             // Calculate peak hours (simplified for demo)
             const peakHours = selectedBranch === 'All' ? '6:00 PM - 8:00 PM' : '5:30 PM - 7:30 PM';
@@ -969,13 +1085,15 @@
         }
 
         function updateTrendAnalysisData() {
+            const filteredData = getFilteredData();
+            
             // Calculate growth rate
-            const week1Data = deliveryData.filter(item => parseInt(item.date.match(/\d+/)[0]) <= 6);
-            const week2Data = deliveryData.filter(item => parseInt(item.date.match(/\d+/)[0]) > 6);
+            const week1Data = filteredData.filter(item => parseInt(item.date.match(/\d+/)[0]) <= 6);
+            const week2Data = filteredData.filter(item => parseInt(item.date.match(/\d+/)[0]) > 6);
             
             const week1Sales = week1Data.reduce((sum, item) => sum + item.sales, 0);
             const week2Sales = week2Data.reduce((sum, item) => sum + item.sales, 0);
-            const growthRate = ((week2Sales - week1Sales) / week1Sales * 100).toFixed(1);
+            const growthRate = week1Sales > 0 ? ((week2Sales - week1Sales) / week1Sales * 100).toFixed(1) : '0.0';
             
             document.getElementById('growthRate').textContent = `+${growthRate}%`;
             
@@ -990,9 +1108,7 @@
         }
 
         function updateInsightsData() {
-            const filteredData = selectedBranch === 'All' 
-                ? deliveryData 
-                : deliveryData.filter(item => item.branch === selectedBranch);
+            const filteredData = getFilteredData();
             
             // Calculate weekend performance
             const weekendData = filteredData.filter(item => 
@@ -1092,9 +1208,7 @@
 
         function updateTransactionsChart() {
             const ctx = document.getElementById('transactionsChart').getContext('2d');
-            const filteredData = selectedBranch === 'All' 
-                ? deliveryData 
-                : deliveryData.filter(item => item.branch === selectedBranch);
+            const filteredData = getFilteredData();
             
             // Destroy existing chart if it exists
             if (transactionsChartInstance) {
@@ -1136,7 +1250,7 @@
                         },
                         title: {
                             display: true,
-                            text: selectedBranch === 'All' ? 'All Branches' : selectedBranch.replace('Crispy Chicken ', ''),
+                            text: getChartTitle(),
                             font: {
                                 size: 16,
                                 weight: 'bold'
@@ -1155,9 +1269,7 @@
 
         function updateSalesChart() {
             const ctx = document.getElementById('salesChart').getContext('2d');
-            const filteredData = selectedBranch === 'All' 
-                ? deliveryData 
-                : deliveryData.filter(item => item.branch === selectedBranch);
+            const filteredData = getFilteredData();
             
             // Destroy existing chart if it exists
             if (salesChartInstance) {
@@ -1196,7 +1308,7 @@
                         },
                         title: {
                             display: true,
-                            text: selectedBranch === 'All' ? 'All Branches' : selectedBranch.replace('Crispy Chicken ', ''),
+                            text: getChartTitle(),
                             font: {
                                 size: 16,
                                 weight: 'bold'
@@ -1267,7 +1379,7 @@
                         },
                         title: {
                             display: true,
-                            text: selectedBranch === 'All' ? 'All Branches Performance' : `Selected: ${selectedBranch.replace('Crispy Chicken ', '')}`,
+                            text: getChartTitle(),
                             font: {
                                 size: 16,
                                 weight: 'bold'
@@ -1286,9 +1398,7 @@
 
         function updateWeeklyChart() {
             const ctx = document.getElementById('weeklyChart').getContext('2d');
-            const filteredData = selectedBranch === 'All' 
-                ? deliveryData 
-                : deliveryData.filter(item => item.branch === selectedBranch);
+            const filteredData = getFilteredData();
             
             // Destroy existing chart if it exists
             if (weeklyChartInstance) {
@@ -1335,7 +1445,7 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: selectedBranch === 'All' ? 'All Branches' : selectedBranch.replace('Crispy Chicken ', ''),
+                            text: getChartTitle(),
                             font: {
                                 size: 16,
                                 weight: 'bold'
@@ -1448,7 +1558,7 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: selectedBranch === 'All' ? 'Daily Sales by Branch (AED)' : `Daily Sales for ${selectedBranch.replace('Crispy Chicken ', '')} (AED)`,
+                            text: getChartTitle(),
                             font: {
                                 size: 16
                             },
@@ -1500,7 +1610,7 @@
                         },
                         title: {
                             display: true,
-                            text: `Hourly Performance Distribution - ${selectedBranch === 'All' ? 'All Branches' : selectedBranch.replace('Crispy Chicken ', '')}`,
+                            text: getChartTitle(),
                             font: {
                                 size: 16,
                                 weight: 'bold'
@@ -1552,7 +1662,7 @@
                         },
                         title: {
                             display: true,
-                            text: `Day of Week Analysis - ${selectedBranch === 'All' ? 'All Branches' : selectedBranch.replace('Crispy Chicken ', '')}`,
+                            text: getChartTitle(),
                             font: {
                                 size: 16,
                                 weight: 'bold'
@@ -1624,7 +1734,7 @@
                         },
                         title: {
                             display: true,
-                            text: `Moving Average Trend - ${selectedBranch === 'All' ? 'All Branches' : selectedBranch.replace('Crispy Chicken ', '')}`,
+                            text: getChartTitle(),
                             font: {
                                 size: 16,
                                 weight: 'bold'
@@ -1673,7 +1783,7 @@
                         },
                         title: {
                             display: true,
-                            text: `Growth Rate Analysis - ${selectedBranch === 'All' ? 'All Branches' : selectedBranch.replace('Crispy Chicken ', '')}`,
+                            text: getChartTitle(),
                             font: {
                                 size: 16,
                                 weight: 'bold'
@@ -1688,6 +1798,22 @@
                     }
                 }
             });
+        }
+
+        function getChartTitle() {
+            let title = '';
+            
+            if (selectedBranch !== 'All') {
+                title += selectedBranch.replace('Crispy Chicken ', '');
+            } else {
+                title += 'All Branches';
+            }
+            
+            if (selectedStartDate && selectedEndDate) {
+                title += ` (Oct ${selectedStartDate}-${selectedEndDate})`;
+            }
+            
+            return title;
         }
 
         function getBranchColor(branch, alpha = 1) {
@@ -1725,9 +1851,7 @@
         }
 
         function updateTable() {
-            const filteredData = selectedBranch === 'All' 
-                ? deliveryData 
-                : deliveryData.filter(item => item.branch === selectedBranch);
+            const filteredData = getFilteredData();
             
             recordCount.textContent = filteredData.length;
             
@@ -1844,9 +1968,7 @@
         }
 
         function handleEditEntry(index) {
-            const filteredData = selectedBranch === 'All' 
-                ? deliveryData 
-                : deliveryData.filter(item => item.branch === selectedBranch);
+            const filteredData = getFilteredData();
             
             const item = filteredData[index];
             editingIndex = index;
@@ -1862,9 +1984,7 @@
             if (window.confirm('Are you sure you want to delete this entry?')) {
                 showLoadingIndicator();
                 
-                const filteredData = selectedBranch === 'All' 
-                    ? deliveryData 
-                    : deliveryData.filter(item => item.branch === selectedBranch);
+                const filteredData = getFilteredData();
                 
                 const itemToDelete = filteredData[index];
                 deliveryData = deliveryData.filter(item => 
@@ -1891,9 +2011,7 @@
             
             setTimeout(() => {
                 if (editingIndex !== null) {
-                    const filteredData = selectedBranch === 'All' 
-                        ? deliveryData 
-                        : deliveryData.filter(item => item.branch === selectedBranch);
+                    const filteredData = getFilteredData();
                     
                     const itemToEdit = filteredData[editingIndex];
                     deliveryData = deliveryData.map(item => 
