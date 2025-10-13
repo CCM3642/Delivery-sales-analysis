@@ -177,6 +177,16 @@
             </div>
         </div>
 
+        <!-- Charts Row 3 - NEW: Branch Performance DAILY -->
+        <div class="grid grid-cols-1 gap-6 mb-6">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Branch Performance DAILY</h3>
+                <div class="chart-container">
+                    <canvas id="dailyBranchChart"></canvas>
+                </div>
+            </div>
+        </div>
+
         <!-- Data Table -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6 overflow-x-auto">
             <h3 class="text-xl font-bold text-gray-800 mb-4">Delivery Data (<span id="recordCount">0</span> records)</h3>
@@ -408,6 +418,7 @@
             updateSalesChart();
             updateBranchChart();
             updateWeeklyChart();
+            updateDailyBranchChart(); // NEW: Add the daily branch performance chart
         }
 
         function updateTransactionsChart() {
@@ -609,6 +620,86 @@
                             grid: {
                                 drawOnChartArea: false
                             }
+                        }
+                    }
+                }
+            });
+        }
+
+        // NEW: Function to update the daily branch performance chart
+        function updateDailyBranchChart() {
+            const ctx = document.getElementById('dailyBranchChart').getContext('2d');
+            
+            // Get all unique branches
+            const branches = [...new Set(deliveryData.map(item => item.branch))];
+            
+            // Get all unique dates
+            const dates = [...new Set(deliveryData.map(item => {
+                const day = item.date.split(',')[0].replace('October ', '').replace('st', '').replace('nd', '').replace('rd', '').replace('th', '').trim();
+                return `Oct ${day}`;
+            }))].sort((a, b) => parseInt(a.split(' ')[1]) - parseInt(b.split(' ')[1]));
+            
+            // Prepare datasets for each branch
+            const datasets = branches.map((branch, index) => {
+                const branchData = dates.map(date => {
+                    const day = date.split(' ')[1];
+                    const dayData = deliveryData.filter(item => {
+                        const itemDay = item.date.split(',')[0].replace('October ', '').replace('st', '').replace('nd', '').replace('rd', '').replace('th', '').trim();
+                        return itemDay === day && item.branch === branch;
+                    });
+                    
+                    return dayData.reduce((sum, item) => sum + item.sales, 0);
+                });
+                
+                // Generate colors for each branch
+                const colors = [
+                    '#3b82f6', // blue
+                    '#10b981', // green
+                    '#f59e0b', // amber
+                    '#8b5cf6', // purple
+                    '#ec4899', // pink
+                    '#06b6d4', // cyan
+                    '#f97316'  // orange
+                ];
+                
+                return {
+                    label: branch.replace('Crispy Chicken ', ''),
+                    data: branchData,
+                    backgroundColor: colors[index % colors.length],
+                    borderColor: colors[index % colors.length],
+                    borderWidth: 1
+                };
+            });
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dates,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Daily Sales by Branch (AED)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
                         }
                     }
                 }
