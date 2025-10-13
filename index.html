@@ -32,6 +32,14 @@
         .btn-primary:hover {
             transform: translateY(-2px);
         }
+        .branch-highlight {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-amber-50 to-orange-100 min-h-screen">
@@ -177,7 +185,7 @@
             </div>
         </div>
 
-        <!-- Charts Row 3 - NEW: Branch Performance DAILY -->
+        <!-- Charts Row 3 - Branch Performance DAILY -->
         <div class="grid grid-cols-1 gap-6 mb-6">
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h3 class="text-xl font-bold text-gray-800 mb-4">Branch Performance DAILY</h3>
@@ -351,6 +359,13 @@
 
         let selectedBranch = 'All';
         let editingIndex = null;
+        
+        // Chart instances
+        let transactionsChartInstance = null;
+        let salesChartInstance = null;
+        let branchChartInstance = null;
+        let weeklyChartInstance = null;
+        let dailyBranchChartInstance = null;
 
         // DOM elements
         const branchSelector = document.getElementById('branchSelector');
@@ -374,6 +389,7 @@
         branchSelector.addEventListener('change', function() {
             selectedBranch = this.value;
             updateDashboard();
+            highlightSelectedBranch();
         });
 
         fileUpload.addEventListener('change', handleFileUpload);
@@ -418,7 +434,7 @@
             updateSalesChart();
             updateBranchChart();
             updateWeeklyChart();
-            updateDailyBranchChart(); // NEW: Add the daily branch performance chart
+            updateDailyBranchChart();
         }
 
         function updateTransactionsChart() {
@@ -426,6 +442,11 @@
             const filteredData = selectedBranch === 'All' 
                 ? deliveryData 
                 : deliveryData.filter(item => item.branch === selectedBranch);
+            
+            // Destroy existing chart if it exists
+            if (transactionsChartInstance) {
+                transactionsChartInstance.destroy();
+            }
             
             // Aggregate by date
             const grouped = {};
@@ -439,15 +460,15 @@
             
             const chartData = Object.values(grouped).sort((a, b) => parseInt(a.date.split(' ')[1]) - parseInt(b.date.split(' ')[1]));
             
-            new Chart(ctx, {
+            transactionsChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: chartData.map(item => item.date),
                     datasets: [{
                         label: 'Transactions',
                         data: chartData.map(item => item.transactions),
-                        borderColor: '#f59e0b',
-                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        borderColor: selectedBranch === 'All' ? '#f59e0b' : getBranchColor(selectedBranch),
+                        backgroundColor: selectedBranch === 'All' ? 'rgba(245, 158, 11, 0.1)' : getBranchColor(selectedBranch, 0.1),
                         borderWidth: 3,
                         tension: 0.3,
                         fill: true
@@ -459,6 +480,15 @@
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        title: {
+                            display: true,
+                            text: selectedBranch === 'All' ? 'All Branches' : selectedBranch.replace('Crispy Chicken ', ''),
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            color: selectedBranch === 'All' ? '#4b5563' : getBranchColor(selectedBranch)
                         }
                     },
                     scales: {
@@ -476,6 +506,11 @@
                 ? deliveryData 
                 : deliveryData.filter(item => item.branch === selectedBranch);
             
+            // Destroy existing chart if it exists
+            if (salesChartInstance) {
+                salesChartInstance.destroy();
+            }
+            
             // Aggregate by date
             const grouped = {};
             filteredData.forEach(item => {
@@ -488,14 +523,14 @@
             
             const chartData = Object.values(grouped).sort((a, b) => parseInt(a.date.split(' ')[1]) - parseInt(b.date.split(' ')[1]));
             
-            new Chart(ctx, {
+            salesChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: chartData.map(item => item.date),
                     datasets: [{
                         label: 'Sales (AED)',
                         data: chartData.map(item => item.sales),
-                        backgroundColor: '#10b981',
+                        backgroundColor: selectedBranch === 'All' ? '#10b981' : getBranchColor(selectedBranch),
                         borderRadius: 5
                     }]
                 },
@@ -505,6 +540,15 @@
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        title: {
+                            display: true,
+                            text: selectedBranch === 'All' ? 'All Branches' : selectedBranch.replace('Crispy Chicken ', ''),
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            color: selectedBranch === 'All' ? '#4b5563' : getBranchColor(selectedBranch)
                         }
                     },
                     scales: {
@@ -519,13 +563,19 @@
         function updateBranchChart() {
             const ctx = document.getElementById('branchChart').getContext('2d');
             
+            // Destroy existing chart if it exists
+            if (branchChartInstance) {
+                branchChartInstance.destroy();
+            }
+            
             // Aggregate by branch
             const grouped = {};
             deliveryData.forEach(item => {
                 if (!grouped[item.branch]) {
                     grouped[item.branch] = { 
                         branch: item.branch.replace('Crispy Chicken ', '').replace('Crispy Chicken-', ''), 
-                        sales: 0 
+                        sales: 0,
+                        fullBranchName: item.branch
                     };
                 }
                 grouped[item.branch].sales += item.sales;
@@ -533,14 +583,24 @@
             
             const chartData = Object.values(grouped).sort((a, b) => b.sales - a.sales);
             
-            new Chart(ctx, {
+            // Create background colors array
+            const backgroundColors = chartData.map(item => {
+                if (selectedBranch === 'All') {
+                    return '#3b82f6'; // default blue for all
+                } else {
+                    // Check if this branch is the selected one
+                    return item.fullBranchName === selectedBranch ? getBranchColor(selectedBranch) : '#e5e7eb';
+                }
+            });
+            
+            branchChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: chartData.map(item => item.branch),
                     datasets: [{
                         label: 'Sales (AED)',
                         data: chartData.map(item => item.sales),
-                        backgroundColor: '#3b82f6',
+                        backgroundColor: backgroundColors,
                         borderRadius: 5
                     }]
                 },
@@ -551,6 +611,15 @@
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        title: {
+                            display: true,
+                            text: selectedBranch === 'All' ? 'All Branches Performance' : `Selected: ${selectedBranch.replace('Crispy Chicken ', '')}`,
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            color: selectedBranch === 'All' ? '#4b5563' : getBranchColor(selectedBranch)
                         }
                     },
                     scales: {
@@ -568,6 +637,11 @@
                 ? deliveryData 
                 : deliveryData.filter(item => item.branch === selectedBranch);
             
+            // Destroy existing chart if it exists
+            if (weeklyChartInstance) {
+                weeklyChartInstance.destroy();
+            }
+            
             const week1 = filteredData.filter(item => parseInt(item.date.match(/\d+/)[0]) <= 7);
             const week2 = filteredData.filter(item => parseInt(item.date.match(/\d+/)[0]) > 7);
             
@@ -581,7 +655,7 @@
                 { week: 'Week 2 (Oct 8-12)', transactions: w2Trans, sales: Math.round(w2Sales) }
             ];
             
-            new Chart(ctx, {
+            weeklyChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: chartData.map(item => item.week),
@@ -589,14 +663,14 @@
                         {
                             label: 'Transactions',
                             data: chartData.map(item => item.transactions),
-                            backgroundColor: '#f59e0b',
+                            backgroundColor: selectedBranch === 'All' ? '#f59e0b' : getBranchColor(selectedBranch),
                             borderRadius: 5,
                             yAxisID: 'y'
                         },
                         {
                             label: 'Sales (AED)',
                             data: chartData.map(item => item.sales),
-                            backgroundColor: '#10b981',
+                            backgroundColor: selectedBranch === 'All' ? '#10b981' : getBranchColor(selectedBranch, 0.7),
                             borderRadius: 5,
                             yAxisID: 'y1'
                         }
@@ -605,6 +679,17 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: selectedBranch === 'All' ? 'All Branches' : selectedBranch.replace('Crispy Chicken ', ''),
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            color: selectedBranch === 'All' ? '#4b5563' : getBranchColor(selectedBranch)
+                        }
+                    },
                     scales: {
                         y: {
                             type: 'linear',
@@ -626,9 +711,13 @@
             });
         }
 
-        // NEW: Function to update the daily branch performance chart
         function updateDailyBranchChart() {
             const ctx = document.getElementById('dailyBranchChart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (dailyBranchChartInstance) {
+                dailyBranchChartInstance.destroy();
+            }
             
             // Get all unique branches
             const branches = [...new Set(deliveryData.map(item => item.branch))];
@@ -662,16 +751,30 @@
                     '#f97316'  // orange
                 ];
                 
+                // If a branch is selected, use the color for that branch and gray for others
+                let backgroundColor = colors[index % colors.length];
+                let borderColor = colors[index % colors.length];
+                let borderWidth = 1;
+                
+                if (selectedBranch !== 'All') {
+                    if (branch === selectedBranch) {
+                        borderWidth = 3;
+                    } else {
+                        backgroundColor = '#e5e7eb'; // gray for non-selected branches
+                        borderColor = '#e5e7eb';
+                    }
+                }
+                
                 return {
                     label: branch.replace('Crispy Chicken ', ''),
                     data: branchData,
-                    backgroundColor: colors[index % colors.length],
-                    borderColor: colors[index % colors.length],
-                    borderWidth: 1
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    borderWidth: borderWidth
                 };
             });
             
-            new Chart(ctx, {
+            dailyBranchChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: dates,
@@ -692,10 +795,11 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Daily Sales by Branch (AED)',
+                            text: selectedBranch === 'All' ? 'Daily Sales by Branch (AED)' : `Daily Sales for ${selectedBranch.replace('Crispy Chicken ', '')} (AED)`,
                             font: {
                                 size: 16
-                            }
+                            },
+                            color: selectedBranch === 'All' ? '#4b5563' : getBranchColor(selectedBranch)
                         },
                         tooltip: {
                             mode: 'index',
@@ -704,6 +808,40 @@
                     }
                 }
             });
+        }
+
+        function getBranchColor(branch, alpha = 1) {
+            const colors = {
+                'Crispy Chicken-Hamdan St': `rgba(59, 130, 246, ${alpha})`, // blue
+                'Crispy Chicken Khaldia': `rgba(16, 185, 129, ${alpha})`, // green
+                'Crispy Chicken Shabiya 11': `rgba(245, 158, 11, ${alpha})`, // amber
+                'Crispy Chicken Muroor': `rgba(139, 92, 246, ${alpha})`, // purple
+                'Crispy Chicken Al Barsha': `rgba(236, 72, 153, ${alpha})`, // pink
+                'Crispy Chicken Al Satwa': `rgba(6, 182, 212, ${alpha})`, // cyan
+                'Crispy Chicken Al Rgga': `rgba(249, 115, 22, ${alpha})` // orange
+            };
+            
+            return colors[branch] || `rgba(107, 114, 128, ${alpha})`; // default gray
+        }
+
+        function highlightSelectedBranch() {
+            // Add visual feedback for the selected branch
+            const branchCards = document.querySelectorAll('.stat-card');
+            if (selectedBranch !== 'All') {
+                branchCards.forEach(card => {
+                    card.classList.remove('branch-highlight');
+                });
+                
+                // Add highlight to the active branches card
+                const activeBranchesCard = document.querySelector('#activeBranches').closest('.stat-card');
+                if (activeBranchesCard) {
+                    activeBranchesCard.classList.add('branch-highlight');
+                }
+            } else {
+                branchCards.forEach(card => {
+                    card.classList.remove('branch-highlight');
+                });
+            }
         }
 
         function updateTable() {
@@ -721,9 +859,15 @@
             displayData.forEach((item, index) => {
                 const row = document.createElement('tr');
                 row.className = 'border-b table-row';
+                
+                // Highlight selected branch rows
+                if (selectedBranch !== 'All' && item.branch === selectedBranch) {
+                    row.classList.add('bg-blue-50');
+                }
+                
                 row.innerHTML = `
                     <td class="px-4 py-3 text-sm">${item.date}</td>
-                    <td class="px-4 py-3 text-sm">${item.branch}</td>
+                    <td class="px-4 py-3 text-sm font-medium ${selectedBranch !== 'All' && item.branch === selectedBranch ? 'text-blue-600' : ''}">${item.branch}</td>
                     <td class="px-4 py-3 text-sm">${item.transactions}</td>
                     <td class="px-4 py-3 text-sm">${item.sales.toFixed(2)}</td>
                     <td class="px-4 py-3 text-sm">${(item.sales / item.transactions).toFixed(2)}</td>
