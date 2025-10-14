@@ -14,6 +14,9 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- SheetJS for Excel import -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
     <!-- Custom CSS -->
     <style>
         :root {
@@ -399,6 +402,56 @@
             .metric-value {
                 font-size: 1.5rem;
             }
+        }
+        
+        /* Excel import styles */
+        .excel-upload-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border: 1px solid #e9ecef;
+        }
+        
+        .excel-upload-section h6 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .excel-format-info {
+            background-color: #e7f3ff;
+            border-left: 4px solid var(--info-color);
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        
+        .excel-format-info small {
+            color: #6c757d;
+        }
+        
+        .progress {
+            height: 5px;
+            margin-bottom: 1rem;
+        }
+        
+        .file-drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .file-drop-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 107, 53, 0.05);
+        }
+        
+        .file-drop-area.drag-over {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 107, 53, 0.1);
         }
     </style>
 </head>
@@ -892,8 +945,8 @@
                             <button type="button" class="btn btn-outline-success" onclick="exportData()">
                                 <i class="fas fa-download"></i> Export Backup
                             </button>
-                            <button type="button" class="btn btn-outline-info" onclick="importData()">
-                                <i class="fas fa-upload"></i> Import Backup
+                            <button type="button" class="btn btn-outline-info" onclick="showImportModal()">
+                                <i class="fas fa-upload"></i> Import Data
                             </button>
                             <button type="button" class="btn btn-outline-warning" onclick="clearAllData()">
                                 <i class="fas fa-trash-alt"></i> Clear All Data
@@ -902,8 +955,48 @@
                                 <i class="fas fa-undo"></i> Reset to Sample
                             </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Excel Import Section -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Excel Import</h5>
+                </div>
+                <div class="card-body">
+                    <div class="excel-upload-section">
+                        <h6><i class="fas fa-file-excel"></i> Import Sales Data from Excel</h6>
                         
-                        <input type="file" id="importFile" class="d-none" accept=".json">
+                        <div class="excel-format-info">
+                            <strong>Excel Format Requirements:</strong>
+                            <ul class="mb-0">
+                                <li>Required columns: Date, Branch, Channel, Transactions, Sales, Offer Type, Offer Status</li>
+                                <li>Optional columns: Average per Order (will be calculated if missing), Notes</li>
+                                <li>Date format: YYYY-MM-DD</li>
+                                <li>Branch names must match exactly: Crispy Chicken-[Branch Name]</li>
+                                <li>Channels: Delivery, Dine-in, Takeaway</li>
+                                <li>Offer Types: Normal Day, Chicken Day, Ultimate</li>
+                                <li>Offer Status: Active, No Offer</li>
+                            </ul>
+                            <small><a href="#" onclick="downloadExcelTemplate()">Download Excel Template</a></small>
+                        </div>
+                        
+                        <div class="file-drop-area" id="fileDropArea">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                            <p class="mb-0">Drag and drop your Excel file here or <a href="#" id="browseLink">browse files</a></p>
+                            <input type="file" id="excelFileInput" accept=".xlsx, .xls" class="d-none">
+                        </div>
+                        
+                        <div class="progress d-none" id="importProgress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <button class="btn btn-primary d-none" id="importExcelBtn" onclick="processExcelFile()">
+                                <i class="fas fa-file-import"></i> Import Excel Data
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1236,6 +1329,54 @@
         </div>
     </div>
 
+    <!-- Import Data Modal -->
+    <div class="modal fade" id="importDataModal" tabindex="-1" aria-labelledby="importDataModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importDataModalLabel">Import Data</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="importType" class="form-label">Import Type</label>
+                        <select class="form-select" id="importType">
+                            <option value="json">JSON File</option>
+                            <option value="excel">Excel File</option>
+                        </select>
+                    </div>
+                    
+                    <div id="jsonImportSection">
+                        <div class="mb-3">
+                            <label for="importFile" class="form-label">Select JSON File</label>
+                            <input type="file" class="form-control" id="importFile" accept=".json">
+                        </div>
+                    </div>
+                    
+                    <div id="excelImportSection" style="display: none;">
+                        <div class="mb-3">
+                            <label for="excelImportFile" class="form-label">Select Excel File</label>
+                            <input type="file" class="form-control" id="excelImportFile" accept=".xlsx, .xls">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="mergeData">
+                            <label class="form-check-label" for="mergeData">
+                                Merge with existing data
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmImportBtn">Import Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Notification Container -->
     <div id="notificationContainer"></div>
 
@@ -1400,6 +1541,7 @@
         let isDataChanged = false;
         let autoSaveEnabled = true;
         let currentEditingOffer = null;
+        let excelFile = null;
 
         // Page navigation
         function showPage(pageName) {
@@ -1649,6 +1791,392 @@
             
             reader.readAsText(file);
             fileInput.value = '';
+        }
+
+        // Import data from Excel
+        function importExcelData() {
+            const fileInput = document.getElementById('excelImportFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showNotification('Please select an Excel file to import', 'warning');
+                return;
+            }
+            
+            if (file.size > CONFIG.MAX_DATA_SIZE) {
+                showNotification('File size exceeds maximum limit', 'danger');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                    
+                    // Process Excel data
+                    const processedData = processExcelData(jsonData);
+                    
+                    if (processedData.length === 0) {
+                        showNotification('No valid data found in Excel file', 'warning');
+                        return;
+                    }
+                    
+                    // Merge or replace data based on user preference
+                    const mergeData = document.getElementById('mergeData').checked;
+                    if (mergeData) {
+                        salesData = [...salesData, ...processedData];
+                        showNotification(`Merged ${processedData.length} records with existing data`, 'success');
+                    } else {
+                        salesData = processedData;
+                        showNotification(`Replaced all data with ${processedData.length} records from Excel`, 'success');
+                    }
+                    
+                    updateDataTable();
+                    updateDataStats();
+                    updateLastSavedTime();
+                    markDataChanged();
+                    
+                    // Close modal
+                    const importModal = bootstrap.Modal.getInstance(document.getElementById('importDataModal'));
+                    importModal.hide();
+                    
+                } catch (error) {
+                    console.error('Error processing Excel file:', error);
+                    showNotification('Error processing Excel file: ' + error.message, 'danger');
+                }
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
+
+        // Process Excel data
+        function processExcelData(jsonData) {
+            const processedData = [];
+            let validCount = 0;
+            let errorCount = 0;
+            
+            jsonData.forEach((row, index) => {
+                try {
+                    // Map Excel columns to our data structure (case-insensitive)
+                    const data = {
+                        id: Date.now() + index, // Generate unique ID
+                        date: parseExcelDate(row.Date || row.date),
+                        branch: validateBranch(row.Branch || row.branch),
+                        channel: validateChannel(row.Channel || row.channel),
+                        transactions: parseInt(row.Transactions || row.transactions) || 0,
+                        sales: parseFloat(row.Sales || row.sales) || 0,
+                        averagePerOrder: row['Average per Order'] || row.averagePerOrder ? 
+                            parseFloat(row['Average per Order'] || row.averagePerOrder) : 0,
+                        offerType: validateOfferType(row['Offer Type'] || row.offerType),
+                        offerStatus: validateOfferStatus(row['Offer Status'] || row.offerStatus),
+                        notes: row.Notes || row.notes || '',
+                        day: getDayOfWeek(row.Date || row.date)
+                    };
+                    
+                    // Calculate average if not provided
+                    if (data.averagePerOrder === 0 && data.transactions > 0) {
+                        data.averagePerOrder = data.sales / data.transactions;
+                    }
+                    
+                    // Validate required fields
+                    if (!data.date || !data.branch || !data.channel || 
+                        !data.transactions || !data.sales || 
+                        !data.offerType || !data.offerStatus) {
+                        throw new Error('Missing required fields');
+                    }
+                    
+                    // Validate data consistency
+                    if (data.transactions === 0 && data.sales !== 0) {
+                        throw new Error('Sales must be 0 when transactions are 0');
+                    }
+                    
+                    if (data.sales === 0 && data.transactions !== 0) {
+                        throw new Error('Transactions must be 0 when sales are 0');
+                    }
+                    
+                    processedData.push(data);
+                    validCount++;
+                } catch (error) {
+                    console.error(`Error processing row ${index + 1}:`, error.message);
+                    errorCount++;
+                }
+            });
+            
+            if (errorCount > 0) {
+                showNotification(`Processed ${validCount} records, skipped ${errorCount} invalid records`, 'warning');
+            }
+            
+            return processedData;
+        }
+
+        // Parse Excel date
+        function parseExcelDate(dateValue) {
+            if (!dateValue) return '';
+            
+            // If it's a number (Excel date format)
+            if (typeof dateValue === 'number') {
+                const date = new Date((dateValue - (25567 + 1)) * 86400 * 1000);
+                return date.toISOString().split('T')[0];
+            }
+            
+            // If it's a string, try to parse it
+            if (typeof dateValue === 'string') {
+                // Try YYYY-MM-DD format
+                if (/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+                    return dateValue;
+                }
+                
+                // Try other formats and convert
+                const date = new Date(dateValue);
+                if (!isNaN(date.getTime())) {
+                    return date.toISOString().split('T')[0];
+                }
+            }
+            
+            return '';
+        }
+
+        // Validate branch
+        function validateBranch(branch) {
+            if (!branch) return '';
+            
+            // Check if branch matches any of our known branches
+            const normalizedBranch = branch.trim();
+            for (const knownBranch of CONFIG.BRANCHES) {
+                if (normalizedBranch.toLowerCase() === knownBranch.toLowerCase()) {
+                    return knownBranch;
+                }
+            }
+            
+            // If no match, return the original branch name
+            return normalizedBranch;
+        }
+
+        // Validate channel
+        function validateChannel(channel) {
+            if (!channel) return '';
+            
+            const normalizedChannel = channel.trim().toLowerCase();
+            for (const validChannel of CONFIG.CHANNELS) {
+                if (normalizedChannel === validChannel.toLowerCase()) {
+                    return validChannel;
+                }
+            }
+            
+            return '';
+        }
+
+        // Validate offer type
+        function validateOfferType(offerType) {
+            if (!offerType) return '';
+            
+            const normalizedType = offerType.trim();
+            for (const validType of CONFIG.OFFER_TYPES) {
+                if (normalizedType.toLowerCase() === validType.toLowerCase()) {
+                    return validType;
+                }
+            }
+            
+            return '';
+        }
+
+        // Validate offer status
+        function validateOfferStatus(offerStatus) {
+            if (!offerStatus) return '';
+            
+            const normalizedStatus = offerStatus.trim().toLowerCase();
+            if (normalizedStatus === 'active' || normalizedStatus === 'no offer') {
+                return normalizedStatus.charAt(0).toUpperCase() + normalizedStatus.slice(1);
+            }
+            
+            return '';
+        }
+
+        // Show import modal
+        function showImportModal() {
+            const importModal = new bootstrap.Modal(document.getElementById('importDataModal'));
+            importModal.show();
+        }
+
+        // Handle import type change
+        document.getElementById('importType').addEventListener('change', function() {
+            const importType = this.value;
+            document.getElementById('jsonImportSection').style.display = importType === 'json' ? 'block' : 'none';
+            document.getElementById('excelImportSection').style.display = importType === 'excel' ? 'block' : 'none';
+        });
+
+        // Handle confirm import
+        document.getElementById('confirmImportBtn').addEventListener('click', function() {
+            const importType = document.getElementById('importType').value;
+            
+            if (importType === 'json') {
+                importData();
+            } else if (importType === 'excel') {
+                importExcelData();
+            }
+        });
+
+        // Download Excel template
+        function downloadExcelTemplate() {
+            // Create sample data for template
+            const templateData = [
+                {
+                    'Date': '2025-10-01',
+                    'Branch': 'Crispy Chicken-Hamdan St',
+                    'Channel': 'Delivery',
+                    'Transactions': 50,
+                    'Sales': 2000,
+                    'Average per Order': 40,
+                    'Offer Type': 'Normal Day',
+                    'Offer Status': 'No Offer',
+                    'Notes': 'Sample data'
+                },
+                {
+                    'Date': '2025-10-02',
+                    'Branch': 'Crispy Chicken Khaldia',
+                    'Channel': 'Delivery',
+                    'Transactions': 30,
+                    'Sales': 1500,
+                    'Average per Order': 50,
+                    'Offer Type': 'Chicken Day',
+                    'Offer Status': 'Active',
+                    'Notes': 'Sample data'
+                }
+            ];
+            
+            // Create workbook
+            const worksheet = XLSX.utils.json_to_sheet(templateData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sales Data');
+            
+            // Generate and download file
+            XLSX.writeFile(workbook, 'crispy_chicken_template.xlsx');
+            
+            showNotification('Excel template downloaded successfully', 'success');
+        }
+
+        // Initialize Excel drag and drop
+        function initExcelDragAndDrop() {
+            const fileDropArea = document.getElementById('fileDropArea');
+            const excelFileInput = document.getElementById('excelFileInput');
+            const browseLink = document.getElementById('browseLink');
+            
+            // Browse link click
+            browseLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                excelFileInput.click();
+            });
+            
+            // File input change
+            excelFileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    excelFile = this.files[0];
+                    fileDropArea.innerHTML = `
+                        <i class="fas fa-file-excel fa-3x text-success mb-3"></i>
+                        <p class="mb-0">${excelFile.name}</p>
+                        <p class="text-muted small">Click to change file</p>
+                    `;
+                }
+            });
+            
+            // Drag and drop events
+            fileDropArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                fileDropArea.classList.add('drag-over');
+            });
+            
+            fileDropArea.addEventListener('dragleave', function() {
+                fileDropArea.classList.remove('drag-over');
+            });
+            
+            fileDropArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                fileDropArea.classList.remove('drag-over');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || 
+                        file.name.endsWith('.xlsx') || 
+                        file.name.endsWith('.xls')) {
+                        excelFile = file;
+                        fileDropArea.innerHTML = `
+                            <i class="fas fa-file-excel fa-3x text-success mb-3"></i>
+                            <p class="mb-0">${file.name}</p>
+                            <p class="text-muted small">Click to change file</p>
+                        `;
+                    } else {
+                        showNotification('Please upload a valid Excel file (.xlsx or .xls)', 'danger');
+                    }
+                }
+            });
+            
+            // Click to change file
+            fileDropArea.addEventListener('click', function() {
+                excelFileInput.click();
+            });
+        }
+
+        // Process Excel file from drag and drop
+        function processExcelFile() {
+            if (!excelFile) {
+                showNotification('Please select an Excel file first', 'warning');
+                return;
+            }
+            
+            if (excelFile.size > CONFIG.MAX_DATA_SIZE) {
+                showNotification('File size exceeds maximum limit', 'danger');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                    
+                    // Process Excel data
+                    const processedData = processExcelData(jsonData);
+                    
+                    if (processedData.length === 0) {
+                        showNotification('No valid data found in Excel file', 'warning');
+                        return;
+                    }
+                    
+                    // Merge with existing data
+                    salesData = [...salesData, ...processedData];
+                    updateDataTable();
+                    updateDataStats();
+                    updateLastSavedTime();
+                    markDataChanged();
+                    
+                    showNotification(`Successfully imported ${processedData.length} records`, 'success');
+                    
+                    // Reset file input and UI
+                    excelFile = null;
+                    document.getElementById('excelFileInput').value = '';
+                    document.getElementById('fileDropArea').innerHTML = `
+                        <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                        <p class="mb-0">Drag and drop your Excel file here or <a href="#" id="browseLink">browse files</a></p>
+                    `;
+                    
+                    // Reinitialize drag and drop
+                    initExcelDragAndDrop();
+                    
+                } catch (error) {
+                    console.error('Error processing Excel file:', error);
+                    showNotification('Error processing Excel file: ' + error.message, 'danger');
+                }
+            };
+            
+            reader.readAsArrayBuffer(excelFile);
         }
 
         // Clear all data with confirmation
@@ -3361,6 +3889,9 @@
             
             // Add event listener for save offer button
             document.getElementById('saveOfferButton').addEventListener('click', saveOffer);
+            
+            // Initialize Excel drag and drop
+            initExcelDragAndDrop();
         });
     </script>
 </body>
