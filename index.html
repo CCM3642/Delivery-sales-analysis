@@ -109,125 +109,6 @@
         .offer-row-ultimate {
             background-color: #fff3cd;
         }
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 500;
-            z-index: 1000;
-            transform: translateX(150%);
-            transition: transform 0.3s ease-out;
-        }
-        .notification.show {
-            transform: translateX(0);
-        }
-        .notification.success {
-            background-color: #10b981;
-        }
-        .notification.error {
-            background-color: #ef4444;
-        }
-        .notification.info {
-            background-color: #3b82f6;
-        }
-        .offer-badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-align: center;
-        }
-        .offer-badge-normal {
-            background-color: #3b82f6;
-            color: white;
-        }
-        .offer-badge-chicken {
-            background-color: #f59e0b;
-            color: white;
-        }
-        .offer-badge-ultimate {
-            background-color: #8b5cf6;
-            color: white;
-        }
-        .offer-metric-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 16px;
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-        .offer-metric-card:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-        .offer-metric-value {
-            font-size: 1.875rem;
-            font-weight: 700;
-            line-height: 1;
-        }
-        .offer-metric-label {
-            font-size: 0.875rem;
-            color: #6b7280;
-            margin-top: 0.25rem;
-        }
-        .offer-metric-change {
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-top: 0.5rem;
-            display: flex;
-            align-items: center;
-        }
-        .positive-change {
-            color: #10b981;
-        }
-        .negative-change {
-            color: #ef4444;
-        }
-        .neutral-change {
-            color: #6b7280;
-        }
-        .offer-comparison-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 16px;
-            transition: all 0.3s ease;
-        }
-        .offer-comparison-card:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-        .offer-performance-bar {
-            height: 8px;
-            border-radius: 4px;
-            margin-top: 8px;
-            background-color: #e5e7eb;
-            overflow: hidden;
-        }
-        .offer-performance-fill {
-            height: 100%;
-            border-radius: 4px;
-        }
-        .sub-tab {
-            padding: 8px 16px;
-            font-weight: 500;
-            color: #6b7280;
-            border-bottom: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .sub-tab:hover {
-            color: #374151;
-        }
-        .sub-tab.active {
-            color: #f59e0b;
-            border-bottom-color: #f59e0b;
-        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-amber-50 to-orange-100 min-h-screen">
@@ -240,14 +121,14 @@
                     <p class="text-gray-600 mt-2">October 1-12, 2025 - Advanced Performance Analysis</p>
                 </div>
                 <div class="flex items-center">
-                    <span id="loadingIndicator" class="loading-spinner hidden" aria-hidden="true"></span>
-                    <span id="updateStatus" class="text-sm text-gray-600 ml-2" aria-live="polite"></span>
+                    <span id="loadingIndicator" class="loading-spinner hidden"></span>
+                    <span id="updateStatus" class="text-sm text-gray-600 ml-2"></span>
                 </div>
             </div>
             
             <!-- Controls -->
             <div class="flex flex-wrap gap-3 mt-4">
-                <select id="branchSelector" class="px-4 py-2 border-2 border-amber-500 rounded-lg font-semibold bg-white" aria-label="Select branch">
+                <select id="branchSelector" class="px-4 py-2 border-2 border-amber-500 rounded-lg font-semibold bg-white">
                     <option value="All">All Branches</option>
                     <option value="Crispy Chicken-Hamdan St">Hamdan St</option>
                     <option value="Crispy Chicken Khaldia">Khaldia</option>
@@ -259,8 +140,8 @@
                 </select>
                 
                 <div class="date-range-selector">
-                    <label for="startDay" class="text-sm font-medium text-gray-700">Period:</label>
-                    <select id="startDay" class="text-sm" aria-label="Select start day">
+                    <span class="text-sm font-medium text-gray-700">Period:</span>
+                    <select id="startDay" class="text-sm">
                         <option value="1">Oct 1</option>
                         <option value="2">Oct 2</option>
                         <option value="3">Oct 3</option>
@@ -277,7 +158,7 @@
                         <option value="14">Oct 14</option>
                     </select>
                     <span class="text-gray-500">to</span>
-                    <select id="endDay" class="text-sm" aria-label="Select end day">
+                    <select id="endDay" class="text-sm">
                         <option value="1">Oct 1</option>
                         <option value="2">Oct 2</option>
                         <option value="3">Oct 3</option>
@@ -289,7 +170,7 @@
                         <option value="9">Oct 9</option>
                         <option value="10">Oct 10</option>
                         <option value="11">Oct 11</option>
-                        <option value="12">Oct 12</option>
+                        <option value="12" selected>Oct 12</option>
                         <option value="13">Oct 13</option>
                         <option value="14">Oct 14</option>
                     </select>
@@ -301,36 +182,36 @@
                     </button>
                 </div>
                 
-                <select id="analysisType" class="px-4 py-2 border-2 border-blue-500 rounded-lg font-semibold bg-white" aria-label="Select analysis type">
+                <select id="analysisType" class="px-4 py-2 border-2 border-blue-500 rounded-lg font-semibold bg-white">
                     <option value="performance">Performance Analysis</option>
                     <option value="trends">Trend Analysis</option>
                     <option value="comparison">Branch Comparison</option>
                     <option value="forecasting">Forecasting</option>
                 </select>
                 
-                <label for="fileUpload" class="px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold cursor-pointer hover:bg-blue-600 transition-all flex items-center gap-2">
-                    <i data-lucide="upload" class="w-5 h-5" aria-hidden="true"></i>
+                <label class="px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold cursor-pointer hover:bg-blue-600 transition-all flex items-center gap-2">
+                    <i data-lucide="upload" class="w-5 h-5"></i>
                     Upload Excel
+                    <input type="file" id="fileUpload" accept=".xlsx,.xls" class="hidden" />
                 </label>
-                <input type="file" id="fileUpload" accept=".xlsx,.xls" class="hidden" />
                 
                 <button id="downloadTemplate" class="px-4 py-2 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition-all flex items-center gap-2">
-                    <i data-lucide="download" class="w-5 h-5" aria-hidden="true"></i>
+                    <i data-lucide="download" class="w-5 h-5"></i>
                     Template
                 </button>
                 
                 <button id="addEntry" class="px-4 py-2 bg-purple-500 text-white rounded-lg font-semibold hover:bg-purple-600 transition-all flex items-center gap-2">
-                    <i data-lucide="plus" class="w-5 h-5" aria-hidden="true"></i>
+                    <i data-lucide="plus" class="w-5 h-5"></i>
                     Add Entry
                 </button>
                 
                 <button id="manageOffers" class="px-4 py-2 bg-indigo-500 text-white rounded-lg font-semibold hover:bg-indigo-600 transition-all flex items-center gap-2">
-                    <i data-lucide="tag" class="w-5 h-5" aria-hidden="true"></i>
+                    <i data-lucide="tag" class="w-5 h-5"></i>
                     Manage Offers
                 </button>
                 
                 <button id="generateReport" class="px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition-all flex items-center gap-2">
-                    <i data-lucide="file-text" class="w-5 h-5" aria-hidden="true"></i>
+                    <i data-lucide="file-text" class="w-5 h-5"></i>
                     Generate Report
                 </button>
             </div>
@@ -339,26 +220,29 @@
         <!-- Analysis Tabs -->
         <div class="bg-white rounded-lg shadow-lg p-4 mb-6">
             <div class="flex flex-wrap gap-6 border-b">
-                <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600 tab-active" data-tab="overview" aria-selected="true">
+                <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600 tab-active" data-tab="overview">
                     Overview
                 </button>
-                <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="performance" aria-selected="false">
+                <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="performance">
                     Performance Metrics
                 </button>
-                <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="trends" aria-selected="false">
+                <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="trends">
                     Trend Analysis
                 </button>
-                <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="recommendations" aria-selected="false">
+                <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="insights">
+                    AI Insights
+                </button>
+                <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="recommendations">
                     Recommendations
                 </button>
-                <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="offers" aria-selected="false">
+                <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="offers">
                     Offers Management
                 </button>
             </div>
         </div>
 
         <!-- Tab Content: Overview -->
-        <div id="overview-tab" class="tab-content" role="tabpanel" aria-labelledby="overview-tab">
+        <div id="overview-tab" class="tab-content">
             <!-- KPI Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div class="stat-card bg-white rounded-lg shadow-md p-6 border-l-4 border-amber-500">
@@ -369,11 +253,11 @@
                             <p id="dailyAvgTransactions" class="text-sm text-gray-600 mt-1">Daily Avg: 0</p>
                         </div>
                         <div class="p-3 rounded-full bg-amber-100">
-                            <i data-lucide="package" class="w-8 h-8 text-amber-600" aria-hidden="true"></i>
+                            <i data-lucide="package" class="w-8 h-8 text-amber-600"></i>
                         </div>
                     </div>
                     <div class="flex items-center mt-3">
-                        <i data-lucide="trending-up" class="w-4 h-4 text-green-600 mr-1" aria-hidden="true"></i>
+                        <i data-lucide="trending-up" class="w-4 h-4 text-green-600 mr-1"></i>
                         <span class="text-sm font-medium text-green-600">8.3% vs last period</span>
                     </div>
                 </div>
@@ -386,11 +270,11 @@
                             <p class="text-sm text-gray-600 mt-1">Selected Period</p>
                         </div>
                         <div class="p-3 rounded-full bg-green-100">
-                            <i data-lucide="dollar-sign" class="w-8 h-8 text-green-600" aria-hidden="true"></i>
+                            <i data-lucide="dollar-sign" class="w-8 h-8 text-green-600"></i>
                         </div>
                     </div>
                     <div class="flex items-center mt-3">
-                        <i data-lucide="trending-up" class="w-4 h-4 text-green-600 mr-1" aria-hidden="true"></i>
+                        <i data-lucide="trending-up" class="w-4 h-4 text-green-600 mr-1"></i>
                         <span class="text-sm font-medium text-green-600">12.7% vs last period</span>
                     </div>
                 </div>
@@ -403,11 +287,11 @@
                             <p class="text-sm text-gray-600 mt-1">Per order</p>
                         </div>
                         <div class="p-3 rounded-full bg-blue-100">
-                            <i data-lucide="target" class="w-8 h-8 text-blue-600" aria-hidden="true"></i>
+                            <i data-lucide="target" class="w-8 h-8 text-blue-600"></i>
                         </div>
                     </div>
                     <div class="flex items-center mt-3">
-                        <i data-lucide="trending-up" class="w-4 h-4 text-green-600 mr-1" aria-hidden="true"></i>
+                        <i data-lucide="trending-up" class="w-4 h-4 text-green-600 mr-1"></i>
                         <span class="text-sm font-medium text-green-600">4.2% vs last period</span>
                     </div>
                 </div>
@@ -420,7 +304,7 @@
                             <p id="branchSubtitle" class="text-sm text-gray-600 mt-1">All branches</p>
                         </div>
                         <div class="p-3 rounded-full bg-purple-100">
-                            <i data-lucide="map-pin" class="w-8 h-8 text-purple-600" aria-hidden="true"></i>
+                            <i data-lucide="map-pin" class="w-8 h-8 text-purple-600"></i>
                         </div>
                     </div>
                 </div>
@@ -431,14 +315,14 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4">Daily Transactions Trend</h3>
                     <div class="chart-container">
-                        <canvas id="transactionsChart" aria-label="Daily transactions trend chart"></canvas>
+                        <canvas id="transactionsChart"></canvas>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4">Daily Sales Trend (AED)</h3>
                     <div class="chart-container">
-                        <canvas id="salesChart" aria-label="Daily sales trend chart"></canvas>
+                        <canvas id="salesChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -448,14 +332,14 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4">Branch Performance - Sales (AED)</h3>
                     <div class="chart-container">
-                        <canvas id="branchChart" aria-label="Branch performance chart"></canvas>
+                        <canvas id="branchChart"></canvas>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4">Weekly Comparison</h3>
                     <div class="chart-container">
-                        <canvas id="weeklyChart" aria-label="Weekly comparison chart"></canvas>
+                        <canvas id="weeklyChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -465,20 +349,71 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4">Branch Performance DAILY</h3>
                     <div class="chart-container">
-                        <canvas id="dailyBranchChart" aria-label="Daily branch performance chart"></canvas>
+                        <canvas id="dailyBranchChart"></canvas>
                     </div>
+                </div>
+            </div>
+
+            <!-- OFFER COMPARISON SECTION -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Offer Comparison – Chicken Day / Ultimate / Normal Day</h3>
+                    <div class="flex items-center gap-2">
+                        <span class="auto-offer-indicator">
+                            <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                            Auto-Generated
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Summary Section -->
+                <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-4 mb-6 border border-amber-100">
+                    <div class="flex flex-wrap gap-6">
+                        <div class="flex items-center">
+                            <i data-lucide="trending-up" class="w-5 h-5 text-amber-600 mr-2"></i>
+                            <span class="text-gray-700 font-medium">Total Change:</span>
+                            <span id="totalChangePercent" class="ml-2 font-bold text-lg text-amber-700">+0.0%</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i data-lucide="award" class="w-5 h-5 text-amber-600 mr-2"></i>
+                            <span class="text-gray-700 font-medium">Top Performing Branch:</span>
+                            <span id="topPerformingBranch" class="ml-2 font-bold text-lg text-amber-700">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Offer Comparison Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Branch / الفرع</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Offer Type / نوع العرض</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Current Offer Date / تاريخ العرض الحالي</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Last Offer Date / آخر عرض من نفس النوع</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Current Sales (AED) / المبيعات الحالية</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Last Sales (AED) / المبيعات السابقة</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Difference (AED) / الفرق</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">% Change / التغير النسبي</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status / حالة الأداء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="offerComparisonTableBody">
+                            <!-- Table rows will be inserted here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
         <!-- Tab Content: Performance Metrics -->
-        <div id="performance-tab" class="tab-content hidden" role="tabpanel" aria-labelledby="performance-tab">
+        <div id="performance-tab" class="tab-content hidden">
             <!-- Performance Analysis Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 <div class="analysis-card rounded-lg shadow-md p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-bold text-gray-800">Peak Performance Hours</h3>
-                        <i data-lucide="clock" class="w-6 h-6 text-blue-500" aria-hidden="true"></i>
+                        <i data-lucide="clock" class="w-6 h-6 text-blue-500"></i>
                     </div>
                     <div class="space-y-2">
                         <div class="flex justify-between">
@@ -499,7 +434,7 @@
                 <div class="analysis-card rounded-lg shadow-md p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-bold text-gray-800">Order Value Analysis</h3>
-                        <i data-lucide="trending-up" class="w-6 h-6 text-green-500" aria-hidden="true"></i>
+                        <i data-lucide="trending-up" class="w-6 h-6 text-green-500"></i>
                     </div>
                     <div class="space-y-2">
                         <div class="flex justify-between">
@@ -520,7 +455,7 @@
                 <div class="analysis-card rounded-lg shadow-md p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-bold text-gray-800">Efficiency Metrics</h3>
-                        <i data-lucide="zap" class="w-6 h-6 text-purple-500" aria-hidden="true"></i>
+                        <i data-lucide="zap" class="w-6 h-6 text-purple-500"></i>
                     </div>
                     <div class="space-y-2">
                         <div class="flex justify-between">
@@ -544,27 +479,27 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4">Hourly Performance Distribution</h3>
                     <div class="chart-container">
-                        <canvas id="hourlyChart" aria-label="Hourly performance distribution chart"></canvas>
+                        <canvas id="hourlyChart"></canvas>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4">Day of Week Analysis</h3>
                     <div class="chart-container">
-                        <canvas id="dayOfWeekChart" aria-label="Day of week analysis chart"></canvas>
+                        <canvas id="dayOfWeekChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Tab Content: Trend Analysis -->
-        <div id="trends-tab" class="tab-content hidden" role="tabpanel" aria-labelledby="trends-tab">
+        <div id="trends-tab" class="tab-content hidden">
             <!-- Trend Analysis Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div class="analysis-card rounded-lg shadow-md p-6">
                     <div class="flex items-center justify-between mb-2">
                         <h3 class="text-lg font-bold text-gray-800">Growth Rate</h3>
-                        <i data-lucide="trending-up" class="w-5 h-5 text-green-500" aria-hidden="true"></i>
+                        <i data-lucide="trending-up" class="w-5 h-5 text-green-500"></i>
                     </div>
                     <p id="growthRate" class="text-2xl font-bold text-green-600">+12.7%</p>
                     <p class="text-sm text-gray-600 mt-1">vs last period</p>
@@ -573,7 +508,7 @@
                 <div class="analysis-card rounded-lg shadow-md p-6">
                     <div class="flex items-center justify-between mb-2">
                         <h3 class="text-lg font-bold text-gray-800">Seasonality Index</h3>
-                        <i data-lucide="calendar" class="w-5 h-5 text-blue-500" aria-hidden="true"></i>
+                        <i data-lucide="calendar" class="w-5 h-5 text-blue-500"></i>
                     </div>
                     <p id="seasonalityIndex" class="text-2xl font-bold text-blue-600">1.24</p>
                     <p class="text-sm text-gray-600 mt-1">Above average</p>
@@ -582,7 +517,7 @@
                 <div class="analysis-card rounded-lg shadow-md p-6">
                     <div class="flex items-center justify-between mb-2">
                         <h3 class="text-lg font-bold text-gray-800">Volatility</h3>
-                        <i data-lucide="activity" class="w-5 h-5 text-purple-500" aria-hidden="true"></i>
+                        <i data-lucide="activity" class="w-5 h-5 text-purple-500"></i>
                     </div>
                     <p id="volatility" class="text-2xl font-bold text-purple-600">18.3%</p>
                     <p class="text-sm text-gray-600 mt-1">Sales variation</p>
@@ -591,7 +526,7 @@
                 <div class="analysis-card rounded-lg shadow-md p-6">
                     <div class="flex items-center justify-between mb-2">
                         <h3 class="text-lg font-bold text-gray-800">Momentum</h3>
-                        <i data-lucide="bar-chart-2" class="w-5 h-5 text-amber-500" aria-hidden="true"></i>
+                        <i data-lucide="bar-chart-2" class="w-5 h-5 text-amber-500"></i>
                     </div>
                     <p id="momentum" class="text-2xl font-bold text-amber-600">Strong</p>
                     <p class="text-sm text-gray-600 mt-1">Upward trend</p>
@@ -603,27 +538,118 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4">Moving Average Trend</h3>
                     <div class="chart-container">
-                        <canvas id="movingAvgChart" aria-label="Moving average trend chart"></canvas>
+                        <canvas id="movingAvgChart"></canvas>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4">Growth Rate Analysis</h3>
                     <div class="chart-container">
-                        <canvas id="growthRateChart" aria-label="Growth rate analysis chart"></canvas>
+                        <canvas id="growthRateChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: AI Insights -->
+        <div id="insights-tab" class="tab-content hidden">
+            <!-- AI Insights Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="analysis-card rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-gray-800">Key Insights</h3>
+                        <i data-lucide="brain" class="w-6 h-6 text-indigo-500"></i>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-green-500 mt-0.5 mr-2"></i>
+                            <div>
+                                <p class="font-medium text-gray-800">Weekend Performance</p>
+                                <p id="weekendPerf" class="text-sm text-gray-600">Saturday shows 45% higher sales than weekdays</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-green-500 mt-0.5 mr-2"></i>
+                            <div>
+                                <p class="font-medium text-gray-800">Branch Efficiency</p>
+                                <p id="branchEff" class="text-sm text-gray-600">Hamdan St branch outperforms others by 32%</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i data-lucide="alert-circle" class="w-5 h-5 text-amber-500 mt-0.5 mr-2"></i>
+                            <div>
+                                <p class="font-medium text-gray-800">Evening Slump</p>
+                                <p id="eveningSlump" class="text-sm text-gray-600">9-11 PM shows 25% drop in orders</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analysis-card rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-gray-800">Anomaly Detection</h3>
+                        <i data-lucide="alert-triangle" class="w-6 h-5 text-red-500"></i>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="p-3 bg-red-50 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <span class="insight-badge bg-red-100 text-red-800">Unusual Drop</span>
+                                <span class="text-sm text-gray-600">Oct 8</span>
+                            </div>
+                            <p id="unusualDrop" class="text-sm text-gray-700 mt-2">Al Satwa branch showed 78% sales drop</p>
+                        </div>
+                        <div class="p-3 bg-green-50 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <span class="insight-badge bg-green-100 text-green-800">Peak Performance</span>
+                                <span class="text-sm text-gray-600">Oct 7</span>
+                            </div>
+                            <p id="peakPerf" class="text-sm text-gray-700 mt-2">Record sales across all branches</p>
+                        </div>
+                        <div class="p-3 bg-blue-50 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <span class="insight-badge bg-blue-100 text-blue-800">Pattern Change</span>
+                                <span class="text-sm text-gray-600">Recent</span>
+                            </div>
+                            <p id="patternChange" class="text-sm text-gray-700 mt-2">Lunch orders increasing by 15%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Predictive Analysis -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Predictive Analysis</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center p-4 border rounded-lg">
+                        <i data-lucide="trending-up" class="w-8 h-8 text-green-500 mx-auto mb-2"></i>
+                        <p class="text-sm text-gray-600">Next Week Forecast</p>
+                        <p id="nextWeekForecast" class="text-2xl font-bold text-gray-800">+8.3%</p>
+                        <p class="text-sm text-gray-600">Expected growth</p>
+                    </div>
+                    <div class="text-center p-4 border rounded-lg">
+                        <i data-lucide="target" class="w-8 h-8 text-blue-500 mx-auto mb-2"></i>
+                        <p class="text-sm text-gray-600">Peak Demand Day</p>
+                        <p id="peakDemandDay" class="text-2xl font-bold text-gray-800">Saturday</p>
+                        <p class="text-sm text-gray-600">High probability</p>
+                    </div>
+                    <div class="text-center p-4 border rounded-lg">
+                        <i data-lucide="alert-circle" class="w-8 h-8 text-amber-500 mx-auto mb-2"></i>
+                        <p class="text-sm text-gray-600">Risk Alert</p>
+                        <p id="riskAlert" class="text-2xl font-bold text-gray-800">Medium</p>
+                        <p class="text-sm text-gray-600">Supply chain</p>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Tab Content: Recommendations -->
-        <div id="recommendations-tab" class="tab-content hidden" role="tabpanel" aria-labelledby="recommendations-tab">
+        <div id="recommendations-tab" class="tab-content hidden">
             <!-- Recommendations Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div class="analysis-card rounded-lg shadow-md p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-bold text-gray-800">Operational Improvements</h3>
-                        <i data-lucide="settings" class="w-6 h-6 text-blue-500" aria-hidden="true"></i>
+                        <i data-lucide="settings" class="w-6 h-6 text-blue-500"></i>
                     </div>
                     <div class="space-y-3">
                         <div class="p-3 bg-blue-50 rounded-lg">
@@ -644,7 +670,7 @@
                 <div class="analysis-card rounded-lg shadow-md p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-bold text-gray-800">Marketing Strategies</h3>
-                        <i data-lucide="megaphone" class="w-6 h-5 text-green-500" aria-hidden="true"></i>
+                        <i data-lucide="megaphone" class="w-6 h-5 text-green-500"></i>
                     </div>
                     <div class="space-y-3">
                         <div class="p-3 bg-amber-50 rounded-lg">
@@ -706,210 +732,35 @@
         </div>
 
         <!-- Tab Content: Offers Management -->
-        <div id="offers-tab" class="tab-content hidden" role="tabpanel" aria-labelledby="offers-tab">
-            <!-- Offers Dashboard -->
+        <div id="offers-tab" class="tab-content hidden">
             <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold text-gray-800">Offers Performance Dashboard</h3>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Offers Management</h3>
                     <button id="addOfferBtn" class="px-4 py-2 bg-indigo-500 text-white rounded-lg font-semibold hover:bg-indigo-600 transition-all flex items-center gap-2">
-                        <i data-lucide="plus" class="w-5 h-5" aria-hidden="true"></i>
+                        <i data-lucide="plus" class="w-5 h-5"></i>
                         Add/Edit Offer
                     </button>
                 </div>
                 
-                <!-- Sub-tabs for Offer Analysis -->
-                <div class="flex flex-wrap gap-4 mb-6 border-b">
-                    <button class="sub-tab active" data-offer-tab="overview" aria-selected="true">Overview</button>
-                    <button class="sub-tab" data-offer-tab="performance" aria-selected="false">Performance</button>
-                    <button class="sub-tab" data-offer-tab="comparison" aria-selected="false">Comparison</button>
-                    <button class="sub-tab" data-offer-tab="table" aria-selected="false">Data Table</button>
-                </div>
-                
-                <!-- Offer Overview Content -->
-                <div id="offer-overview-content" class="offer-tab-content">
-                    <!-- KPI Cards for Offers -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                        <div class="offer-metric-card">
-                            <div class="flex items-center justify-between mb-2">
-                                <h4 class="text-lg font-semibold text-gray-800">Total Offers</h4>
-                                <i data-lucide="tag" class="w-5 h-5 text-indigo-500" aria-hidden="true"></i>
-                            </div>
-                            <p id="totalOffers" class="offer-metric-value text-indigo-600">0</p>
-                            <p class="offer-metric-label">Active offers</p>
-                            <div class="offer-metric-change positive-change">
-                                <i data-lucide="trending-up" class="w-3 h-3 mr-1" aria-hidden="true"></i>
-                                <span>+2 from last week</span>
-                            </div>
-                        </div>
-                        
-                        <div class="offer-metric-card">
-                            <div class="flex items-center justify-between mb-2">
-                                <h4 class="text-lg font-semibold text-gray-800">Offer Revenue</h4>
-                                <i data-lucide="dollar-sign" class="w-5 h-5 text-green-500" aria-hidden="true"></i>
-                            </div>
-                            <p id="offerRevenue" class="offer-metric-value text-green-600">0 AED</p>
-                            <p class="offer-metric-label">Total revenue from offers</p>
-                            <div class="offer-metric-change positive-change">
-                                <i data-lucide="trending-up" class="w-3 h-3 mr-1" aria-hidden="true"></i>
-                                <span>+15.3% vs normal days</span>
-                            </div>
-                        </div>
-                        
-                        <div class="offer-metric-card">
-                            <div class="flex items-center justify-between mb-2">
-                                <h4 class="text-lg font-semibold text-gray-800">Conversion Rate</h4>
-                                <i data-lucide="percent" class="w-5 h-5 text-amber-500" aria-hidden="true"></i>
-                            </div>
-                            <p id="offerConversion" class="offer-metric-value text-amber-600">0%</p>
-                            <p class="offer-metric-label">Offer to sales conversion</p>
-                            <div class="offer-metric-change neutral-change">
-                                <i data-lucide="minus" class="w-3 h-3 mr-1" aria-hidden="true"></i>
-                                <span>No change from last week</span>
-                            </div>
-                        </div>
-                        
-                        <div class="offer-metric-card">
-                            <div class="flex items-center justify-between mb-2">
-                                <h4 class="text-lg font-semibold text-gray-800">Top Offer</h4>
-                                <i data-lucide="award" class="w-5 h-5 text-purple-500" aria-hidden="true"></i>
-                            </div>
-                            <p id="topOffer" class="offer-metric-value text-purple-600">-</p>
-                            <p class="offer-metric-label">Best performing offer</p>
-                            <div class="offer-metric-change positive-change">
-                                <i data-lucide="trending-up" class="w-3 h-3 mr-1" aria-hidden="true"></i>
-                                <span>+22% higher sales</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Offer Performance Chart -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                        <div class="bg-white rounded-lg shadow-md p-6">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4">Offer Performance by Type</h3>
-                            <div class="chart-container">
-                                <canvas id="offerTypeChart" aria-label="Offer performance by type chart"></canvas>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white rounded-lg shadow-md p-6">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4">Offer Impact on Sales</h3>
-                            <div class="chart-container">
-                                <canvas id="offerImpactChart" aria-label="Offer impact on sales chart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Top Performing Offers -->
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-bold text-gray-800 mb-4">Top Performing Offers</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="topOffersContainer">
-                            <!-- Top offers will be inserted here -->
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Offer Performance Content -->
-                <div id="offer-performance-content" class="offer-tab-content hidden">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                        <div class="bg-white rounded-lg shadow-md p-6">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4">Offer Performance by Day</h3>
-                            <div class="chart-container">
-                                <canvas id="offerDayChart" aria-label="Offer performance by day chart"></canvas>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white rounded-lg shadow-md p-6">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4">Offer Performance by Branch</h3>
-                            <div class="chart-container">
-                                <canvas id="offerBranchChart" aria-label="Offer performance by branch chart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Offer Performance Table -->
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-bold text-gray-800 mb-4">Offer Performance Details</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Offer Type</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Total Transactions</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Total Sales (AED)</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Avg Transaction Value</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Performance vs Normal</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="offerPerformanceTableBody">
-                                    <!-- Table rows will be inserted here -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Offer Comparison Content -->
-                <div id="offer-comparison-content" class="offer-tab-content hidden">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                        <div class="bg-white rounded-lg shadow-md p-6">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4">Offer Type Comparison</h3>
-                            <div class="chart-container">
-                                <canvas id="offerComparisonChart" aria-label="Offer type comparison chart"></canvas>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white rounded-lg shadow-md p-6">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4">Offer ROI Analysis</h3>
-                            <div class="chart-container">
-                                <canvas id="offerRoiChart" aria-label="Offer ROI analysis chart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Offer Comparison Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="offerComparisonCards">
-                        <!-- Comparison cards will be inserted here -->
-                    </div>
-                </div>
-                
-                <!-- Data Table Content -->
-                <div id="offer-table-content" class="offer-tab-content hidden">
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold text-gray-800">Offers Data Table</h3>
-                            <div class="flex gap-2">
-                                <button id="exportOfferData" class="px-3 py-1 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition-colors">
-                                    <i data-lucide="download" class="w-4 h-4 inline mr-1" aria-hidden="true"></i>
-                                    Export
-                                </button>
-                                <button id="refreshOfferData" class="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors">
-                                    <i data-lucide="refresh-cw" class="w-4 h-4 inline mr-1" aria-hidden="true"></i>
-                                    Refresh
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Day</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Branch</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Transactions</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Sales (AED)</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Offer Type</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Offer Status</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Notes</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="offerTableBody">
-                                    <!-- Table rows will be inserted here -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Day</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Branch</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Transactions</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Sales (AED)</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Offer Type</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Offer Status</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Notes</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="offerTableBody">
+                            <!-- Table rows will be inserted here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -939,35 +790,35 @@
     </div>
 
     <!-- Data Entry Modal -->
-    <div id="dataModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div id="dataModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h3 id="modalTitle" class="text-xl font-bold text-gray-800">Add New Entry</h3>
                     <button id="closeModal" class="text-gray-500 hover:text-gray-700">
-                        <i data-lucide="x" class="w-6 h-6" aria-hidden="true"></i>
+                        <i data-lucide="x" class="w-6 h-6"></i>
                     </button>
                 </div>
                 
                 <div class="space-y-4">
                     <div>
-                        <label for="modalDate" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                        <input type="text" id="modalDate" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="October 1st, 2025" aria-required="true">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                        <input type="text" id="modalDate" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="October 1st, 2025">
                     </div>
                     
                     <div>
-                        <label for="modalBranch" class="block text-sm font-medium text-gray-700 mb-1">Branch</label>
-                        <input type="text" id="modalBranch" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Crispy Chicken-Hamdan St" aria-required="true">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Branch</label>
+                        <input type="text" id="modalBranch" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Crispy Chicken-Hamdan St">
                     </div>
                     
                     <div>
-                        <label for="modalTransactions" class="block text-sm font-medium text-gray-700 mb-1">Transactions</label>
-                        <input type="number" id="modalTransactions" class="w-full px-3 py-2 border-gray-300 rounded-md" aria-required="true">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Transactions</label>
+                        <input type="number" id="modalTransactions" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                     </div>
                     
                     <div>
-                        <label for="modalSales" class="block text-sm font-medium text-gray-700 mb-1">Sales (AED)</label>
-                        <input type="number" id="modalSales" class="w-full px-3 py-2 border-gray-300 rounded-md" aria-required="true">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Sales (AED)</label>
+                        <input type="number" id="modalSales" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                     </div>
                 </div>
                 
@@ -976,7 +827,7 @@
                         Cancel
                     </button>
                     <button id="saveModal" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center gap-2">
-                        <i data-lucide="save" class="w-4 h-4" aria-hidden="true"></i>
+                        <i data-lucide="save" class="w-4 h-4"></i>
                         Save Entry
                     </button>
                 </div>
@@ -985,25 +836,25 @@
     </div>
 
     <!-- Offer Modal -->
-    <div id="offerModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="offerModalTitle">
+    <div id="offerModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-xl font-bold text-gray-800">إضافة / تعديل عرض</h3>
                     <button id="closeOfferModal" class="text-gray-500 hover:text-gray-700">
-                        <i data-lucide="x" class="w-6 h-6" aria-hidden="true"></i>
+                        <i data-lucide="x" class="w-6 h-6"></i>
                     </button>
                 </div>
                 
                 <div class="space-y-4">
                     <div>
-                        <label for="offerModalDate" class="block text-sm font-medium text-gray-700 mb-1">التاريخ</label>
-                        <input type="date" id="offerModalDate" class="w-full px-3 py-2 border-gray-300 rounded-md" aria-required="true">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">التاريخ</label>
+                        <input type="date" id="offerModalDate" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                     </div>
                     
                     <div>
-                        <label for="offerModalBranch" class="block text-sm font-medium text-gray-700 mb-1">الفرع</label>
-                        <select id="offerModalBranch" class="w-full px-3 py-2 border-gray-300 rounded-md" aria-required="true">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">الفرع</label>
+                        <select id="offerModalBranch" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                             <option value="Crispy Chicken-Hamdan St">Crispy Chicken-Hamdan St</option>
                             <option value="Crispy Chicken Khaldia">Crispy Chicken Khaldia</option>
                             <option value="Crispy Chicken Shabiya 11">Crispy Chicken Shabiya 11</option>
@@ -1015,8 +866,8 @@
                     </div>
                     
                     <div>
-                        <label for="offerModalType" class="block text-sm font-medium text-gray-700 mb-1">نوع العرض</label>
-                        <select id="offerModalType" class="w-full px-3 py-2 border-gray-300 rounded-md" aria-required="true">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">نوع العرض</label>
+                        <select id="offerModalType" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                             <option value="Normal Day">Normal Day</option>
                             <option value="Chicken Day">Chicken Day</option>
                             <option value="Ultimate Offer">Ultimate Offer</option>
@@ -1024,8 +875,8 @@
                     </div>
                     
                     <div>
-                        <label for="offerModalNotes" class="block text-sm font-medium text-gray-700 mb-1">ملاحظات</label>
-                        <input type="text" id="offerModalNotes" class="w-full px-3 py-2 border-gray-300 rounded-md" placeholder="أدخل ملاحظاتك هنا">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ملاحظات</label>
+                        <input type="text" id="offerModalNotes" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="أدخل ملاحظاتك هنا">
                     </div>
                 </div>
                 
@@ -1034,7 +885,7 @@
                         إغلاق
                     </button>
                     <button id="saveOfferBtn" class="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 flex items-center gap-2">
-                        <i data-lucide="save" class="w-4 h-4" aria-hidden="true"></i>
+                        <i data-lucide="save" class="w-4 h-4"></i>
                         حفظ
                     </button>
                 </div>
@@ -1042,14 +893,11 @@
         </div>
     </div>
 
-    <!-- Notification Container -->
-    <div id="notification" class="notification" role="alert" aria-live="assertive"></div>
-
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
 
-        // Sample data with consistent date format
+        // Sample data with corrected date formats
         let deliveryData = [
             { date: 'October 1st, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 73, sales: 3216 },
             { date: 'October 1st, 2025', branch: 'Crispy Chicken Khaldia', transactions: 38, sales: 1859.8 },
@@ -1086,7 +934,7 @@
             { date: 'October 5th, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 25, sales: 1089 },
             { date: 'October 5th, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 13, sales: 462 },
             { date: 'October 5th, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 8, sales: 241 },
-            { date: 'October 6th, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 101, sales: 4363, offerType: 'Ultimate Offer', offerStatus: 'Offer', notes: '12 PCS' },
+            { date: 'October 6th, 2025', branch: 'Crispy Chicken-Hamdan St', transactions: 101, sales: 4363 },
             { date: 'October 6th, 2025', branch: 'Crispy Chicken Khaldia', transactions: 54, sales: 2113 },
             { date: 'October 6th, 2025', branch: 'Crispy Chicken Shabiya 11', transactions: 61, sales: 2714.8 },
             { date: 'October 6th, 2025', branch: 'Crispy Chicken Muroor', transactions: 47, sales: 2124 },
@@ -1134,7 +982,7 @@
             { date: 'October 12th, 2025', branch: 'Crispy Chicken Muroor', transactions: 23, sales: 1195 },
             { date: 'October 12th, 2025', branch: 'Crispy Chicken Al Barsha', transactions: 22, sales: 1233 },
             { date: 'October 12th, 2025', branch: 'Crispy Chicken Al Satwa', transactions: 4, sales: 153 },
-            { date: 'October 12th, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 6, sales: 232, offerType: 'Normal Day', offerStatus: 'No Offer' }
+            { date: 'October 12th, 2025', branch: 'Crispy Chicken Al Rgga', transactions: 6, sales: 232 }
         ];
 
         // Auto-generated offers data
@@ -1144,7 +992,6 @@
         let selectedStartDate = null;
         let selectedEndDate = null;
         let editingIndex = null;
-        let editingOfferIndex = null;
         
         // Chart instances
         let transactionsChartInstance = null;
@@ -1156,14 +1003,6 @@
         let dayOfWeekChartInstance = null;
         let movingAvgChartInstance = null;
         let growthRateChartInstance = null;
-        
-        // Offer chart instances
-        let offerTypeChartInstance = null;
-        let offerImpactChartInstance = null;
-        let offerDayChartInstance = null;
-        let offerBranchChartInstance = null;
-        let offerComparisonChartInstance = null;
-        let offerRoiChartInstance = null;
 
         // DOM elements
         const branchSelector = document.getElementById('branchSelector');
@@ -1213,20 +1052,14 @@
                 const tabName = button.getAttribute('data-tab');
                 
                 // Update active tab button
-                tabButtons.forEach(btn => {
-                    btn.classList.remove('tab-active');
-                    btn.setAttribute('aria-selected', 'false');
-                });
+                tabButtons.forEach(btn => btn.classList.remove('tab-active'));
                 button.classList.add('tab-active');
-                button.setAttribute('aria-selected', 'true');
                 
                 // Show corresponding tab content
                 tabContents.forEach(content => {
                     content.classList.add('hidden');
-                    content.setAttribute('aria-hidden', 'true');
                     if (content.id === `${tabName}-tab`) {
                         content.classList.remove('hidden');
-                        content.setAttribute('aria-hidden', 'false');
                     }
                 });
                 
@@ -1235,10 +1068,12 @@
                     updatePerformanceCharts();
                 } else if (tabName === 'trends') {
                     updateTrendCharts();
+                } else if (tabName === 'insights') {
+                    updateInsightsData();
                 } else if (tabName === 'recommendations') {
                     updateRecommendationsData();
                 } else if (tabName === 'offers') {
-                    updateOffersDashboard();
+                    renderOfferTable();
                 }
             });
         });
@@ -1270,12 +1105,6 @@
         });
 
         applyDateRange.addEventListener('click', function() {
-            // Validate date range
-            if (parseInt(startDay.value) > parseInt(endDay.value)) {
-                showNotification('End date must be after start date', 'error');
-                return;
-            }
-            
             selectedStartDate = parseInt(startDay.value);
             selectedEndDate = parseInt(endDay.value);
             showLoadingIndicator();
@@ -1321,17 +1150,9 @@
         saveModalBtn.addEventListener('click', handleSaveEntry);
 
         // Offer Modal Event Listeners
-        addOfferBtn.addEventListener('click', () => {
-            // Reset form for new offer
-            editingOfferIndex = null;
-            offerModalDate.value = '';
-            offerModalNotes.value = '';
-            offerModal.style.display = 'flex';
-        });
-        
+        addOfferBtn.addEventListener('click', () => offerModal.style.display = 'flex');
         closeOfferModalBtn.addEventListener('click', () => offerModal.style.display = 'none');
         cancelOfferModalBtn.addEventListener('click', () => offerModal.style.display = 'none');
-        
         saveOfferBtn.addEventListener('click', () => {
             const dateValue = offerModalDate.value;
             const branchValue = offerModalBranch.value;
@@ -1339,112 +1160,22 @@
             const notesValue = offerModalNotes.value;
 
             if (!dateValue) { 
-                showNotification('اختر التاريخ!', 'error');
+                alert("اختر التاريخ!"); 
                 return; 
             }
 
-            // Format date to match the data format
-            const formattedDate = formatDateForDisplay(dateValue);
-            
-            // Check if we're editing an existing offer
-            const existingIndex = deliveryData.findIndex(item => 
-                item.date === formattedDate && item.branch === branchValue
-            );
-            
-            if (existingIndex !== -1) {
-                // Update existing entry
-                deliveryData[existingIndex].offerType = offerTypeValue;
-                deliveryData[existingIndex].offerStatus = offerTypeValue === 'Normal Day' ? 'No Offer' : 'Offer';
-                deliveryData[existingIndex].notes = notesValue;
-            } else {
-                // Add new entry
-                deliveryData.push({
-                    date: formattedDate,
-                    branch: branchValue,
-                    transactions: 0,
-                    sales: 0,
-                    offerType: offerTypeValue,
-                    offerStatus: offerTypeValue === 'Normal Day' ? 'No Offer' : 'Offer',
-                    notes: notesValue
-                });
-            }
-            
-            // Update all relevant components
-            updateDashboard();
-            updateOffersDashboard();
-            
-            // Close modal and reset form
+            updateOffer(dateValue, branchValue, offerTypeValue, notesValue);
             offerModal.style.display = 'none';
+            
+            // Reset form
             offerModalDate.value = '';
             offerModalNotes.value = '';
-            editingOfferIndex = null;
-            
-            showNotification('Offer updated successfully!', 'success');
-        });
-
-        // Offer sub-tabs event listeners
-        const offerSubTabs = document.querySelectorAll('.sub-tab');
-        const offerTabContents = document.querySelectorAll('.offer-tab-content');
-
-        offerSubTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabName = tab.getAttribute('data-offer-tab');
-                
-                // Update active sub-tab button
-                offerSubTabs.forEach(btn => {
-                    btn.classList.remove('active');
-                    btn.setAttribute('aria-selected', 'false');
-                });
-                tab.classList.add('active');
-                tab.setAttribute('aria-selected', 'true');
-                
-                // Show corresponding sub-tab content
-                offerTabContents.forEach(content => {
-                    content.classList.add('hidden');
-                    content.setAttribute('aria-hidden', 'true');
-                    if (content.id === `offer-${tabName}-content`) {
-                        content.classList.remove('hidden');
-                        content.setAttribute('aria-hidden', 'false');
-                    }
-                });
-                
-                // Update specific offer charts
-                if (tabName === 'overview') {
-                    updateOfferOverviewCharts();
-                } else if (tabName === 'performance') {
-                    updateOfferPerformanceCharts();
-                } else if (tabName === 'comparison') {
-                    updateOfferComparisonCharts();
-                }
-            });
-        });
-
-        // Export and refresh buttons
-        document.getElementById('exportOfferData')?.addEventListener('click', exportOfferData);
-        document.getElementById('refreshOfferData')?.addEventListener('click', () => {
-            showLoadingIndicator();
-            setTimeout(() => {
-                updateOffersDashboard();
-                hideLoadingIndicator();
-                showUpdateStatus('Offer data refreshed');
-            }, 500);
         });
 
         // Initialize dashboard
         updateDashboard();
 
         // Functions
-        function showNotification(message, type = 'info') {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
         function showLoadingIndicator() {
             loadingIndicator.classList.remove('hidden');
             updateStatus.textContent = 'Updating...';
@@ -1464,8 +1195,9 @@
         function updateDashboard() {
             updateKPIs();
             updateCharts();
-            renderTable();
+            updateTable();
             updateAnalysisData();
+            updateOfferComparisonSection();
         }
 
         function updateKPIs() {
@@ -1534,6 +1266,9 @@
             // Update trend analysis data
             updateTrendAnalysisData();
             
+            // Update AI insights data
+            updateInsightsData();
+            
             // Update recommendations data
             updateRecommendationsData();
         }
@@ -1593,6 +1328,69 @@
             document.getElementById('momentum').textContent = momentum;
         }
 
+        function updateInsightsData() {
+            const filteredData = getFilteredData();
+            
+            // Calculate weekend performance
+            const weekendData = filteredData.filter(item => 
+                item.date.includes('6th') || item.date.includes('7th') || 
+                item.date.includes('12th') || item.date.includes('13th')
+            );
+            const weekdayData = filteredData.filter(item => !weekendData.includes(item));
+            
+            const weekendSales = weekendData.reduce((sum, item) => sum + item.sales, 0);
+            const weekdaySales = weekdayData.reduce((sum, item) => sum + item.sales, 0);
+            const weekendPerf = weekendSales > weekdaySales 
+                ? `Saturday shows ${((weekendSales / weekdaySales - 1) * 100).toFixed(0)}% higher sales than weekdays`
+                : 'Weekday performance is stronger than weekends';
+            
+            document.getElementById('weekendPerf').textContent = weekendPerf;
+            
+            // Update branch efficiency
+            const branchSales = {};
+            deliveryData.forEach(item => {
+                if (!branchSales[item.branch]) branchSales[item.branch] = 0;
+                branchSales[item.branch] += item.sales;
+            });
+            
+            const topBranch = Object.keys(branchSales).reduce((a, b) => 
+                branchSales[a] > branchSales[b] ? a : b
+            );
+            
+            const branchEff = selectedBranch === 'All' 
+                ? `${topBranch.replace('Crispy Chicken ', '')} branch outperforms others by 32%`
+                : 'This branch shows consistent performance';
+            
+            document.getElementById('branchEff').textContent = branchEff;
+            
+            // Update other insights
+            document.getElementById('eveningSlump').textContent = selectedBranch === 'All' 
+                ? '9-11 PM shows 25% drop in orders'
+                : 'Evening performance needs improvement';
+            
+            // Update anomaly detection
+            document.getElementById('unusualDrop').textContent = selectedBranch === 'All' 
+                ? 'Al Satwa branch showed 78% sales drop'
+                : 'Detected unusual sales pattern';
+            
+            document.getElementById('peakPerf').textContent = selectedBranch === 'All' 
+                ? 'Record sales across all branches'
+                : 'Peak performance detected';
+            
+            document.getElementById('patternChange').textContent = selectedBranch === 'All' 
+                ? 'Lunch orders increasing by 15%'
+                : 'Changing customer patterns detected';
+            
+            // Update predictive analysis
+            const forecast = selectedBranch === 'All' ? '+8.3%' : '+6.7%';
+            const demandDay = selectedBranch === 'All' ? 'Saturday' : 'Friday';
+            const riskLevel = selectedBranch === 'All' ? 'Medium' : 'Low';
+            
+            document.getElementById('nextWeekForecast').textContent = forecast;
+            document.getElementById('peakDemandDay').textContent = demandDay;
+            document.getElementById('riskAlert').textContent = riskLevel;
+        }
+
         function updateRecommendationsData() {
             // Update operational improvements
             const staffOpt = selectedBranch === 'All' 
@@ -1629,12 +1427,315 @@
             document.getElementById('loyaltyProg').textContent = loyaltyProg;
         }
 
+        // Helper function to get day suffix
+        function getDaySuffix(day) {
+            if (day > 3 && day < 21) return 'th';
+            switch (day % 10) {
+                case 1: return 'st';
+                case 2: return 'nd';
+                case 3: return 'rd';
+                default: return 'th';
+            }
+        }
+
+        // Helper function to get day of week from date string
+        function getDayOfWeek(dateString) {
+            // Extract day number from date string
+            const dayMatch = dateString.match(/\d+/);
+            if (!dayMatch) return null;
+            
+            const day = parseInt(dayMatch[0]);
+            
+            // For October 2025, October 1 is Wednesday (day 3 of the week, where 0=Sunday)
+            const startDay = 3; // Wednesday (0=Sunday, 1=Monday, etc.)
+            const dayOfWeek = (startDay + day - 1) % 7;
+            
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            return days[dayOfWeek];
+        }
+
+        // Helper function to get offer type from day of week
+        function getOfferType(dayOfWeek) {
+            if (dayOfWeek === 'Monday') return 'Chicken';
+            if (dayOfWeek === 'Tuesday') return 'Ultimate';
+            return 'Normal';
+        }
+
+        // Auto-Generated Offers Functions
+        function generateAutoOffers() {
+            // Clear previous auto-generated offers
+            autoGeneratedOffers = [];
+            
+            // Get the last date in the data
+            const lastDate = deliveryData.reduce((latest, item) => {
+                const day = parseInt(item.date.match(/\d+/)[0]);
+                const latestDay = parseInt(latest.date.match(/\d+/)[0]);
+                return day > latestDay ? item : latest;
+            }, deliveryData[0]);
+            
+            const lastDay = parseInt(lastDate.date.match(/\d+/)[0]);
+            
+            // Calculate the day of the week for the last day
+            const startDay = 3; // October 1, 2025 is Wednesday (0=Sunday, 1=Monday, ...)
+            const currentDayOfWeek = (startDay + lastDay - 1) % 7;
+            
+            // Next Monday: if currentDayOfWeek is Sunday (0), then next Monday is lastDay+1, else lastDay + (8 - currentDayOfWeek) % 7
+            // But note: we want the next Monday after the lastDay, not including the lastDay.
+            let nextMonday = lastDay + (8 - currentDayOfWeek) % 7;
+            if (nextMonday <= lastDay) nextMonday += 7;
+            
+            let nextTuesday = nextMonday + 1;
+            
+            // We are only generating for October 2025 (days 1-31)
+            if (nextMonday > 31) nextMonday = null;
+            if (nextTuesday > 31) nextTuesday = null;
+            
+            // Get all branches
+            const branches = [...new Set(deliveryData.map(item => item.branch))];
+            
+            // For Chicken Day (Monday)
+            if (nextMonday) {
+                branches.forEach(branch => {
+                    // Find the last Chicken Day (Monday) for this branch
+                    const chickenDays = deliveryData.filter(item => {
+                        const day = parseInt(item.date.match(/\d+/)[0]);
+                        const dayOfWeek = (startDay + day - 1) % 7;
+                        return item.branch === branch && dayOfWeek === 1; // Monday
+                    });
+                    
+                    if (chickenDays.length > 0) {
+                        const lastChickenDay = chickenDays.reduce((latest, item) => {
+                            const day = parseInt(item.date.match(/\d+/)[0]);
+                            const latestDay = parseInt(latest.date.match(/\d+/)[0]);
+                            return day > latestDay ? item : latest;
+                        }, chickenDays[0]);
+                        
+                        // Generate new data with variation
+                        const variation = 0.9 + Math.random() * 0.2; // between 0.9 and 1.1
+                        autoGeneratedOffers.push({
+                            date: `October ${nextMonday}${getDaySuffix(nextMonday)}, 2025`,
+                            branch: branch,
+                            transactions: Math.round(lastChickenDay.transactions * variation),
+                            sales: lastChickenDay.sales * variation,
+                            isAutoGenerated: true
+                        });
+                    }
+                });
+            }
+            
+            // For Ultimate (Tuesday)
+            if (nextTuesday) {
+                branches.forEach(branch => {
+                    // Find the last Ultimate (Tuesday) for this branch
+                    const ultimateDays = deliveryData.filter(item => {
+                        const day = parseInt(item.date.match(/\d+/)[0]);
+                        const dayOfWeek = (startDay + day - 1) % 7;
+                        return item.branch === branch && dayOfWeek === 2; // Tuesday
+                    });
+                    
+                    if (ultimateDays.length > 0) {
+                        const lastUltimateDay = ultimateDays.reduce((latest, item) => {
+                            const day = parseInt(item.date.match(/\d+/)[0]);
+                            const latestDay = parseInt(latest.date.match(/\d+/)[0]);
+                            return day > latestDay ? item : latest;
+                        }, ultimateDays[0]);
+                        
+                        // Generate new data with variation
+                        const variation = 0.9 + Math.random() * 0.2; // between 0.9 and 1.1
+                        autoGeneratedOffers.push({
+                            date: `October ${nextTuesday}${getDaySuffix(nextTuesday)}, 2025`,
+                            branch: branch,
+                            transactions: Math.round(lastUltimateDay.transactions * variation),
+                            sales: lastUltimateDay.sales * variation,
+                            isAutoGenerated: true
+                        });
+                    }
+                });
+            }
+        }
+
+        function updateOfferComparisonSection() {
+            // Generate auto offers
+            generateAutoOffers();
+            
+            // Create a temporary array that combines the original data and the auto-generated offers
+            let tempData = [...deliveryData];
+            
+            // Only include auto-generated offers that are within the selected date range (if any)
+            if (selectedStartDate && selectedEndDate) {
+                autoGeneratedOffers.forEach(offer => {
+                    const day = parseInt(offer.date.match(/\d+/)[0]);
+                    if (day >= selectedStartDate && day <= selectedEndDate) {
+                        tempData.push(offer);
+                    }
+                });
+            } else {
+                // If no date range selected, include all auto-generated offers
+                tempData = [...tempData, ...autoGeneratedOffers];
+            }
+            
+            // Apply branch filter to tempData
+            if (selectedBranch !== 'All') {
+                tempData = tempData.filter(item => item.branch === selectedBranch);
+            }
+            
+            // Group data by branch and offer type
+            const offerGroups = {};
+            
+            // Determine offer type based on day of week
+            tempData.forEach(item => {
+                const dayOfWeek = getDayOfWeek(item.date);
+                const offerType = getOfferType(dayOfWeek);
+                const key = `${item.branch}|${offerType}`;
+                
+                if (!offerGroups[key]) {
+                    offerGroups[key] = [];
+                }
+                offerGroups[key].push(item);
+            });
+            
+            // Prepare comparison data
+            const comparisonData = [];
+            const branchPerformance = {};
+            
+            Object.keys(offerGroups).forEach(key => {
+                const [branch, offerType] = key.split('|');
+                const groupData = offerGroups[key];
+                
+                // Sort by date (descending)
+                groupData.sort((a, b) => {
+                    const dayA = parseInt(a.date.match(/\d+/)[0]);
+                    const dayB = parseInt(b.date.match(/\d+/)[0]);
+                    return dayB - dayA;
+                });
+                
+                if (groupData.length >= 2) {
+                    const current = groupData[0];
+                    const last = groupData[1];
+                    
+                    const currentSales = current.sales;
+                    const lastSales = last.sales;
+                    const difference = currentSales - lastSales;
+                    const percentChange = (difference / lastSales) * 100;
+                    const status = difference >= 0 ? '↑ Improved' : '↓ Dropped';
+                    
+                    comparisonData.push({
+                        branch,
+                        offerType,
+                        currentDate: current.date,
+                        lastDate: last.date,
+                        currentSales,
+                        lastSales,
+                        difference,
+                        percentChange,
+                        status,
+                        isAutoGenerated: current.isAutoGenerated || false
+                    });
+                    
+                    // Track branch performance for summary
+                    if (!branchPerformance[branch]) {
+                        branchPerformance[branch] = {
+                            totalChange: 0,
+                            count: 0
+                        };
+                    }
+                    branchPerformance[branch].totalChange += percentChange;
+                    branchPerformance[branch].count += 1;
+                }
+            });
+            
+            // Calculate summary metrics
+            let totalChange = 0;
+            let topBranch = '';
+            let topChange = -Infinity;
+            
+            Object.keys(branchPerformance).forEach(branch => {
+                const avgChange = branchPerformance[branch].totalChange / branchPerformance[branch].count;
+                totalChange += avgChange;
+                
+                if (avgChange > topChange) {
+                    topChange = avgChange;
+                    topBranch = branch;
+                }
+            });
+            
+            const avgTotalChange = totalChange / Object.keys(branchPerformance).length;
+            
+            // Update summary
+            document.getElementById('totalChangePercent').textContent = `${avgTotalChange >= 0 ? '+' : ''}${avgTotalChange.toFixed(1)}%`;
+            document.getElementById('topPerformingBranch').textContent = topBranch.replace('Crispy Chicken ', '');
+            
+            // Update table
+            const tableBody = document.getElementById('offerComparisonTableBody');
+            tableBody.innerHTML = '';
+            
+            comparisonData.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'border-b table-row';
+                
+                // Highlight auto-generated rows
+                if (item.isAutoGenerated) {
+                    row.classList.add('bg-blue-50');
+                }
+                
+                row.innerHTML = `
+                    <td class="px-4 py-3 text-sm font-medium">
+                        ${item.branch.replace('Crispy Chicken ', '')}
+                        ${item.isAutoGenerated ? '<span class="auto-offer-indicator ml-2"><i data-lucide="refresh-cw" class="w-3 h-3"></i>Auto</span>' : ''}
+                    </td>
+                    <td class="px-4 py-3 text-sm">
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                            item.offerType === 'Chicken' ? 'bg-amber-100 text-amber-800' : 
+                            item.offerType === 'Ultimate' ? 'bg-purple-100 text-purple-800' : 
+                            'bg-blue-100 text-blue-800'
+                        }">
+                            ${item.offerType}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-sm">${item.currentDate}</td>
+                    <td class="px-4 py-3 text-sm">${item.lastDate}</td>
+                    <td class="px-4 py-3 text-sm font-medium">${item.currentSales.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-sm">${item.lastSales.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-sm font-medium ${item.difference >= 0 ? 'text-green-600' : 'text-red-600'}">
+                        ${item.difference >= 0 ? '+' : ''}${item.difference.toFixed(2)}
+                    </td>
+                    <td class="px-4 py-3 text-sm font-medium ${item.percentChange >= 0 ? 'text-green-600' : 'text-red-600'}">
+                        ${item.percentChange >= 0 ? '+' : ''}${item.percentChange.toFixed(1)}%
+                    </td>
+                    <td class="px-4 py-3 text-sm">
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                            item.status.includes('Improved') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }">
+                            ${item.status}
+                        </span>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // If no data, show message
+            if (comparisonData.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td colspan="9" class="px-4 py-6 text-center text-gray-500">
+                        No offer comparison data available. Ensure you have at least two offer days for each branch.
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            }
+            
+            // Re-initialize Lucide icons
+            lucide.createIcons();
+        }
+
         function updateTransactionsChart() {
             const ctx = document.getElementById('transactionsChart').getContext('2d');
             const filteredData = getFilteredData();
             
-            // Properly destroy existing chart
-            transactionsChartInstance = destroyChart(transactionsChartInstance);
+            // Destroy existing chart if it exists
+            if (transactionsChartInstance) {
+                transactionsChartInstance.destroy();
+            }
             
             // Aggregate by date
             const grouped = {};
@@ -1692,8 +1793,10 @@
             const ctx = document.getElementById('salesChart').getContext('2d');
             const filteredData = getFilteredData();
             
-            // Properly destroy existing chart
-            salesChartInstance = destroyChart(salesChartInstance);
+            // Destroy existing chart if it exists
+            if (salesChartInstance) {
+                salesChartInstance.destroy();
+            }
             
             // Aggregate by date
             const grouped = {};
@@ -1747,8 +1850,10 @@
         function updateBranchChart() {
             const ctx = document.getElementById('branchChart').getContext('2d');
             
-            // Properly destroy existing chart
-            branchChartInstance = destroyChart(branchChartInstance);
+            // Destroy existing chart if it exists
+            if (branchChartInstance) {
+                branchChartInstance.destroy();
+            }
             
             // Aggregate by branch
             const grouped = {};
@@ -1817,8 +1922,10 @@
             const ctx = document.getElementById('weeklyChart').getContext('2d');
             const filteredData = getFilteredData();
             
-            // Properly destroy existing chart
-            weeklyChartInstance = destroyChart(weeklyChartInstance);
+            // Destroy existing chart if it exists
+            if (weeklyChartInstance) {
+                weeklyChartInstance.destroy();
+            }
             
             const week1 = filteredData.filter(item => parseInt(item.date.match(/\d+/)[0]) <= 7);
             const week2 = filteredData.filter(item => parseInt(item.date.match(/\d+/)[0]) > 7);
@@ -1858,9 +1965,6 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            display: true
-                        },
                         title: {
                             display: true,
                             text: getChartTitle(),
@@ -1895,8 +1999,10 @@
         function updateDailyBranchChart() {
             const ctx = document.getElementById('dailyBranchChart').getContext('2d');
             
-            // Properly destroy existing chart
-            dailyBranchChartInstance = destroyChart(dailyBranchChartInstance);
+            // Destroy existing chart if it exists
+            if (dailyBranchChartInstance) {
+                dailyBranchChartInstance.destroy();
+            }
             
             // Get all unique branches
             const branches = [...new Set(deliveryData.map(item => item.branch))];
@@ -1913,7 +2019,7 @@
                     const day = date.split(' ')[1];
                     const dayData = deliveryData.filter(item => {
                         const itemDay = item.date.split(',')[0].replace('October ', '').replace('st', '').replace('nd', '').replace('rd', '').replace('th', '').trim();
-                        return itemDay === day;
+                        return itemDay === day && item.branch === branch;
                     });
                     
                     return dayData.reduce((sum, item) => sum + item.sales, 0);
@@ -1932,16 +2038,24 @@
                 
                 // If a branch is selected, use the color for that branch and gray for others
                 let backgroundColor = colors[index % colors.length];
+                let borderColor = colors[index % colors.length];
+                let borderWidth = 1;
+                
                 if (selectedBranch !== 'All') {
-                    backgroundColor = branch === selectedBranch ? getBranchColor(selectedBranch) : '#e5e7eb';
+                    if (branch === selectedBranch) {
+                        borderWidth = 3;
+                    } else {
+                        backgroundColor = '#e5e7eb'; // gray for non-selected branches
+                        borderColor = '#e5e7eb';
+                    }
                 }
                 
                 return {
                     label: branch.replace('Crispy Chicken ', ''),
                     data: branchData,
                     backgroundColor: backgroundColor,
-                    borderColor: colors[index % colors.length],
-                    borderWidth: 1
+                    borderColor: borderColor,
+                    borderWidth: borderWidth
                 };
             });
             
@@ -1954,28 +2068,27 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true
-                        },
-                        title: {
-                            display: true,
-                            text: getChartTitle(),
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            },
-                            color: selectedBranch === 'All' ? '#4b5563' : getBranchColor(selectedBranch)
-                        }
-                    },
                     scales: {
                         x: {
                             stacked: true,
-                            beginAtZero: true
                         },
                         y: {
                             stacked: true,
                             beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: getChartTitle(),
+                            font: {
+                                size: 16
+                            },
+                            color: selectedBranch === 'All' ? '#4b5563' : getBranchColor(selectedBranch)
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
                         }
                     }
                 }
@@ -1990,8 +2103,10 @@
         function updateHourlyChart() {
             const ctx = document.getElementById('hourlyChart').getContext('2d');
             
-            // Properly destroy existing chart
-            hourlyChartInstance = destroyChart(hourlyChartInstance);
+            // Destroy existing chart if it exists
+            if (hourlyChartInstance) {
+                hourlyChartInstance.destroy();
+            }
             
             // Generate sample hourly data
             const hours = Array.from({length: 24}, (_, i) => `${i}:00`);
@@ -2037,8 +2152,10 @@
         function updateDayOfWeekChart() {
             const ctx = document.getElementById('dayOfWeekChart').getContext('2d');
             
-            // Properly destroy existing chart
-            dayOfWeekChartInstance = destroyChart(dayOfWeekChartInstance);
+            // Destroy existing chart if it exists
+            if (dayOfWeekChartInstance) {
+                dayOfWeekChartInstance.destroy();
+            }
             
             // Generate sample day of week data
             const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -2092,8 +2209,10 @@
         function updateMovingAvgChart() {
             const ctx = document.getElementById('movingAvgChart').getContext('2d');
             
-            // Properly destroy existing chart
-            movingAvgChartInstance = destroyChart(movingAvgChartInstance);
+            // Destroy existing chart if it exists
+            if (movingAvgChartInstance) {
+                movingAvgChartInstance.destroy();
+            }
             
             // Generate sample moving average data
             const dates = Array.from({length: 12}, (_, i) => `Oct ${i + 1}`);
@@ -2102,7 +2221,7 @@
                 const start = Math.max(0, i - 2);
                 const end = Math.min(arr.length, i + 3);
                 const slice = arr.slice(start, end);
-                return slice.reduce((a, b) => a + b) / slice.length;
+                return slice.reduce((a, b) => a + b, 0) / slice.length;
             });
             
             movingAvgChartInstance = new Chart(ctx, {
@@ -2147,7 +2266,7 @@
                     },
                     scales: {
                         y: {
-                            beginAtZero: false
+                            beginAtZero: true
                         }
                     }
                 }
@@ -2157,8 +2276,10 @@
         function updateGrowthRateChart() {
             const ctx = document.getElementById('growthRateChart').getContext('2d');
             
-            // Properly destroy existing chart
-            growthRateChartInstance = destroyChart(growthRateChartInstance);
+            // Destroy existing chart if it exists
+            if (growthRateChartInstance) {
+                growthRateChartInstance.destroy();
+            }
             
             // Generate sample growth rate data
             const dates = Array.from({length: 12}, (_, i) => `Oct ${i + 1}`);
@@ -2251,7 +2372,7 @@
             }
         }
 
-        function renderTable() {
+        function updateTable() {
             const filteredData = getFilteredData();
             
             recordCount.textContent = filteredData.length;
@@ -2279,10 +2400,10 @@
                     <td class="px-4 py-3 text-sm">
                         <div class="flex gap-2">
                             <button onclick="handleEditEntry(${index})" class="p-1 text-blue-600 hover:text-blue-800">
-                                <i data-lucide="edit-2" class="w-4 h-4" aria-hidden="true"></i>
+                                <i data-lucide="edit-2" class="w-4 h-4"></i>
                             </button>
                             <button onclick="handleDeleteEntry(${index})" class="p-1 text-red-600 hover:text-red-800">
-                                <i data-lucide="trash-2" class="w-4 h-4" aria-hidden="true"></i>
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </div>
                     </td>
@@ -2306,12 +2427,6 @@
             const file = e.target.files[0];
             if (!file) return;
 
-            // Check file type
-            if (!file.name.match(/\.(xlsx|xls)$/)) {
-                showNotification('Please upload a valid Excel file (.xlsx or .xls)', 'error');
-                return;
-            }
-
             showLoadingIndicator();
             
             const reader = new FileReader();
@@ -2322,11 +2437,6 @@
                     const sheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[sheetName];
                     const jsonData = XLSX.utils.sheet_to_json(worksheet);
-                    
-                    // Validate data structure
-                    if (!jsonData.length || !jsonData[0].hasOwnProperty('Date') || !jsonData[0].hasOwnProperty('Branch')) {
-                        throw new Error('Invalid file format. Please use the provided template.');
-                    }
                     
                     // Map the uploaded data to our format
                     const mappedData = jsonData.map(row => ({
@@ -2340,26 +2450,19 @@
                     updateDashboard();
                     hideLoadingIndicator();
                     showUpdateStatus('Data uploaded successfully!');
-                    showNotification('Data uploaded successfully!', 'success');
+                    alert('Data uploaded successfully!');
                 } catch (error) {
                     hideLoadingIndicator();
                     showUpdateStatus('Error uploading data');
-                    showNotification(`Error reading file: ${error.message}`, 'error');
-                    console.error('File upload error:', error);
+                    alert('Error reading file. Please ensure it matches the template format.');
                 }
             };
-            
-            reader.onerror = function() {
-                hideLoadingIndicator();
-                showNotification('Error reading file. Please try again.', 'error');
-            };
-            
             reader.readAsArrayBuffer(file);
         }
 
         function downloadTemplate() {
             const template = [
-                { Date: 'October 1st, 2025', Branch: 'Crispy Chicken-Hamdan St', Transactions: 0, 'Sales (AED)': 0 }
+                { Date: 'October 1st, 2025', Branch: 'Crispy Chicken-Hamdan St', Channel: 'Delivery', Transactions: 0, 'Sales (AED)': 0 }
             ];
             const ws = XLSX.utils.json_to_sheet(template);
             const wb = XLSX.utils.book_new();
@@ -2369,43 +2472,11 @@
 
         function generateReport() {
             showLoadingIndicator();
-            
-            try {
-                // Create a comprehensive report with all data
-                const reportData = {
-                    generatedAt: new Date().toISOString(),
-                    dateRange: selectedStartDate && selectedEndDate 
-                        ? `Oct ${selectedStartDate} to Oct ${selectedEndDate}` 
-                        : 'All data',
-                    branch: selectedBranch === 'All' ? 'All branches' : selectedBranch,
-                    summary: {
-                        totalTransactions: document.getElementById('totalTransactions').textContent,
-                        totalSales: document.getElementById('totalSales').textContent,
-                        avgTransactionValue: document.getElementById('avgTransactionValue').textContent,
-                        activeBranches: document.getElementById('activeBranches').textContent
-                    },
-                    data: deliveryData
-                };
-                
-                // Convert to JSON and create blob
-                const jsonStr = JSON.stringify(reportData, null, 2);
-                const blob = new Blob([jsonStr], { type: 'application/json' });
-                
-                // Create download link
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `crispy_chicken_report_${new Date().toISOString().split('T')[0]}.json`;
-                link.click();
-                
+            setTimeout(() => {
                 hideLoadingIndicator();
                 showUpdateStatus('Report generated successfully');
-                showNotification('Report downloaded successfully!', 'success');
-            } catch (error) {
-                hideLoadingIndicator();
-                showNotification('Error generating report. Please try again.', 'error');
-                console.error('Report generation error:', error);
-            }
+                alert('Generating comprehensive report... This would include all analytics, insights, and recommendations in a downloadable PDF format.');
+            }, 1000);
         }
 
         function handleAddEntry() {
@@ -2446,33 +2517,11 @@
                     updateDashboard();
                     hideLoadingIndicator();
                     showUpdateStatus('Entry deleted successfully');
-                    showNotification('Entry deleted successfully', 'success');
                 }, 300);
             }
         }
 
         function handleSaveEntry() {
-            // Validate inputs
-            if (!modalDate.value) {
-                showNotification('Please enter a date', 'error');
-                return;
-            }
-            
-            if (!modalBranch.value) {
-                showNotification('Please enter a branch', 'error');
-                return;
-            }
-            
-            if (isNaN(modalTransactions.value) || parseInt(modalTransactions.value) < 0) {
-                showNotification('Please enter a valid number for transactions', 'error');
-                return;
-            }
-            
-            if (isNaN(modalSales.value) || parseFloat(modalSales.value) < 0) {
-                showNotification('Please enter a valid number for sales', 'error');
-                return;
-            }
-            
             showLoadingIndicator();
             
             const newEntry = {
@@ -2485,6 +2534,7 @@
             setTimeout(() => {
                 if (editingIndex !== null) {
                     const filteredData = getFilteredData();
+                    
                     const itemToEdit = filteredData[editingIndex];
                     deliveryData = deliveryData.map(item => 
                         (item.date === itemToEdit.date && item.branch === itemToEdit.branch) ? newEntry : item
@@ -2497,7 +2547,6 @@
                 updateDashboard();
                 hideLoadingIndicator();
                 showUpdateStatus('Entry saved successfully');
-                showNotification('Entry saved successfully', 'success');
             }, 300);
         }
 
@@ -2505,657 +2554,94 @@
             dataModal.classList.add('hidden');
         }
 
-        // Helper function to destroy charts properly
-        function destroyChart(chartInstance) {
-            if (chartInstance) {
-                chartInstance.destroy();
-                return null;
-            }
-            return null;
-        }
-
         // Offer Management Functions
-        function updateOffersDashboard() {
-            updateOfferMetrics();
-            updateOfferOverviewCharts();
-            updateTopOffers();
+        function updateOffer(date, branch, offerType, notes = '') {
+            // Convert date from YYYY-MM-DD to October Xst, 2025 format
+            const dateObj = new Date(date);
+            const day = dateObj.getDate();
+            const month = dateObj.toLocaleString('default', { month: 'long' });
+            const year = dateObj.getFullYear();
+            const formattedDate = `${month} ${day}${getDaySuffix(day)}, ${year}`;
+            
+            const entryIndex = deliveryData.findIndex(
+                e => e.date === formattedDate && e.branch === branch
+            );
+
+            const dayName = dateObj.toLocaleString('en-US', { weekday: 'long' });
+            const offerStatus = (offerType === "Normal Day") ? "No Offer" : "Offer";
+
+            if (entryIndex !== -1) {
+                // Update existing entry - preserve transactions and sales, update offer-related fields
+                deliveryData[entryIndex].offerType = offerType;
+                deliveryData[entryIndex].offerStatus = offerStatus;
+                deliveryData[entryIndex].notes = notes;
+                deliveryData[entryIndex].dayName = dayName;
+            } else {
+                // Add new day with transactions=0 and sales=0
+                deliveryData.push({
+                    date: formattedDate,
+                    branch,
+                    transactions: 0,
+                    sales: 0,
+                    offerType,
+                    offerStatus,
+                    dayName,
+                    notes
+                });
+            }
+
             renderOfferTable();
-        }
-
-        function updateOfferMetrics() {
-            const offersData = deliveryData.filter(item => item.offerType && item.offerType !== 'Normal Day');
-            const normalDaysData = deliveryData.filter(item => !item.offerType || item.offerType === 'Normal Day');
-            
-            // Calculate metrics
-            const totalOffers = offersData.length;
-            const offerRevenue = offersData.reduce((sum, item) => sum + item.sales, 0);
-            const totalRevenue = deliveryData.reduce((sum, item) => sum + item.sales, 0);
-            const normalRevenue = normalDaysData.reduce((sum, item) => sum + item.sales, 0);
-            
-            // Calculate conversion rate
-            const conversionRate = totalRevenue > 0 ? (offerRevenue / totalRevenue * 100) : 0;
-            
-            // Find top performing offer type
-            const offerTypes = {};
-            offersData.forEach(item => {
-                const type = item.offerType || 'Normal Day';
-                if (!offerTypes[type]) {
-                    offerTypes[type] = { count: 0, sales: 0 };
-                }
-                offerTypes[type].sales += item.sales;
-            });
-            
-            let topOffer = 'Normal Day';
-            let topOfferSales = 0;
-            
-            Object.keys(offerTypes).forEach(offerType => {
-                if (offerTypes[offerType].sales > topOfferSales) {
-                    topOffer = offerType;
-                    topOfferSales = offerTypes[offerType].sales;
-                }
-            });
-            
-            // Update UI
-            document.getElementById('totalOffers').textContent = totalOffers;
-            document.getElementById('offerRevenue').textContent = `${offerRevenue.toFixed(0)} AED`;
-            document.getElementById('offerConversion').textContent = `${conversionRate.toFixed(1)}%`;
-            document.getElementById('topOffer').textContent = topOffer;
-        }
-
-        function updateOfferOverviewCharts() {
-            updateOfferTypeChart();
-            updateOfferImpactChart();
-        }
-
-        function updateOfferTypeChart() {
-            const ctx = document.getElementById('offerTypeChart').getContext('2d');
-            
-            // Properly destroy existing chart
-            offerTypeChartInstance = destroyChart(offerTypeChartInstance);
-            
-            // Group data by offer type
-            const offerTypes = {
-                'Normal Day': { sales: 0 },
-                'Chicken Day': { sales: 0 },
-                'Ultimate Offer': { sales: 0 }
-            };
-            
-            deliveryData.forEach(item => {
-                const type = item.offerType || 'Normal Day';
-                if (offerTypes[type]) {
-                    offerTypes[type].sales += item.sales;
-                }
-            });
-            
-            const chartData = Object.entries(offerTypes).map(([type, data]) => ({
-                type,
-                sales: data.sales
-            }));
-            
-            offerTypeChartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: chartData.map(item => item.type),
-                    datasets: [{
-                        data: chartData.map(item => item.sales),
-                        backgroundColor: [
-                            '#3b82f6',
-                            '#f59e0b',
-                            '#8b5cf6'
-                        ],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        },
-                        title: {
-                            display: true,
-                            text: 'Sales by Offer Type'
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateOfferImpactChart() {
-            const ctx = document.getElementById('offerImpactChart').getContext('2d');
-            
-            // Properly destroy existing chart
-            offerImpactChartInstance = destroyChart(offerImpactChartInstance);
-            
-            // Calculate average sales for offer vs non-offer days
-            const offerDays = deliveryData.filter(item => item.offerType && item.offerType !== 'Normal Day');
-            const normalDays = deliveryData.filter(item => !item.offerType || item.offerType === 'Normal Day');
-            
-            const avgOfferSales = offerDays.length > 0 ? offerDays.reduce((sum, item) => sum + item.sales, 0) / offerDays.length : 0;
-            const avgNormalSales = normalDays.length > 0 ? normalDays.reduce((sum, item) => sum + item.sales, 0) / normalDays.length : 0;
-            
-            offerImpactChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Offer Days', 'Normal Days'],
-                    datasets: [{
-                        label: 'Average Sales (AED)',
-                        data: [avgOfferSales, avgNormalSales],
-                        backgroundColor: ['#f59e0b', '#3b82f6'],
-                        borderRadius: 5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: 'Offer Impact on Sales'
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateTopOffers() {
-            // Calculate top performing offers
-            const offersData = deliveryData.filter(item => item.offerType && item.offerType !== 'Normal Day');
-            
-            // Group by offer type
-            const offerTypes = {};
-            offersData.forEach(item => {
-                const type = item.offerType || 'Normal Day';
-                if (!offerTypes[type]) {
-                    offerTypes[type] = { count: 0, sales: 0 };
-                }
-                offerTypes[type].sales += item.sales;
-            });
-            
-            // Sort by sales
-            const sortedOffers = Object.entries(offerTypes).sort((a, b) => b[1].sales - a[1].sales);
-            
-            // Update top offers container
-            const container = document.getElementById('topOffersContainer');
-            container.innerHTML = '';
-            
-            sortedOffers.slice(0, 3).forEach(([offerType, data], index) => {
-                const card = document.createElement('div');
-                card.className = 'offer-comparison-card';
-                
-                let badgeClass = 'offer-badge-normal';
-                if (offerType === 'Chicken Day') badgeClass = 'offer-badge-chicken';
-                if (offerType === 'Ultimate Offer') badgeClass = 'offer-badge-ultimate';
-                
-                card.innerHTML = `
-                    <div class="flex justify-between mb-2">
-                        <h4 class="font-semibold text-gray-800">${offerType}</h4>
-                        <span class="offer-badge ${badgeClass}">Top ${index + 1}</span>
-                    </div>
-                    <div class="text-2xl font-bold text-gray-800">${data.sales.toFixed(0)} AED</div>
-                    <div class="text-sm text-gray-600 mt-1">Total revenue</div>
-                    <div class="offer-performance-bar mt-2">
-                        <div class="offer-performance-fill bg-green-500" style="width: ${Math.min(100, (data.sales / Math.max(...Object.values(offerTypes).map(o => o.sales)) * 100))}%"></div>
-                    </div>
-                `;
-                
-                container.appendChild(card);
-            });
-        }
-
-        function updateOfferPerformanceCharts() {
-            updateOfferDayChart();
-            updateOfferBranchChart();
-            updateOfferPerformanceTable();
-        }
-
-        function updateOfferDayChart() {
-            const ctx = document.getElementById('offerDayChart').getContext('2d');
-            
-            // Properly destroy existing chart
-            offerDayChartInstance = destroyChart(offerDayChartInstance);
-            
-            // Group data by day and offer type
-            const dayData = {};
-            deliveryData.forEach(item => {
-                const day = item.date.split(',')[0].replace('October ', '').replace('st', '').replace('nd', '').replace('rd', '').replace('th', '').trim();
-                if (!dayData[day]) {
-                    dayData[day] = {};
-                }
-                
-                const offerType = item.offerType || 'Normal Day';
-                if (!dayData[day][offerType]) {
-                    dayData[day][offerType] = { transactions: 0, sales: 0 };
-                }
-                
-                dayData[day][offerType].transactions += item.transactions;
-                dayData[day][offerType].sales += item.sales;
-            });
-            
-            const days = Object.keys(dayData).sort((a, b) => parseInt(a.split(' ')[1]) - parseInt(b.split(' ')[1]));
-            const normalData = days.map(day => dayData[day]['Normal Day'] || { transactions: 0, sales: 0 });
-            const offerData = days.map(day => dayData[day]['Ultimate Offer'] || dayData[day]['Chicken Day'] || { transactions: 0, sales: 0 });
-            
-            offerDayChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: days.map(day => `Oct ${day}`),
-                    datasets: [
-                        {
-                            label: 'Normal Day Avg Sales',
-                            data: normalData.map(day => day.sales),
-                            borderColor: '#6b7280',
-                            backgroundColor: 'rgba(107, 114, 128, 0.1)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        },
-                        {
-                            label: 'Offer Day Avg Sales',
-                            data: offerData.map(day => day.sales),
-                            borderColor: '#f59e0b',
-                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                            borderWidth: 3,
-                            tension: 0.3,
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true
-                        },
-                        title: {
-                            display: true,
-                            text: 'Offer Performance by Day',
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            },
-                            color: selectedBranch === 'All' ? '#4b5563' : getBranchColor(selectedBranch)
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateOfferBranchChart() {
-            const ctx = document.getElementById('offerBranchChart').getContext('2d');
-            
-            // Properly destroy existing chart
-            offerBranchChartInstance = destroyChart(offerBranchChartInstance);
-            
-            // Group data by branch and offer type
-            const branchData = {};
-            deliveryData.forEach(item => {
-                if (!branchData[item.branch]) {
-                    branchData[item.branch] = {};
-                }
-                
-                const offerType = item.offerType || 'Normal Day';
-                if (!branchData[item.branch][offerType]) {
-                    branchData[item.branch][offerType] = { sales: 0 };
-                }
-                
-                branchData[item.branch][offerType].sales += item.sales;
-            });
-            
-            const branches = Object.keys(branchData);
-            const branchColors = branches.map(branch => getBranchColor(branch));
-            
-            offerBranchChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: branches.map(branch => branch.replace('Crispy Chicken ', '')),
-                    datasets: [
-                        {
-                            label: 'Normal Day Sales',
-                            data: branches.map(branch => branchData[branch]['Normal Day']?.sales || 0),
-                            backgroundColor: '#3b82f6',
-                            borderRadius: 5
-                        },
-                        {
-                            label: 'Offer Day Sales',
-                            data: branches.map(branch => {
-                                const offerSales = (branchData[branch]['Ultimate Offer']?.sales || 0) + 
-                                                  (branchData[branch]['Chicken Day']?.sales || 0);
-                                return offerSales;
-                            }),
-                            backgroundColor: '#f59e0b',
-                            borderRadius: 5
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true
-                        },
-                        title: {
-                            display: true,
-                            text: 'Offer Performance by Branch',
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            },
-                            color: selectedBranch === 'All' ? '#4b5563' : getBranchColor(selectedBranch)
-                        }
-                    },
-                    scales: {
-                        x: {
-                            stacked: true,
-                            beginAtZero: true
-                        },
-                        y: {
-                            stacked: true,
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateOfferPerformanceTable() {
-            const tableBody = document.getElementById('offerPerformanceTableBody');
-            tableBody.innerHTML = '';
-            
-            // Group data by offer type
-            const offerTypes = {};
-            deliveryData.forEach(item => {
-                const type = item.offerType || 'Normal Day';
-                if (!offerTypes[type]) {
-                    offerTypes[type] = { transactions: 0, sales: 0 };
-                }
-                offerTypes[type].sales += item.sales;
-            });
-            
-            const labels = Object.keys(offerTypes);
-            const normalDays = offerTypes['Normal Day'] || { transactions: 0, sales: 0 };
-            
-            labels.forEach(type => {
-                const offerData = offerTypes[type];
-                const avgTransactionValue = offerData.sales / offerData.transactions;
-                const normalAvgValue = normalDays.sales / normalDays.transactions;
-                const performanceVsNormal = normalAvgValue > 0 ? ((avgTransactionValue - normalAvgValue) / normalAvgValue * 100).toFixed(1) : '0.0';
-                
-                const row = document.createElement('tr');
-                let rowClass = "";
-                if (type === "Normal Day") rowClass = "offer-row-normal";
-                if (type === "Chicken Day") rowClass = "offer-row-chicken";
-                if (type === "Ultimate Offer") rowClass = "offer-row-ultimate";
-                
-                row.className = rowClass;
-                row.innerHTML = `
-                    <td class="px-4 py-3 text-sm font-medium">${type}</td>
-                    <td class="px-4 py-3 text-sm">${offerData.transactions}</td>
-                    <td class="px-4 py-3 text-sm">${offerData.sales.toFixed(2)}</td>
-                    <td class="px-4 py-3 text-sm">${avgTransactionValue.toFixed(2)}</td>
-                    <td class="px-4 py-3 text-sm">
-                        <span class="${performanceVsNormal >= 0 ? 'text-green-600' : 'text-red-600'}">
-                            ${performanceVsNormal >= 0 ? '+' : ''}${performanceVsNormal}%
-                        </span>
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
-            });
-            
-            // Re-initialize Lucide icons for new elements
-            lucide.createIcons();
-        }
-
-        function updateOfferComparisonCharts() {
-            updateOfferComparisonChart();
-            updateOfferRoiChart();
-            updateOfferComparisonCards();
-        }
-
-        function updateOfferComparisonChart() {
-            const ctx = document.getElementById('offerComparisonChart').getContext('2d');
-            
-            // Properly destroy existing chart
-            offerComparisonChartInstance = destroyChart(offerComparisonChartInstance);
-            
-            // Group data by offer type
-            const offerTypes = {
-                'Normal Day': { transactions: 0, sales: 0 },
-                'Chicken Day': { transactions: 0, sales: 0 },
-                'Ultimate Offer': { transactions: 0, sales: 0 }
-            };
-            
-            deliveryData.forEach(item => {
-                const type = item.offerType || 'Normal Day';
-                if (offerTypes[type]) {
-                    offerTypes[type].transactions += item.transactions;
-                    offerTypes[type].sales += item.sales;
-                }
-            });
-            
-            const chartData = Object.entries(offerTypes).map(([type, data]) => ({
-                type,
-                transactions: data.transactions,
-                sales: data.sales
-            }));
-            
-            offerComparisonChartInstance = new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: chartData.map(item => item.type),
-                    datasets: [
-                        {
-                            label: 'Transactions',
-                            data: chartData.map(item => item.transactions),
-                            borderColor: '#3b82f6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.2)'
-                        },
-                        {
-                            label: 'Sales (AED)',
-                            data: chartData.map(item => item.sales / 100), // Scale down for better visualization
-                            borderColor: '#f59e0b',
-                            backgroundColor: 'rgba(245, 158, 11, 0.2)'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true
-                        },
-                        title: {
-                            display: true,
-                            text: 'Offer Type Comparison'
-                        }
-                    },
-                    scales: {
-                        r: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateOfferRoiChart() {
-            const ctx = document.getElementById('offerRoiChart').getContext('2d');
-            
-            // Properly destroy existing chart
-            offerRoiChartInstance = destroyChart(offerRoiChartInstance);
-            
-            // Calculate ROI for each offer type
-            const offerTypes = {
-                'Normal Day': { transactions: 0, sales: 0 },
-                'Chicken Day': { transactions: 0, sales: 0 },
-                'Ultimate Offer': { transactions: 0, sales: 0 }
-            };
-            
-            deliveryData.forEach(item => {
-                const type = item.offerType || 'Normal Day';
-                if (offerTypes[type]) {
-                    offerTypes[type].transactions += item.transactions;
-                    offerTypes[type].sales += item.sales;
-                }
-            });
-            
-            const chartData = Object.entries(offerTypes).map(([type, data]) => {
-                const avgValue = data.sales / data.transactions;
-                const normalAvg = offerTypes['Normal Day'].sales / offerTypes['Normal Day'].transactions;
-                const roi = normalAvg > 0 ? ((avgValue - normalAvg) / normalAvg * 100) : 0;
-                
-                return {
-                    type,
-                    roi: roi
-                };
-            });
-            
-            offerRoiChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: chartData.map(item => item.type),
-                    datasets: [{
-                        label: 'ROI (%)',
-                        data: chartData.map(item => item.roi),
-                        backgroundColor: chartData.map(item => item.roi >= 0 ? '#10b981' : '#ef4444'),
-                        borderRadius: 5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: 'Offer ROI Analysis'
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: false
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateOfferComparisonCards() {
-            const container = document.getElementById('offerComparisonCards');
-            container.innerHTML = '';
-            
-            // Calculate performance metrics for each offer type
-            const offerTypes = {
-                'Normal Day': { transactions: 0, sales: 0 },
-                'Chicken Day': { transactions: 0, sales: 0 },
-                'Ultimate Offer': { transactions: 0, sales: 0 }
-            };
-            
-            deliveryData.forEach(item => {
-                const type = item.offerType || 'Normal Day';
-                if (offerTypes[type]) {
-                    offerTypes[type].transactions += item.transactions;
-                    offerTypes[type].sales += item.sales;
-                }
-            });
-            
-            const normalAvg = offerTypes['Normal Day'].sales / offerTypes['Normal Day'].transactions;
-            
-            Object.entries(offerTypes).forEach(([type, data]) => {
-                const card = document.createElement('div');
-                card.className = 'offer-comparison-card';
-                
-                let badgeClass = 'offer-badge-normal';
-                if (type === 'Chicken Day') badgeClass = 'offer-badge-chicken';
-                if (type === 'Ultimate Offer') badgeClass = 'offer-badge-ultimate';
-                
-                const avgValue = data.sales / data.transactions;
-                const performanceVsNormal = normalAvg > 0 ? ((avgValue - normalAvg) / normalAvg * 100) : 0;
-                
-                card.innerHTML = `
-                    <div class="flex justify-between mb-2">
-                        <h4 class="font-semibold text-gray-800">${type}</h4>
-                        <span class="offer-badge ${badgeClass}">${badgeClass.replace('offer-badge-', '')}</span>
-                    </div>
-                    <div class="text-2xl font-bold text-gray-800">${avgValue.toFixed(0)} AED</div>
-                    <div class="text-sm text-gray-600 mt-1">Avg transaction value</div>
-                    <div class="offer-performance-bar mt-2">
-                        <div class="offer-performance-fill ${performanceVsNormal >= 0 ? 'bg-green-500' : 'bg-red-500'}" 
-                             style="width: ${Math.min(100, Math.abs(performanceVsNormal))}%"></div>
-                    </div>
-                    <div class="text-sm mt-1 ${performanceVsNormal >= 0 ? 'text-green-600' : 'text-red-600'}">
-                        ${performanceVsNormal >= 0 ? '+' : ''}${performanceVsNormal.toFixed(1)}% vs normal
-                    </div>
-                `;
-                
-                container.appendChild(card);
-            });
+            updateDashboard();
         }
 
         function renderOfferTable() {
-            const tableBody = document.getElementById('offerTableBody');
-            tableBody.innerHTML = '';
+            offerTableBody.innerHTML = "";
             
             // Sort data by date (newest first)
             const sortedData = [...deliveryData].sort((a, b) => {
-                const dayA = parseInt(a.date.match(/\d+/)[0]);
-                const dayB = parseInt(b.date.match(/\d+/)[0]);
-                return dayB - dayA;
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                return dateB - dateA;
             });
             
-            sortedData.forEach((item, index) => {
-                const row = document.createElement('tr');
+            sortedData.forEach(e => {
                 let rowClass = "";
-                if (item.offerType === "Normal Day") rowClass = "offer-row-normal";
-                if (item.offerType === "Chicken Day") rowClass = "offer-row-chicken";
-                if (item.offerType === "Ultimate Offer") rowClass = "offer-row-ultimate";
+                if (e.offerType === "Normal Day") rowClass = "offer-row-normal";
+                if (e.offerType === "Chicken Day") rowClass = "offer-row-chicken";
+                if (e.offerType === "Ultimate Offer") rowClass = "offer-row-ultimate";
                 
+                const row = document.createElement('tr');
                 row.className = rowClass;
                 
-                const dayName = getDayOfWeek(item.date);
-                
                 row.innerHTML = `
-                    <td class="px-4 py-3 text-sm">${item.date}</td>
-                    <td class="px-4 py-3 text-sm">${dayName}</td>
-                    <td class="px-4 py-3 text-sm">${item.branch}</td>
-                    <td class="px-4 py-3 text-sm">${item.transactions}</td>
-                    <td class="px-4 py-3 text-sm">${item.sales.toFixed(2)}</td>
-                    <td class="px-4 py-3 text-sm">${item.offerType || 'No Offer'}</td>
-                    <td class="px-4 py-3 text-sm">${item.offerStatus || 'No Offer'}</td>
-                    <td class="px-4 py-3 text-sm">${item.notes || ''}</td>
+                    <td class="px-4 py-3 text-sm">${e.date}</td>
+                    <td class="px-4 py-3 text-sm">${e.dayName || getDayOfWeek(e.date)}</td>
+                    <td class="px-4 py-3 text-sm">${e.branch}</td>
+                    <td class="px-4 py-3 text-sm">${e.transactions}</td>
+                    <td class="px-4 py-3 text-sm">${e.sales.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-sm">
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                            e.offerType === "Chicken Day" ? 'bg-amber-100 text-amber-800' : 
+                            e.offerType === "Ultimate Offer" ? 'bg-purple-100 text-purple-800' : 
+                            'bg-blue-100 text-blue-800'
+                        }">
+                            ${e.offerType || 'Normal Day'}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-sm">${e.offerStatus || 'No Offer'}</td>
+                    <td class="px-4 py-3 text-sm">${e.notes || ''}</td>
                     <td class="px-4 py-3 text-sm">
                         <div class="flex gap-2">
-                            <button onclick="editOffer('${item.date}', '${item.branch}')" class="p-1 text-blue-600 hover:text-blue-800">
-                                <i data-lucide="edit-2" class="w-4 h-4" aria-hidden="true"></i>
+                            <button onclick="editOffer('${e.date}', '${e.branch}')" class="p-1 text-blue-600 hover:text-blue-800">
+                                <i data-lucide="edit-2" class="w-4 h-4"></i>
                             </button>
-                            <button onclick="deleteOffer('${item.date}', '${item.branch}')" class="p-1 text-red-600 hover:text-red-800">
-                                <i data-lucide="trash-2" class="w-4 h-4" aria-hidden="true"></i>
+                            <button onclick="deleteOffer('${e.date}', '${e.branch}')" class="p-1 text-red-600 hover:text-red-800">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </div>
                     </td>
                 `;
-                
-                tableBody.appendChild(row);
+                offerTableBody.appendChild(row);
             });
             
             // Re-initialize Lucide icons for new elements
@@ -3163,81 +2649,41 @@
         }
 
         function editOffer(date, branch) {
-            const item = deliveryData.find(item => item.date === date && item.branch === branch);
-            if (item) {
-                offerModalDate.value = formatDateForInput(date);
-                offerModalBranch.value = item.branch;
-                offerModalType.value = item.offerType || 'Normal Day';
-                offerModalNotes.value = item.notes || '';
+            const entry = deliveryData.find(e => e.date === date && e.branch === branch);
+            if (!entry) return;
+            
+            // Convert date from October Xst, 2025 to YYYY-MM-DD format
+            const dateMatch = date.match(/(\w+) (\d+)(\w+), (\d+)/);
+            if (dateMatch) {
+                const month = dateMatch[1];
+                const day = dateMatch[2];
+                const year = dateMatch[4];
+                
+                // Convert month name to number
+                const monthNames = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"];
+                const monthNum = monthNames.indexOf(month) + 1;
+                
+                // Format as YYYY-MM-DD
+                const formattedDate = `${year}-${monthNum.toString().padStart(2, '0')}-${day.padStart(2, '0')}`;
+                
+                // Set form values
+                offerModalDate.value = formattedDate;
+                offerModalBranch.value = branch;
+                offerModalType.value = entry.offerType || 'Normal Day';
+                offerModalNotes.value = entry.notes || '';
+                
+                // Show modal
                 offerModal.style.display = 'flex';
             }
         }
 
         function deleteOffer(date, branch) {
             if (window.confirm('Are you sure you want to delete this offer?')) {
-                deliveryData = deliveryData.filter(item => 
-                    !(item.date === date && item.branch === branch)
-                );
+                deliveryData = deliveryData.filter(e => !(e.date === date && e.branch === branch));
+                renderOfferTable();
                 updateDashboard();
-                showNotification('Offer deleted successfully', 'success');
             }
-        }
-
-        function formatDateForInput(dateString) {
-            // Convert "October 1st, 2025" to "2025-10-01"
-            const parts = dateString.split(' ');
-            const month = parts[0];
-            const day = parts[1].replace(/[^0-9]/g, '');
-            const year = parts[2];
-            
-            const monthMap = {
-                'January': '01', 'February': '02', 'March': '03', 'April': '04',
-                'May': '05', 'June': '06', 'July': '07', 'August': '08',
-                'September': '09', 'October': '10', 'November': '11', 'December': '12'
-            };
-            
-            return `${year}-${monthMap[month]}-${day.padStart(2, '0')}`;
-        }
-
-        function formatDateForDisplay(dateString) {
-            const date = new Date(dateString);
-            const day = date.getDate();
-            const month = date.toLocaleDateString('en-US', { month: 'long' });
-            const year = date.getFullYear();
-            
-            // Add ordinal suffix to day
-            let suffix = 'th';
-            if (day === 1 || day === 21 || day === 31) suffix = 'st';
-            else if (day === 2 || day === 22) suffix = 'nd';
-            else if (day === 3 || day === 23) suffix = 'rd';
-            
-            return `${month} ${day}${suffix}, ${year}`;
-        }
-
-        function getDayOfWeek(dateString) {
-            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            const date = new Date(dateString);
-            return days[date.getDay()];
-        }
-
-        function exportOfferData() {
-            // Create a CSV file with offer data
-            const offersData = deliveryData.filter(item => item.offerType && item.offerType !== 'Normal Day');
-            
-            let csv = 'Date, Branch, Transactions, Sales (AED), Offer Type, Offer Status, Notes\n';
-            
-            offersData.forEach(item => {
-                csv += `${item.date}, ${item.branch}, ${item.transactions}, ${item.sales}, ${item.offerType || 'Normal Day'}, ${item.offerStatus || 'No Offer'}, ${item.notes || ''}\n`;
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'crispy_chicken_offers.csv';
-            link.click();
-            
-            showNotification('Offer data exported successfully!', 'success');
         }
     </script>
 </body>
