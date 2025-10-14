@@ -663,12 +663,6 @@
                 <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="trends">
                     Trend Analysis
                 </button>
-                <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="insights">
-                    AI Insights
-                </button>
-                <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="recommendations">
-                    Recommendations
-                </button>
                 <button class="tab-btn pb-3 px-1 font-medium text-gray-600 hover:text-amber-600" data-tab="offers">
                     Offers Management
                 </button>
@@ -915,186 +909,6 @@
                     <div class="chart-wrapper">
                         <canvas id="growthRateChart"></canvas>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tab Content: AI Insights -->
-        <div id="insights-tab" class="tab-content hidden">
-            <!-- AI Insights Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div class="analysis-card rounded-lg shadow-md p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-bold text-gray-800">Key Insights</h3>
-                        <i data-lucide="brain" class="w-6 h-6 text-indigo-500"></i>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="flex items-start">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-green-500 mt-0.5 mr-2"></i>
-                            <div>
-                                <p class="font-medium text-gray-800">Weekend Performance</p>
-                                <p id="weekendPerf" class="text-sm text-gray-600">Saturday shows 45% higher sales than weekdays</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-green-500 mt-0.5 mr-2"></i>
-                            <div>
-                                <p class="font-medium text-gray-800">Branch Efficiency</p>
-                                <p id="branchEff" class="text-sm text-gray-600">Hamdan St branch outperforms others by 32%</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <i data-lucide="alert-circle" class="w-5 h-5 text-amber-500 mt-0.5 mr-2"></i>
-                            <div>
-                                <p class="font-medium text-gray-800">Evening Slump</p>
-                                <p id="eveningSlump" class="text-sm text-gray-600">9-11 PM shows 25% drop in orders</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="analysis-card rounded-lg shadow-md p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-bold text-gray-800">Anomaly Detection</h3>
-                        <i data-lucide="alert-triangle" class="w-6 h-5 text-red-500"></i>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="p-3 bg-red-50 rounded-lg">
-                            <div class="flex items-center justify-between">
-                                <span class="insight-badge bg-red-100 text-red-800">Unusual Drop</span>
-                                <span class="text-sm text-gray-600">Oct 8</span>
-                            </div>
-                            <p id="unusualDrop" class="text-sm text-gray-700 mt-2">Al Satwa branch showed 78% sales drop</p>
-                        </div>
-                        <div class="p-3 bg-green-50 rounded-lg">
-                            <div class="flex items-center justify-between">
-                                <span class="insight-badge bg-green-100 text-green-800">Peak Performance</span>
-                                <span class="text-sm text-gray-600">Oct 7</span>
-                            </div>
-                            <p id="peakPerf" class="text-sm text-gray-700 mt-2">Record sales across all branches</p>
-                        </div>
-                        <div class="p-3 bg-blue-50 rounded-lg">
-                            <div class="flex items-center justify-between">
-                                <span class="insight-badge bg-blue-100 text-blue-800">Pattern Change</span>
-                                <span class="text-sm text-gray-600">Recent</span>
-                            </div>
-                            <p id="patternChange" class="text-sm text-gray-700 mt-2">Lunch orders increasing by 15%</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Predictive Analysis -->
-            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Predictive Analysis</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="text-center p-4 border rounded-lg">
-                        <i data-lucide="trending-up" class="w-8 h-8 text-green-500 mx-auto mb-2"></i>
-                        <p class="text-sm text-gray-600">Next Week Forecast</p>
-                        <p id="nextWeekForecast" class="text-2xl font-bold text-gray-800">+8.3%</p>
-                        <p class="text-sm text-gray-600">Expected growth</p>
-                    </div>
-                    <div class="text-center p-4 border rounded-lg">
-                        <i data-lucide="target" class="w-8 h-8 text-blue-500 mx-auto mb-2"></i>
-                        <p class="text-sm text-gray-600">Peak Demand Day</p>
-                        <p id="peakDemandDay" class="text-2xl font-bold text-gray-800">Saturday</p>
-                        <p class="text-sm text-gray-600">High probability</p>
-                    </div>
-                    <div class="text-center p-4 border rounded-lg">
-                        <i data-lucide="alert-circle" class="w-8 h-8 text-amber-500 mx-auto mb-2"></i>
-                        <p class="text-sm text-gray-600">Risk Alert</p>
-                        <p id="riskAlert" class="text-2xl font-bold text-gray-800">Medium</p>
-                        <p class="text-sm text-gray-600">Supply chain</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tab Content: Recommendations -->
-        <div id="recommendations-tab" class="tab-content hidden">
-            <!-- Recommendations Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div class="analysis-card rounded-lg shadow-md p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-bold text-gray-800">Operational Improvements</h3>
-                        <i data-lucide="settings" class="w-6 h-6 text-blue-500"></i>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="p-3 bg-blue-50 rounded-lg">
-                            <p class="font-medium text-blue-800">Staff Optimization</p>
-                            <p id="staffOpt" class="text-sm text-blue-700">Increase staff during 6-8 PM peak hours</p>
-                        </div>
-                        <div class="p-3 bg-green-50 rounded-lg">
-                            <p class="font-medium text-green-800">Menu Engineering</p>
-                            <p id="menuEng" class="text-sm text-green-700">Promote combo deals during lunch hours</p>
-                        </div>
-                        <div class="p-3 bg-purple-50 rounded-lg">
-                            <p class="font-medium text-purple-800">Delivery Routes</p>
-                            <p id="deliveryRoutes" class="text-sm text-purple-700">Optimize routes for Al Barsha area</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="analysis-card rounded-lg shadow-md p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-bold text-gray-800">Marketing Strategies</h3>
-                        <i data-lucide="megaphone" class="w-6 h-5 text-green-500"></i>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="p-3 bg-amber-50 rounded-lg">
-                            <p class="font-medium text-amber-800">Weekend Promotions</p>
-                            <p id="weekendPromo" class="text-sm text-amber-700">Family bundles on Saturdays</p>
-                        </div>
-                        <div class="p-3 bg-red-50 rounded-lg">
-                            <p class="font-medium text-red-800">Evening Boost</p>
-                            <p id="eveningBoost" class="text-sm text-red-700">Late-night specials 9-11 PM</p>
-                        </div>
-                        <div class="p-3 bg-indigo-50 rounded-lg">
-                            <p class="font-medium text-indigo-800">Loyalty Program</p>
-                            <p id="loyaltyProg" class="text-sm text-indigo-700">Target frequent customers</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Plan -->
-            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">30-Day Action Plan</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Priority</th>
-                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Action</th>
-                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Timeline</th>
-                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Expected Impact</th>
-                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            <tr>
-                                <td class="px-4 py-3 text-sm"><span class="insight-badge bg-red-100 text-red-800">High</span></td>
-                                <td class="px-4 py-3 text-sm font-medium">Peak hour staffing</td>
-                                <td class="px-4 py-3 text-sm">Week 1</td>
-                                <td class="px-4 py-3 text-sm">+15% capacity</td>
-                                <td class="px-4 py-3 text-sm"><span class="text-amber-600">In Progress</span></td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 text-sm"><span class="insight-badge bg-amber-100 text-amber-800">Medium</span></td>
-                                <td class="px-4 py-3 text-sm font-medium">Weekend promotions</td>
-                                <td class="px-4 py-3 text-sm">Week 2</td>
-                                <td class="px-4 py-3 text-sm">+20% sales</td>
-                                <td class="px-4 py-3 text-sm"><span class="text-gray-600">Planned</span></td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 text-sm"><span class="insight-badge bg-green-100 text-green-800">Low</span></td>
-                                <td class="px-4 py-3 text-sm font-medium">Menu optimization</td>
-                                <td class="px-4 py-3 text-sm">Week 3-4</td>
-                                <td class="px-4 py-3 text-sm">+10% AOV</td>
-                                <td class="px-4 py-3 text-sm"><span class="text-gray-600">Planned</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
@@ -1369,7 +1183,7 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Branch</label>
-                            <select id="modalBranch" class="w-full px-3 py-2 border-gray-300 rounded-md">
+                            <select id="modalBranch" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                                 <option value="">Select a branch</option>
                                 <option value="Crispy Chicken-Hamdan St">Crispy Chicken-Hamdan St</option>
                                 <option value="Crispy Chicken Khaldia">Crispy Chicken Khaldia</option>
@@ -1384,13 +1198,13 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Transactions</label>
-                            <input type="number" id="modalTransactions" class="w-full px-3 py-2 border-gray-300 rounded-md" min="0">
+                            <input type="number" id="modalTransactions" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0">
                             <div id="modalTransactionsError" class="error-message"></div>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Sales (AED)</label>
-                            <input type="number" id="modalSales" class="w-full px-3 py-2 border-gray-300 rounded-md" min="0" step="0.01">
+                            <input type="number" id="modalSales" class="w-full px-3 py-2 border border-gray-300 rounded-md" min="0" step="0.01">
                             <div id="modalSalesError" class="error-message"></div>
                         </div>
                     </div>
@@ -1423,13 +1237,13 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">التاريخ</label>
-                        <input type="date" id="offerModalDate" class="w-full px-3 py-2 border-gray-300 rounded-md">
+                        <input type="date" id="offerModalDate" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                         <div id="offerModalDateError" class="error-message"></div>
                     </div>
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">الفرع</label>
-                        <select id="offerModalBranch" class="w-full px-3 py-2 border-gray-300 rounded-md">
+                        <select id="offerModalBranch" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                             <option value="Crispy Chicken-Hamdan St">Crispy Chicken-Hamdan St</option>
                             <option value="Crispy Chicken Khaldia">Crispy Chicken Khaldia</option>
                             <option value="Crispy Chicken Shabiya 11">Crispy Chicken Shabiya 11</option>
@@ -1442,7 +1256,7 @@
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">نوع العرض</label>
-                        <select id="offerModalType" class="w-full px-3 py-2 border-gray-300 rounded-md">
+                        <select id="offerModalType" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                             <option value="Normal Day">Normal Day</option>
                             <option value="Chicken Day">Chicken Day</option>
                             <option value="Ultimate Offer">Ultimate Offer</option>
@@ -1451,12 +1265,12 @@
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">ملاحظات</label>
-                        <input type="text" id="offerModalNotes" class="w-full px-3 py-2 border-gray-300 rounded-md" placeholder="أدخل ملاحظاتك هنا">
+                        <input type="text" id="offerModalNotes" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="أدخل ملاحظاتك هنا">
                     </div>
                 </div>
                 
                 <div class="flex justify-end gap-3 mt-6">
-                    <button id="cancelOfferModal" class="px-4 py-2 border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                    <button id="cancelOfferModal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
                         إغلاق
                     </button>
                     <button id="saveOfferBtn" class="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 flex items-center gap-2">
@@ -1655,10 +1469,6 @@
                     updatePerformanceCharts();
                 } else if (tabName === 'trends') {
                     updateTrendCharts();
-                } else if (tabName === 'insights') {
-                    updateInsightsData();
-                } else if (tabName === 'recommendations') {
-                    updateRecommendationsData();
                 } else if (tabName === 'offers') {
                     updateOffersDashboard();
                 }
@@ -1686,7 +1496,7 @@
 
         endDay.addEventListener('change', function() {
             // Ensure start day is not after end day
-            if (parseInt(startDay.value) > parseInt(endDay.value)) {
+            if (parseInt(startDay.value) > parseInt(this.value)) {
                 startDay.value = this.value;
             }
         });
@@ -2243,10 +2053,6 @@
                     updatePerformanceCharts();
                 } else if (tabName === 'trends') {
                     updateTrendCharts();
-                } else if (tabName === 'insights') {
-                    updateInsightsData();
-                } else if (tabName === 'recommendations') {
-                    updateRecommendationsData();
                 } else if (tabName === 'offers') {
                     updateOffersDashboard();
                 }
@@ -3022,290 +2828,6 @@
             document.getElementById('seasonalityIndex').textContent = seasonalityIndex.toFixed(2);
             document.getElementById('volatility').textContent = `${volatility.toFixed(1)}%`;
             document.getElementById('momentum').textContent = momentum;
-        }
-
-        function updateInsightsData() {
-            // Get filtered data
-            const filteredData = getFilteredData();
-            
-            // Calculate insights
-            updateKeyInsights(filteredData);
-            updateAnomalyDetection(filteredData);
-            updatePredictiveAnalysis(filteredData);
-        }
-
-        function updateKeyInsights(data) {
-            // Group by day of week
-            const dayGroups = {};
-            data.forEach(item => {
-                const dayOfWeek = getDayOfWeek(item.date);
-                if (!dayGroups[dayOfWeek]) {
-                    dayGroups[dayOfWeek] = {
-                        transactions: 0,
-                        sales: 0
-                    };
-                }
-                dayGroups[dayOfWeek].transactions += item.transactions;
-                dayGroups[dayOfWeek].sales += item.sales;
-            });
-            
-            // Calculate weekend vs weekday performance
-            const weekendSales = (dayGroups['Saturday']?.sales || 0) + (dayGroups['Sunday']?.sales || 0);
-            const weekdaySales = Object.keys(dayGroups)
-                .filter(day => day !== 'Saturday' && day !== 'Sunday')
-                .reduce((sum, day) => sum + (dayGroups[day]?.sales || 0), 0);
-            
-            const weekendPerformance = weekdaySales > 0 ? ((weekendSales / 2) / (weekdaySales / 5) * 100) : 100;
-            
-            // Find best performing branch
-            const branchGroups = {};
-            data.forEach(item => {
-                if (!branchGroups[item.branch]) {
-                    branchGroups[item.branch] = {
-                        transactions: 0,
-                        sales: 0
-                    };
-                }
-                branchGroups[item.branch].transactions += item.transactions;
-                branchGroups[item.branch].sales += item.sales;
-            });
-            
-            let bestBranch = '';
-            let maxSales = 0;
-            let secondMaxSales = 0;
-            
-            Object.keys(branchGroups).forEach(branch => {
-                if (branchGroups[branch].sales > maxSales) {
-                    secondMaxSales = maxSales;
-                    maxSales = branchGroups[branch].sales;
-                    bestBranch = branch;
-                } else if (branchGroups[branch].sales > secondMaxSales) {
-                    secondMaxSales = branchGroups[branch].sales;
-                }
-            });
-            
-            const branchPerformance = secondMaxSales > 0 ? ((maxSales - secondMaxSales) / secondMaxSales * 100) : 0;
-            
-            // Update UI
-            document.getElementById('weekendPerf').textContent = 
-                `Saturday shows ${weekendPerformance >= 100 ? '+' : ''}${(weekendPerformance - 100).toFixed(0)}% higher sales than weekdays`;
-            document.getElementById('branchEff').textContent = 
-                `${bestBranch} outperforms others by ${branchPerformance.toFixed(0)}%`;
-            document.getElementById('eveningSlump').textContent = 
-                '9-11 PM shows 25% drop in orders';
-        }
-
-        function updateAnomalyDetection(data) {
-            // Group by date and branch
-            const dateBranchGroups = {};
-            data.forEach(item => {
-                const key = `${item.date}-${item.branch}`;
-                if (!dateBranchGroups[key]) {
-                    dateBranchGroups[key] = {
-                        date: item.date,
-                        branch: item.branch,
-                        sales: 0
-                    };
-                }
-                dateBranchGroups[key].sales += item.sales;
-            });
-            
-            // Calculate average sales per branch
-            const branchAvgs = {};
-            Object.values(dateBranchGroups).forEach(item => {
-                if (!branchAvgs[item.branch]) {
-                    branchAvgs[item.branch] = {
-                        total: 0,
-                        count: 0
-                    };
-                }
-                branchAvgs[item.branch].total += item.sales;
-                branchAvgs[item.branch].count += 1;
-            });
-            
-            Object.keys(branchAvgs).forEach(branch => {
-                branchAvgs[branch] = branchAvgs[branch].total / branchAvgs[branch].count;
-            });
-            
-            // Find anomalies (more than 50% deviation from average)
-            const anomalies = [];
-            Object.values(dateBranchGroups).forEach(item => {
-                const avg = branchAvgs[item.branch];
-                const deviation = Math.abs(item.sales - avg) / avg * 100;
-                
-                if (deviation > 50) {
-                    anomalies.push({
-                        ...item,
-                        deviation: deviation,
-                        type: item.sales < avg ? 'drop' : 'spike'
-                    });
-                }
-            });
-            
-            // Sort anomalies by deviation
-            anomalies.sort((a, b) => b.deviation - a.deviation);
-            
-            // Update UI with top anomalies
-            if (anomalies.length > 0) {
-                const topAnomaly = anomalies[0];
-                document.getElementById('unusualDrop').textContent = 
-                    `${topAnomaly.branch} showed ${topAnomaly.deviation.toFixed(0)}% ${topAnomaly.type === 'drop' ? 'drop' : 'spike'}`;
-            }
-            
-            // Find peak performance day
-            const dateGroups = {};
-            data.forEach(item => {
-                if (!dateGroups[item.date]) {
-                    dateGroups[item.date] = 0;
-                }
-                dateGroups[item.date] += item.sales;
-            });
-            
-            let peakDate = '';
-            let peakSales = 0;
-            
-            Object.keys(dateGroups).forEach(date => {
-                if (dateGroups[date] > peakSales) {
-                    peakSales = dateGroups[date];
-                    peakDate = date;
-                }
-            });
-            
-            document.getElementById('peakPerf').textContent = 
-                `Record sales across all branches`;
-            
-            // Pattern change (simulated)
-            document.getElementById('patternChange').textContent = 
-                'Lunch orders increasing by 15%';
-        }
-
-        function updatePredictiveAnalysis(data) {
-            // Simple forecasting based on trend
-            const sortedData = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
-            
-            // Calculate daily sales
-            const dailySales = {};
-            data.forEach(item => {
-                if (!dailySales[item.date]) {
-                    dailySales[item.date] = 0;
-                }
-                dailySales[item.date] += item.sales;
-            });
-            
-            const dailySalesValues = Object.values(dailySales);
-            const avgDailySales = dailySalesValues.reduce((sum, val) => sum + val, 0) / dailySalesValues.length;
-            
-            // Calculate trend (simple linear regression)
-            const n = dailySalesValues.length;
-            const xValues = Array.from({length: n}, (_, i) => i);
-            const sumX = xValues.reduce((sum, x) => sum + x, 0);
-            const sumY = dailySalesValues.reduce((sum, y) => sum + y, 0);
-            const sumXY = xValues.reduce((sum, x, i) => sum + x * dailySalesValues[i], 0);
-            const sumXX = xValues.reduce((sum, x) => sum + x * x, 0);
-            
-            const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
-            const intercept = (sumY - slope * sumX) / n;
-            
-            // Predict next week's sales
-            const nextWeekPrediction = intercept + slope * (n + 7);
-            const growthForecast = ((nextWeekPrediction - avgDailySales) / avgDailySales * 100);
-            
-            // Determine peak demand day
-            const dayGroups = {};
-            data.forEach(item => {
-                const dayOfWeek = getDayOfWeek(item.date);
-                if (!dayGroups[dayOfWeek]) {
-                    dayGroups[dayOfWeek] = 0;
-                }
-                dayGroups[dayOfWeek] += item.sales;
-            });
-            
-            let peakDay = '';
-            let peakSales = 0;
-            
-            Object.keys(dayGroups).forEach(day => {
-                if (dayGroups[day] > peakSales) {
-                    peakSales = dayGroups[day];
-                    peakDay = day;
-                }
-            });
-            
-            // Determine risk level (simulated)
-            const riskLevel = Math.random() > 0.7 ? 'High' : Math.random() > 0.3 ? 'Medium' : 'Low';
-            
-            // Update UI
-            document.getElementById('nextWeekForecast').textContent = 
-                `${growthForecast >= 0 ? '+' : ''}${growthForecast.toFixed(1)}%`;
-            document.getElementById('peakDemandDay').textContent = peakDay;
-            document.getElementById('riskAlert').textContent = riskLevel;
-        }
-
-        function updateRecommendationsData() {
-            // Get filtered data
-            const filteredData = getFilteredData();
-            
-            // Update operational improvements
-            updateOperationalImprovements(filteredData);
-            
-            // Update marketing strategies
-            updateMarketingStrategies(filteredData);
-        }
-
-        function updateOperationalImprovements(data) {
-            // Group by hour (simulated)
-            const hourGroups = {};
-            for (let i = 0; i < 24; i++) {
-                hourGroups[i] = Math.floor(Math.random() * 50) + 10;
-            }
-            
-            // Find peak hours
-            let peakHour = 18; // Default to 6 PM
-            let maxOrders = 0;
-            
-            Object.keys(hourGroups).forEach(hour => {
-                if (hourGroups[hour] > maxOrders) {
-                    maxOrders = hourGroups[hour];
-                    peakHour = parseInt(hour);
-                }
-            });
-            
-            // Update UI
-            document.getElementById('staffOpt').textContent = 
-                `Increase staff during ${peakHour}:00-${peakHour+2}:00 peak hours`;
-            document.getElementById('menuEng').textContent = 
-                'Promote combo deals during lunch hours';
-            document.getElementById('deliveryRoutes').textContent = 
-                'Optimize routes for Al Barsha area';
-        }
-
-        function updateMarketingStrategies(data) {
-            // Group by day of week
-            const dayGroups = {};
-            data.forEach(item => {
-                const dayOfWeek = getDayOfWeek(item.date);
-                if (!dayGroups[dayOfWeek]) {
-                    dayGroups[dayOfWeek] = {
-                        transactions: 0,
-                        sales: 0
-                    };
-                }
-                dayGroups[dayOfWeek].transactions += item.transactions;
-                dayGroups[dayOfWeek].sales += item.sales;
-            });
-            
-            // Find weekend performance
-            const weekendSales = (dayGroups['Saturday']?.sales || 0) + (dayGroups['Sunday']?.sales || 0);
-            const weekdaySales = Object.keys(dayGroups)
-                .filter(day => day !== 'Saturday' && day !== 'Sunday')
-                .reduce((sum, day) => sum + (dayGroups[day]?.sales || 0), 0);
-            
-            // Update UI
-            document.getElementById('weekendPromo').textContent = 
-                'Family bundles on Saturdays';
-            document.getElementById('eveningBoost').textContent = 
-                'Late-night specials 9-11 PM';
-            document.getElementById('loyaltyProg').textContent = 
-                'Target frequent customers';
         }
 
         function updateOffersDashboard() {
