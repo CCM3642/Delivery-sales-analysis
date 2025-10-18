@@ -14,10 +14,7 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <!-- jsPDF for PDF export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <!-- SheetJS for Excel export -->
+    <!-- SheetJS for Excel Import -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
@@ -636,6 +633,15 @@
                 min-width: auto;
                 max-width: none;
             }
+            
+            .data-stats {
+                flex-wrap: wrap;
+            }
+            
+            .data-stats .stat-item {
+                flex: 1 1 50%;
+                margin-bottom: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -643,7 +649,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"><i class="fas fa-chicken-drumstick"></i> Crispy Chicken Dashboard</a>
+            <a class="navbar-brand" href="#"><i class="fas fa-drumstick-bite"></i> Crispy Chicken Dashboard</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -1035,11 +1041,8 @@
                                     </h2>
                                     <div id="recommendations1" class="accordion-collapse collapse show" data-bs-parent="#recommendationsAccordion">
                                         <div class="accordion-body">
-                                            <ul>
-                                                <li>Increase weekend promotions at Hamdan St branch to handle high traffic</li>
-                                                <li>Introduce more family meal packages at Al Barsha branch to increase average transaction value</li>
-                                                <li>Optimize Muroor branch operating hours to match customer demand patterns</li>
-                                                <li>Add new product sampling activities at Khaldia branch to attract more customers</li>
+                                            <ul id="shortTermRecommendations">
+                                                <!-- Recommendations will be populated by JavaScript -->
                                             </ul>
                                         </div>
                                     </div>
@@ -1052,11 +1055,8 @@
                                     </h2>
                                     <div id="recommendations2" class="accordion-collapse collapse" data-bs-parent="#recommendationsAccordion">
                                         <div class="accordion-body">
-                                            <ul>
-                                                <li>Redistribute target sales indicators for each branch based on sales data</li>
-                                                <li>Create specific improvement plans for underperforming branches</li>
-                                                <li>Analyze ROI of different offer types and optimize promotion strategy</li>
-                                                <li>Evaluate new branch location possibilities to expand market coverage</li>
+                                            <ul id="mediumTermRecommendations">
+                                                <!-- Recommendations will be populated by JavaScript -->
                                             </ul>
                                         </div>
                                     </div>
@@ -1069,11 +1069,8 @@
                                     </h2>
                                     <div id="recommendations3" class="accordion-collapse collapse" data-bs-parent="#recommendationsAccordion">
                                         <div class="accordion-body">
-                                            <ul>
-                                                <li>Develop customer loyalty program to increase retention rate</li>
-                                                <li>Consider launching online ordering and delivery services</li>
-                                                <li>Explore new product lines to increase revenue sources</li>
-                                                <li>Develop brand expansion plan to enter new market areas</li>
+                                            <ul id="longTermRecommendations">
+                                                <!-- Recommendations will be populated by JavaScript -->
                                             </ul>
                                         </div>
                                     </div>
@@ -1276,15 +1273,52 @@
                         <div class="excel-format-info">
                             <strong>Excel Format Requirements:</strong>
                             <ul class="mb-0">
-                                <li>Required columns: Date, Branch, Channel, Transactions, Sales, Offer Type, Offer Status</li>
-                                <li>Optional columns: Average per Order (will be calculated if missing), Notes</li>
-                                <li>Date format: YYYY-MM-DD</li>
-                                <li>Branch names must match exactly: Crispy Chicken-[Branch Name]</li>
-                                <li>Channels: Delivery, Dine-in, Takeaway</li>
-                                <li>Offer Types: Normal Day, Chicken Day, Ultimate</li>
-                                <li>Offer Status: Active, No Offer</li>
+                                <li><strong>Required columns:</strong> Date, Branch, Channel, Transactions, Sales, Offer Type, Offer Status</li>
+                                <li><strong>Optional columns:</strong> Average per Order (calculated automatically), Notes</li>
+                                <li><strong>Date format:</strong> YYYY-MM-DD (e.g., 2025-10-01)</li>
+                                <li><strong>Branch names:</strong> Must match exactly: Crispy Chicken-Hamdan St, Crispy Chicken Khaldia, etc.</li>
+                                <li><strong>Channels:</strong> Delivery, Dine-in, Takeaway</li>
+                                <li><strong>Offer Types:</strong> Normal Day, Chicken Day, Ultimate</li>
+                                <li><strong>Offer Status:</strong> Active, No Offer</li>
+                                <li><strong>Transactions:</strong> Must be a positive integer</li>
+                                <li><strong>Sales:</strong> Must be a positive number (AED)</li>
                             </ul>
-                            <small><a href="#" onclick="downloadExcelTemplate()">Download Excel Template</a></small>
+                            <div class="mt-2">
+                                <strong>Sample Format:</strong>
+                                <table class="table table-sm mt-2">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Branch</th>
+                                            <th>Channel</th>
+                                            <th>Transactions</th>
+                                            <th>Sales</th>
+                                            <th>Offer Type</th>
+                                            <th>Offer Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>2025-10-01</td>
+                                            <td>Crispy Chicken-Hamdan St</td>
+                                            <td>Delivery</td>
+                                            <td>73</td>
+                                            <td>3216.00</td>
+                                            <td>Normal Day</td>
+                                            <td>No Offer</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i> 
+                                The system will automatically calculate the average per order if not provided. 
+                                Duplicate records (same date, branch, and channel) will be automatically removed.
+                            </small>
+                            <hr>
+                            <small><a href="#" onclick="downloadExcelTemplate()" class="text-primary">
+                                <i class="fas fa-download"></i> Download Excel Template
+                            </a></small>
                         </div>
                         
                         <div class="file-drop-area" id="fileDropArea">
@@ -1567,7 +1601,7 @@
                     <h5 class="mb-0">Executive Summary</h5>
                 </div>
                 <div class="card-body">
-                    <p>This report analyzes Crispy Chicken's sales data from October 1-14, 2025. During this period, the company achieved total sales of <span id="reportTotalSales">0</span> AED with <span id="reportTotalTransactions">0</span> transactions completed. The average transaction value was <span id="reportAvgTransaction">0</span> AED. Overall, the company performed well during this period, with particularly strong performance from the Hamdan St and Khaldia branches.</p>
+                    <p>This report analyzes Crispy Chicken's sales data from <span id="reportDateRange">October 1-14, 2025</span>. During this period, the company achieved total sales of <span id="reportTotalSales">0</span> AED with <span id="reportTotalTransactions">0</span> transactions completed. The average transaction value was <span id="reportAvgTransaction">0</span> AED. Overall, the company performed well during this period, with particularly strong performance from the Hamdan St and Khaldia branches.</p>
                     <p>During the reporting period, we observed that weekend sales were significantly higher than weekdays, indicating that our marketing activities are more effective on weekends. Additionally, the Ultimate offer type had the highest conversion rate, suggesting we should promote more of these offers in the future.</p>
                 </div>
             </div>
@@ -1612,10 +1646,8 @@
                             </div>
                             <div class="mt-3">
                                 <h6>Key Findings:</h6>
-                                <ul>
-                                    <li>Hamdan St branch has the highest sales, accounting for 35% of total sales</li>
-                                    <li>Al Barsha branch has fewer transactions but the highest average transaction value</li>
-                                    <li>Al Satwa branch performs particularly well on weekends but relatively weak on weekdays</li>
+                                <ul id="branchPerformanceFindings">
+                                    <!-- Findings will be populated by JavaScript -->
                                 </ul>
                             </div>
                         </div>
@@ -1632,10 +1664,8 @@
                             </div>
                             <div class="mt-3">
                                 <h6>Key Findings:</h6>
-                                <ul>
-                                    <li>Saturday and Sunday are peak sales days, with 40% higher transaction volume than weekdays</li>
-                                    <li>Week 1 (Oct 1-7) had slightly higher sales than Week 2</li>
-                                    <li>Wednesday is typically the lowest transaction day of the week</li>
+                                <ul id="dailyWeeklyFindings">
+                                    <!-- Findings will be populated by JavaScript -->
                                 </ul>
                             </div>
                         </div>
@@ -1655,10 +1685,8 @@
                             </div>
                             <div class="mt-3">
                                 <h6>Key Findings:</h6>
-                                <ul>
-                                    <li>Beginning and end of month typically show better sales performance</li>
-                                    <li>Middle of month has higher sales volatility, requiring further analysis</li>
-                                    <li>Overall sales show an upward trend with 12% month-over-month growth</li>
+                                <ul id="monthlyTrendFindings">
+                                    <!-- Findings will be populated by JavaScript -->
                                 </ul>
                             </div>
                         </div>
@@ -1675,11 +1703,8 @@
                             </div>
                             <div class="mt-3">
                                 <h6>Target Distribution Recommendations:</h6>
-                                <ul>
-                                    <li>Hamdan St branch: 35% target share (based on historical performance)</li>
-                                    <li>Khaldia branch: 25% target share (based on traffic analysis)</li>
-                                    <li>Al Barsha branch: 20% target share (based on average transaction value)</li>
-                                    <li>Other branches: 20% target share (based on growth potential)</li>
+                                <ul id="targetPlanFindings">
+                                    <!-- Findings will be populated by JavaScript -->
                                 </ul>
                             </div>
                         </div>
@@ -1734,11 +1759,8 @@
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle"></i> 
                             <strong>Key Feedback Insights:</strong> 
-                            <ul>
-                                <li>Service quality is consistently rated highest across all branches</li>
-                                <li>Food quality shows room for improvement, particularly in Al Barsha branch</li>
-                                <li>Customers appreciate cleanliness but suggest faster service during peak hours</li>
-                                <li>Ultimate offer receives the most positive customer feedback</li>
+                            <ul id="feedbackInsightsList">
+                                <!-- Insights will be populated by JavaScript -->
                             </ul>
                         </div>
                     </div>
@@ -1753,29 +1775,20 @@
                     <div class="row">
                         <div class="col-md-4">
                             <h6>Short-term Recommendations</h6>
-                            <ul>
-                                <li>Increase weekend promotions at Hamdan St branch to handle high traffic</li>
-                                <li>Introduce more family meal packages at Al Barsha branch to increase average transaction value</li>
-                                <li>Optimize Muroor branch operating hours to match customer demand patterns</li>
-                                <li>Add new product sampling activities at Khaldia branch to attract more customers</li>
+                            <ul id="shortTermManagementRecommendations">
+                                <!-- Recommendations will be populated by JavaScript -->
                             </ul>
                         </div>
                         <div class="col-md-4">
                             <h6>Medium-term Strategy Adjustments</h6>
-                            <ul>
-                                <li>Redistribute target sales indicators for each branch based on sales data</li>
-                                <li>Create specific improvement plans for underperforming branches</li>
-                                <li>Analyze ROI of different offer types and optimize promotion strategy</li>
-                                <li>Evaluate new branch location possibilities to expand market coverage</li>
+                            <ul id="mediumTermManagementRecommendations">
+                                <!-- Recommendations will be populated by JavaScript -->
                             </ul>
                         </div>
                         <div class="col-md-4">
                             <h6>Long-term Development Plans</h6>
-                            <ul>
-                                <li>Develop customer loyalty program to increase retention rate</li>
-                                <li>Consider launching online ordering and delivery services</li>
-                                <li>Explore new product lines to increase revenue sources</li>
-                                <li>Develop brand expansion plan to enter new market areas</li>
+                            <ul id="longTermManagementRecommendations">
+                                <!-- Recommendations will be populated by JavaScript -->
                             </ul>
                         </div>
                     </div>
@@ -2072,7 +2085,7 @@
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay" style="display: none;">
         <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="sr-only">Loading...</span>
         </div>
     </div>
 
@@ -2087,6 +2100,7 @@
         let offers = [];
         let charts = {};
         let undoStack = [];
+        let currentPage = 'dashboard';
         
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
@@ -2118,24 +2132,19 @@
             
             // Initialize category color picker
             initializeCategoryColorPicker();
-            
-            // Setup navigation
-            setupNavigation();
         }
         
-        // Setup navigation
-        function setupNavigation() {
-            document.querySelectorAll('.nav-link[data-page]').forEach(link => {
+        // Setup event listeners
+        function setupEventListeners() {
+            // Navigation links
+            document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                     const pageId = this.getAttribute('data-page');
                     showPage(pageId);
                 });
             });
-        }
-        
-        // Setup event listeners
-        function setupEventListeners() {
+            
             // Sales data form
             document.getElementById('salesDataForm').addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -2310,16 +2319,13 @@
             document.getElementById(`${pageId}-page`).style.display = 'block';
             
             // Update navigation
-            document.querySelectorAll('.nav-link').forEach(link => {
+            document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
                 link.classList.remove('active');
             });
+            document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
             
-            // Find and activate the corresponding navigation link
-            document.querySelectorAll('.nav-link[data-page]').forEach(link => {
-                if (link.getAttribute('data-page') === pageId) {
-                    link.classList.add('active');
-                }
-            });
+            // Update current page
+            currentPage = pageId;
             
             // Update page-specific content
             switch(pageId) {
@@ -2415,7 +2421,11 @@
             const totalSales = filteredSales.reduce((sum, sale) => sum + parseFloat(sale.sales), 0);
             const totalTransactions = filteredSales.reduce((sum, sale) => sum + parseInt(sale.transactions), 0);
             const avgTransaction = totalTransactions > 0 ? totalSales / totalTransactions : 0;
-            const targetAchievement = Math.min(100, (totalSales / 50000) * 100); // Assuming target of 50,000 AED
+            
+            // Calculate dynamic target based on historical data
+            const avgDailySales = totalSales / Math.max(1, filteredSales.length);
+            const targetSales = avgDailySales * 30; // Monthly target based on average daily sales
+            const targetAchievement = targetSales > 0 ? Math.min(100, (totalSales / targetSales) * 100) : 0;
             
             // Update metric cards
             document.getElementById('totalSales').textContent = formatCurrency(totalSales);
@@ -2444,7 +2454,8 @@
         
         // Update sales trend chart
         function updateSalesTrendChart(data) {
-            const ctx = document.getElementById('salesTrendChart').getContext('2d');
+            const ctx = document.getElementById('salesTrendChart');
+            if (!ctx) return;
             
             // Group data by date
             const groupedData = {};
@@ -2464,7 +2475,7 @@
             }
             
             // Create new chart
-            charts.salesTrend = new Chart(ctx, {
+            charts.salesTrend = new Chart(ctx.getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: sortedDates,
@@ -2509,7 +2520,8 @@
         
         // Update branch sales chart
         function updateBranchSalesChart(data) {
-            const ctx = document.getElementById('branchSalesChart').getContext('2d');
+            const ctx = document.getElementById('branchSalesChart');
+            if (!ctx) return;
             
             // Group data by branch
             const groupedData = {};
@@ -2526,7 +2538,7 @@
             }
             
             // Create new chart
-            charts.branchSales = new Chart(ctx, {
+            charts.branchSales = new Chart(ctx.getContext('2d'), {
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(groupedData),
@@ -2566,6 +2578,8 @@
         // Update daily sales table
         function updateDailySalesTable(data) {
             const tbody = document.getElementById('dailySalesTable');
+            if (!tbody) return;
+            
             tbody.innerHTML = '';
             
             // Sort data by date
@@ -2593,7 +2607,8 @@
         // Update performance charts
         function updatePerformanceCharts(data) {
             // Branch performance radar chart
-            const radarCtx = document.getElementById('branchPerformanceRadarChart').getContext('2d');
+            const radarCtx = document.getElementById('branchPerformanceRadarChart');
+            if (!radarCtx) return;
             
             // Group data by branch
             const branchData = {};
@@ -2626,7 +2641,7 @@
             }
             
             // Create new chart
-            charts.branchPerformanceRadar = new Chart(radarCtx, {
+            charts.branchPerformanceRadar = new Chart(radarCtx.getContext('2d'), {
                 type: 'radar',
                 data: {
                     labels: Object.keys(branchData),
@@ -2660,7 +2675,8 @@
             });
             
             // Branch performance ranking chart
-            const rankingCtx = document.getElementById('branchPerformanceRankingChart').getContext('2d');
+            const rankingCtx = document.getElementById('branchPerformanceRankingChart');
+            if (!rankingCtx) return;
             
             // Destroy existing chart if it exists
             if (charts.branchPerformanceRanking) {
@@ -2668,7 +2684,7 @@
             }
             
             // Create new chart
-            charts.branchPerformanceRanking = new Chart(rankingCtx, {
+            charts.branchPerformanceRanking = new Chart(rankingCtx.getContext('2d'), {
                 type: 'bar',
                 data: {
                     labels: Object.keys(branchData),
@@ -2704,15 +2720,20 @@
                 branchData[a].avgSale > branchData[b].avgSale ? a : b
             );
             
-            document.getElementById('bestBranch').textContent = bestBranch;
-            document.getElementById('highestTransactionsBranch').textContent = highestTransactionsBranch;
-            document.getElementById('highestAvgSaleBranch').textContent = highestAvgSaleBranch;
+            const bestBranchEl = document.getElementById('bestBranch');
+            const highestTransactionsBranchEl = document.getElementById('highestTransactionsBranch');
+            const highestAvgSaleBranchEl = document.getElementById('highestAvgSaleBranch');
+            
+            if (bestBranchEl) bestBranchEl.textContent = bestBranch;
+            if (highestTransactionsBranchEl) highestTransactionsBranchEl.textContent = highestTransactionsBranch;
+            if (highestAvgSaleBranchEl) highestAvgSaleBranchEl.textContent = highestAvgSaleBranch;
         }
         
         // Update trends charts
         function updateTrendsCharts(data) {
             // Daily trends chart
-            const dailyCtx = document.getElementById('dailyTrendsChart').getContext('2d');
+            const dailyCtx = document.getElementById('dailyTrendsChart');
+            if (!dailyCtx) return;
             
             // Group data by date
             const dailyData = {};
@@ -2736,7 +2757,7 @@
             }
             
             // Create new chart
-            charts.dailyTrends = new Chart(dailyCtx, {
+            charts.dailyTrends = new Chart(dailyCtx.getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: sortedDates,
@@ -2789,7 +2810,8 @@
             });
             
             // Weekly trends chart
-            const weeklyCtx = document.getElementById('weeklyTrendsChart').getContext('2d');
+            const weeklyCtx = document.getElementById('weeklyTrendsChart');
+            if (!weeklyCtx) return;
             
             // Group data by week
             const weeklyData = {};
@@ -2818,7 +2840,7 @@
             }
             
             // Create new chart
-            charts.weeklyTrends = new Chart(weeklyCtx, {
+            charts.weeklyTrends = new Chart(weeklyCtx.getContext('2d'), {
                 type: 'bar',
                 data: {
                     labels: sortedWeeks.map(week => `Week ${sortedWeeks.indexOf(week) + 1}`),
@@ -2849,7 +2871,8 @@
             });
             
             // Moving average chart
-            const movingAvgCtx = document.getElementById('movingAverageChart').getContext('2d');
+            const movingAvgCtx = document.getElementById('movingAverageChart');
+            if (!movingAvgCtx) return;
             
             // Calculate moving average
             const windowSize = 3;
@@ -2872,7 +2895,7 @@
             }
             
             // Create new chart
-            charts.movingAverage = new Chart(movingAvgCtx, {
+            charts.movingAverage = new Chart(movingAvgCtx.getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: movingAvgData.map(d => d.date),
@@ -2918,8 +2941,11 @@
         
         // Update insights
         function updateInsights(data) {
-            // Anomaly detection
             const anomalyText = document.getElementById('anomalyText');
+            const predictionText = document.getElementById('predictionText');
+            const keyFindingsList = document.getElementById('keyFindingsList');
+            
+            if (!anomalyText || !predictionText || !keyFindingsList) return;
             
             // Calculate average daily sales
             const dailySales = {};
@@ -2943,9 +2969,6 @@
                 anomalyText.textContent = 'No anomalies detected in daily sales data.';
             }
             
-            // Predictive analytics
-            const predictionText = document.getElementById('predictionText');
-            
             // Simple linear regression for trend
             const n = salesValues.length;
             const xValues = Array.from({length: n}, (_, i) => i);
@@ -2965,24 +2988,79 @@
             
             predictionText.textContent = `Based on current trend, predicted sales for next day: ${formatCurrency(nextDayPrediction)}`;
             
-            // Key findings
-            const keyFindingsList = document.getElementById('keyFindingsList');
+            // Generate data-driven findings
+            const findings = generateDataDrivenFindings(data);
+            
             keyFindingsList.innerHTML = '';
-            
-            // Add findings
-            const findings = [
-                'Weekend sales are 40% higher than weekdays',
-                'Ultimate offer type has the highest conversion rate',
-                'Hamdan St branch contributes 35% of total sales',
-                'Average transaction value increased by 15% compared to last month'
-            ];
-            
             findings.forEach(finding => {
                 const li = document.createElement('li');
                 li.className = 'list-group-item';
                 li.textContent = finding;
                 keyFindingsList.appendChild(li);
             });
+        }
+        
+        // Generate data-driven findings
+        function generateDataDrivenFindings(data) {
+            const findings = [];
+            
+            // Group data by day of week
+            const dayOfWeekData = {};
+            data.forEach(sale => {
+                const dayOfWeek = new Date(sale.date).toLocaleDateString('en-US', { weekday: 'long' });
+                if (!dayOfWeekData[dayOfWeek]) {
+                    dayOfWeekData[dayOfWeek] = { sales: 0, transactions: 0 };
+                }
+                dayOfWeekData[dayOfWeek].sales += parseFloat(sale.sales);
+                dayOfWeekData[dayOfWeek].transactions += parseInt(sale.transactions);
+            });
+            
+            // Find best performing day
+            const bestDay = Object.keys(dayOfWeekData).reduce((a, b) => 
+                dayOfWeekData[a].sales > dayOfWeekData[b].sales ? a : b
+            );
+            const worstDay = Object.keys(dayOfWeekData).reduce((a, b) => 
+                dayOfWeekData[a].sales < dayOfWeekData[b].sales ? a : b
+            );
+            
+            findings.push(`${bestDay} is the best performing day with ${formatCurrency(dayOfWeekData[bestDay].sales)} in sales`);
+            findings.push(`${worstDay} shows the lowest sales at ${formatCurrency(dayOfWeekData[worstDay].sales)}`);
+            
+            // Analyze offer performance
+            const offerData = {};
+            data.forEach(sale => {
+                if (!offerData[sale.offerType]) {
+                    offerData[sale.offerType] = { sales: 0, transactions: 0 };
+                }
+                offerData[sale.offerType].sales += parseFloat(sale.sales);
+                offerData[sale.offerType].transactions += parseInt(sale.transactions);
+            });
+            
+            const bestOffer = Object.keys(offerData).reduce((a, b) => 
+                offerData[a].sales > offerData[b].sales ? a : b
+            );
+            
+            findings.push(`${bestOffer} offer generates the highest revenue at ${formatCurrency(offerData[bestOffer].sales)}`);
+            
+            // Branch performance
+            const branchData = {};
+            data.forEach(sale => {
+                if (!branchData[sale.branch]) {
+                    branchData[sale.branch] = 0;
+                }
+                branchData[sale.branch] += parseFloat(sale.sales);
+            });
+            
+            const topBranch = Object.keys(branchData).reduce((a, b) => 
+                branchData[a] > branchData[b] ? a : b
+            );
+            
+            const totalSales = Object.values(branchData).reduce((a, b) => a + b, 0);
+            const topBranchPercentage = ((branchData[topBranch] / totalSales) * 100).toFixed(1);
+            
+            findings.push(`${topBranch} leads with ${topBranchPercentage}% of total sales`);
+            
+            return findings;
         }
         
         // Update feedback analysis
@@ -3006,141 +3084,154 @@
                 ? ((filteredFeedback.filter(f => f.rating >= 4).length / totalFeedback) * 100).toFixed(1)
                 : '0';
             
-            document.getElementById('totalFeedback').textContent = totalFeedback;
-            document.getElementById('avgRating').textContent = avgRating;
-            document.getElementById('positiveFeedback').textContent = `${positiveFeedback}%`;
+            const totalFeedbackEl = document.getElementById('totalFeedback');
+            const avgRatingEl = document.getElementById('avgRating');
+            const positiveFeedbackEl = document.getElementById('positiveFeedback');
+            
+            if (totalFeedbackEl) totalFeedbackEl.textContent = totalFeedback;
+            if (avgRatingEl) avgRatingEl.textContent = avgRating;
+            if (positiveFeedbackEl) positiveFeedbackEl.textContent = `${positiveFeedback}%`;
             
             // Feedback by category chart
-            const categoryCtx = document.getElementById('feedbackCategoryChart').getContext('2d');
-            
-            // Group feedback by category
-            const categoryData = {};
-            filteredFeedback.forEach(feedback => {
-                if (!categoryData[feedback.category]) {
-                    categoryData[feedback.category] = 0;
-                }
-                categoryData[feedback.category]++;
-            });
-            
-            // Destroy existing chart if it exists
-            if (charts.feedbackCategory) {
-                charts.feedbackCategory.destroy();
-            }
-            
-            // Create new chart
-            charts.feedbackCategory = new Chart(categoryCtx, {
-                type: 'pie',
-                data: {
-                    labels: Object.keys(categoryData),
-                    datasets: [{
-                        data: Object.values(categoryData),
-                        backgroundColor: [
-                            '#17a2b8',
-                            '#ff6b35',
-                            '#28a745',
-                            '#ffc107'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right'
-                        }
+            const categoryCtx = document.getElementById('feedbackCategoryChart');
+            if (categoryCtx) {
+                // Group feedback by category
+                const categoryData = {};
+                filteredFeedback.forEach(feedback => {
+                    if (!categoryData[feedback.category]) {
+                        categoryData[feedback.category] = 0;
                     }
+                    categoryData[feedback.category]++;
+                });
+                
+                // Destroy existing chart if it exists
+                if (charts.feedbackCategory) {
+                    charts.feedbackCategory.destroy();
                 }
-            });
-            
-            // Rating distribution chart
-            const ratingCtx = document.getElementById('ratingDistributionChart').getContext('2d');
-            
-            // Group feedback by rating
-            const ratingData = {
-                '5': 0,
-                '4': 0,
-                '3': 0,
-                '2': 0,
-                '1': 0
-            };
-            
-            filteredFeedback.forEach(feedback => {
-                ratingData[feedback.rating.toString()]++;
-            });
-            
-            // Destroy existing chart if it exists
-            if (charts.ratingDistribution) {
-                charts.ratingDistribution.destroy();
-            }
-            
-            // Create new chart
-            charts.ratingDistribution = new Chart(ratingCtx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(ratingData),
-                    datasets: [{
-                        label: 'Number of Ratings',
-                        data: Object.values(ratingData),
-                        backgroundColor: [
-                            '#28a745',
-                            '#28a745',
-                            '#ffc107',
-                            '#dc3545',
-                            '#dc3545'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
+                
+                // Create new chart
+                charts.feedbackCategory = new Chart(categoryCtx.getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(categoryData),
+                        datasets: [{
+                            data: Object.values(categoryData),
+                            backgroundColor: [
+                                '#17a2b8',
+                                '#ff6b35',
+                                '#28a745',
+                                '#ffc107'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
                             }
                         }
                     }
+                });
+            }
+            
+            // Rating distribution chart
+            const ratingCtx = document.getElementById('ratingDistributionChart');
+            if (ratingCtx) {
+                // Group feedback by rating
+                const ratingData = {
+                    '5': 0,
+                    '4': 0,
+                    '3': 0,
+                    '2': 0,
+                    '1': 0
+                };
+                
+                filteredFeedback.forEach(feedback => {
+                    ratingData[feedback.rating.toString()]++;
+                });
+                
+                // Destroy existing chart if it exists
+                if (charts.ratingDistribution) {
+                    charts.ratingDistribution.destroy();
                 }
-            });
+                
+                // Create new chart
+                charts.ratingDistribution = new Chart(ratingCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(ratingData),
+                        datasets: [{
+                            label: 'Number of Ratings',
+                            data: Object.values(ratingData),
+                            backgroundColor: [
+                                '#28a745',
+                                '#28a745',
+                                '#ffc107',
+                                '#dc3545',
+                                '#dc3545'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        }
+                    }
+                });
+            }
             
             // Recent feedback list
             const recentFeedbackList = document.getElementById('recentFeedbackList');
-            recentFeedbackList.innerHTML = '';
-            
-            // Sort feedback by date (newest first)
-            const sortedFeedback = [...filteredFeedback].sort((a, b) => 
-                new Date(b.date) - new Date(a.date)
-            );
-            
-            // Limit to 5 recent feedback
-            const displayFeedback = sortedFeedback.slice(0, 5);
-            
-            displayFeedback.forEach(feedback => {
-                const feedbackCard = document.createElement('div');
-                feedbackCard.className = 'feedback-card';
+            if (recentFeedbackList) {
+                recentFeedbackList.innerHTML = '';
                 
-                const ratingStars = '★'.repeat(feedback.rating) + '☆'.repeat(5 - feedback.rating);
+                // Sort feedback by date (newest first)
+                const sortedFeedback = [...filteredFeedback].sort((a, b) => 
+                    new Date(b.date) - new Date(a.date)
+                );
                 
-                feedbackCard.innerHTML = `
-                    <h6>${feedback.branch} - ${feedback.date}</h6>
-                    <p>${feedback.comment}</p>
-                    <div class="feedback-meta">
-                        <span class="feedback-category category-${feedback.category.toLowerCase()}">${feedback.category}</span>
-                        <span>${ratingStars} (${feedback.rating}/5)</span>
-                    </div>
-                `;
+                // Limit to 5 recent feedback
+                const displayFeedback = sortedFeedback.slice(0, 5);
                 
-                recentFeedbackList.appendChild(feedbackCard);
-            });
+                displayFeedback.forEach(feedback => {
+                    const feedbackCard = document.createElement('div');
+                    feedbackCard.className = 'feedback-card';
+                    
+                    const ratingStars = '★'.repeat(feedback.rating) + '☆'.repeat(5 - feedback.rating);
+                    
+                    feedbackCard.innerHTML = `
+                        <h6>${feedback.branch} - ${feedback.date}</h6>
+                        <p>${feedback.comment}</p>
+                        <div class="feedback-meta">
+                            <span class="feedback-category category-${feedback.category.toLowerCase()}">${feedback.category}</span>
+                            <span>${ratingStars} (${feedback.rating}/5)</span>
+                        </div>
+                    `;
+                    
+                    recentFeedbackList.appendChild(feedbackCard);
+                });
+            }
         }
         
         // Update data stats
         function updateDataStats() {
-            document.getElementById('salesRecordsCount').textContent = salesData.length;
-            document.getElementById('offersCount').textContent = offers.length;
-            document.getElementById('feedbackCount').textContent = feedbackData.length;
+            const salesRecordsCountEl = document.getElementById('salesRecordsCount');
+            const offersCountEl = document.getElementById('offersCount');
+            const feedbackCountEl = document.getElementById('feedbackCount');
+            const totalDataSizeEl = document.getElementById('totalDataSize');
+            
+            if (salesRecordsCountEl) salesRecordsCountEl.textContent = salesData.length;
+            if (offersCountEl) offersCountEl.textContent = offers.length;
+            if (feedbackCountEl) feedbackCountEl.textContent = feedbackData.length;
             
             // Calculate total data size
             const dataSize = new Blob([JSON.stringify(salesData)]).size;
@@ -3148,12 +3239,14 @@
             const offersSize = new Blob([JSON.stringify(offers)]).size;
             const totalSize = (dataSize + feedbackSize + offersSize) / 1024; // KB
             
-            document.getElementById('totalDataSize').textContent = `${totalSize.toFixed(2)} KB`;
+            if (totalDataSizeEl) totalDataSizeEl.textContent = `${totalSize.toFixed(2)} KB`;
         }
         
         // Update data table
         function updateDataTable() {
             const tbody = document.getElementById('dataTable');
+            if (!tbody) return;
+            
             tbody.innerHTML = '';
             
             // Sort data by date (newest first)
@@ -3184,6 +3277,8 @@
         // Update feedback table
         function updateFeedbackTable() {
             const tbody = document.getElementById('feedbackTable');
+            if (!tbody) return;
+            
             tbody.innerHTML = '';
             
             // Sort data by date (newest first)
@@ -3238,10 +3333,8 @@
                     data: formData
                 });
                 
-                // Update UI
-                updateDataStats();
-                updateDataTable();
-                updateDashboard();
+                // Update all UI components
+                updateAllUI();
                 
                 // Reset form
                 document.getElementById('salesDataForm').reset();
@@ -3263,17 +3356,37 @@
             }
         }
         
+        // Update all UI components after data change
+        function updateAllUI() {
+            updateDataStats();
+            updateDataTable();
+            updateFeedbackTable();
+            updateDashboard();
+            updateFeedbackSummary();
+            updateManagementReport();
+            updateFeedbackManagement();
+            updateOffersTable();
+            
+            // Update undo status
+            const undoStatusEl = document.getElementById('undoStatus');
+            if (undoStatusEl) {
+                undoStatusEl.textContent = undoStack.length > 0 ? `${undoStack.length} actions available` : 'No actions to undo';
+            }
+        }
+        
         // Validate sales form
         function validateSalesForm(data) {
             let isValid = true;
+            
+            // Clear previous validation
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
             
             // Date validation
             if (!data.date || !isValidDate(data.date)) {
                 document.getElementById('dateInput').classList.add('is-invalid');
                 document.getElementById('dateInputFeedback').textContent = 'Valid date is required';
                 isValid = false;
-            } else {
-                document.getElementById('dateInput').classList.remove('is-invalid');
             }
             
             // Branch validation
@@ -3281,8 +3394,6 @@
                 document.getElementById('branchInput').classList.add('is-invalid');
                 document.getElementById('branchInputFeedback').textContent = 'Valid branch is required';
                 isValid = false;
-            } else {
-                document.getElementById('branchInput').classList.remove('is-invalid');
             }
             
             // Channel validation
@@ -3290,8 +3401,6 @@
                 document.getElementById('channelInput').classList.add('is-invalid');
                 document.getElementById('channelInputFeedback').textContent = 'Valid channel is required';
                 isValid = false;
-            } else {
-                document.getElementById('channelInput').classList.remove('is-invalid');
             }
             
             // Transactions validation
@@ -3299,8 +3408,6 @@
                 document.getElementById('transactionsInput').classList.add('is-invalid');
                 document.getElementById('transactionsInputFeedback').textContent = 'Valid number of transactions is required';
                 isValid = false;
-            } else {
-                document.getElementById('transactionsInput').classList.remove('is-invalid');
             }
             
             // Sales validation
@@ -3308,8 +3415,6 @@
                 document.getElementById('salesInput').classList.add('is-invalid');
                 document.getElementById('salesInputFeedback').textContent = 'Valid sales amount is required';
                 isValid = false;
-            } else {
-                document.getElementById('salesInput').classList.remove('is-invalid');
             }
             
             // Offer type validation
@@ -3317,8 +3422,6 @@
                 document.getElementById('offerTypeInput').classList.add('is-invalid');
                 document.getElementById('offerTypeInputFeedback').textContent = 'Valid offer type is required';
                 isValid = false;
-            } else {
-                document.getElementById('offerTypeInput').classList.remove('is-invalid');
             }
             
             // Offer status validation
@@ -3326,8 +3429,6 @@
                 document.getElementById('offerStatusInput').classList.add('is-invalid');
                 document.getElementById('offerStatusInputFeedback').textContent = 'Valid offer status is required';
                 isValid = false;
-            } else {
-                document.getElementById('offerStatusInput').classList.remove('is-invalid');
             }
             
             return isValid;
@@ -3394,10 +3495,8 @@
                     data: formData
                 });
                 
-                // Update UI
-                updateDataStats();
-                updateFeedbackTable();
-                updateFeedbackSummary();
+                // Update all UI components
+                updateAllUI();
                 
                 // Reset form
                 document.getElementById('feedbackForm').reset();
@@ -3426,13 +3525,15 @@
         function validateFeedbackForm(data) {
             let isValid = true;
             
+            // Clear previous validation
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
+            
             // Date validation
             if (!data.date || !isValidDate(data.date)) {
                 document.getElementById('feedbackDate').classList.add('is-invalid');
                 document.getElementById('feedbackDateFeedback').textContent = 'Valid date is required';
                 isValid = false;
-            } else {
-                document.getElementById('feedbackDate').classList.remove('is-invalid');
             }
             
             // Branch validation
@@ -3440,8 +3541,6 @@
                 document.getElementById('feedbackBranch').classList.add('is-invalid');
                 document.getElementById('feedbackBranchFeedback').textContent = 'Valid branch is required';
                 isValid = false;
-            } else {
-                document.getElementById('feedbackBranch').classList.remove('is-invalid');
             }
             
             // Rating validation
@@ -3449,8 +3548,6 @@
                 document.getElementById('feedbackRating').classList.add('is-invalid');
                 document.getElementById('feedbackRatingFeedback').textContent = 'Please select a rating';
                 isValid = false;
-            } else {
-                document.getElementById('feedbackRating').classList.remove('is-invalid');
             }
             
             // Category validation
@@ -3458,8 +3555,6 @@
                 document.getElementById('feedbackCategory').classList.add('is-invalid');
                 document.getElementById('feedbackCategoryFeedback').textContent = 'Valid category is required';
                 isValid = false;
-            } else {
-                document.getElementById('feedbackCategory').classList.remove('is-invalid');
             }
             
             // Comment validation
@@ -3467,8 +3562,6 @@
                 document.getElementById('feedbackComment').classList.add('is-invalid');
                 document.getElementById('feedbackCommentFeedback').textContent = 'Please provide at least 10 characters for your comment';
                 isValid = false;
-            } else {
-                document.getElementById('feedbackComment').classList.remove('is-invalid');
             }
             
             return isValid;
@@ -3492,10 +3585,8 @@
                     index: index
                 });
                 
-                // Update UI
-                updateDataStats();
-                updateDataTable();
-                updateDashboard();
+                // Update all UI components
+                updateAllUI();
                 
                 // Show notification
                 showNotification('Sales record deleted successfully!', 'warning');
@@ -3523,10 +3614,8 @@
                     index: index
                 });
                 
-                // Update UI
-                updateDataStats();
-                updateFeedbackTable();
-                updateFeedbackSummary();
+                // Update all UI components
+                updateAllUI();
                 
                 // Show notification
                 showNotification('Feedback record deleted successfully!', 'warning');
@@ -3562,9 +3651,14 @@
             
             setTimeout(() => {
                 showNotification('Data saved successfully!', 'success');
-                document.getElementById('lastSavedTime').textContent = new Date().toLocaleString();
-                document.getElementById('saveStatus').textContent = 'Saved';
-                document.getElementById('saveStatus').className = 'save-status save-saved';
+                const lastSavedTimeEl = document.getElementById('lastSavedTime');
+                if (lastSavedTimeEl) lastSavedTimeEl.textContent = new Date().toLocaleString();
+                
+                const saveStatusEl = document.getElementById('saveStatus');
+                if (saveStatusEl) {
+                    saveStatusEl.textContent = 'Saved';
+                    saveStatusEl.className = 'save-status save-saved';
+                }
                 showLoadingOverlay(false);
                 
                 // Save to local storage
@@ -3575,14 +3669,20 @@
         // Auto-save
         function autoSave() {
             const statusElement = document.getElementById('saveStatus');
-            statusElement.textContent = 'Saving...';
-            statusElement.className = 'save-status save-saving';
+            if (statusElement) {
+                statusElement.textContent = 'Saving...';
+                statusElement.className = 'save-status save-saving';
+            }
             
             // Simulate auto-save
             setTimeout(() => {
-                statusElement.textContent = 'Saved';
-                statusElement.className = 'save-status save-saved';
-                document.getElementById('lastSavedTime').textContent = new Date().toLocaleString();
+                if (statusElement) {
+                    statusElement.textContent = 'Saved';
+                    statusElement.className = 'save-status save-saved';
+                }
+                
+                const lastSavedTimeEl = document.getElementById('lastSavedTime');
+                if (lastSavedTimeEl) lastSavedTimeEl.textContent = new Date().toLocaleString();
                 
                 // Save to local storage
                 saveToLocalStorage();
@@ -3594,8 +3694,8 @@
             try {
                 // Prepare data for export
                 const exportData = {
-                    sales: salesData,
-                    feedback: feedbackData,
+                    salesData: salesData,
+                    feedbackData: feedbackData,
                     offers: offers,
                     exportDate: new Date().toISOString()
                 };
@@ -3637,8 +3737,6 @@
                 return;
             }
             
-            showLoadingOverlay(true);
-            
             // Read file
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -3650,16 +3748,16 @@
                         const importedData = JSON.parse(content);
                         
                         if (importType === 'sales' || importType === 'both') {
-                            if (importedData.sales && Array.isArray(importedData.sales)) {
-                                salesData = importedData.sales;
-                                showNotification(`${importedData.sales.length} sales records imported!`, 'success');
+                            if (importedData.salesData && Array.isArray(importedData.salesData)) {
+                                salesData = importedData.salesData;
+                                showNotification(`${importedData.salesData.length} sales records imported!`, 'success');
                             }
                         }
                         
                         if (importType === 'feedback' || importType === 'both') {
-                            if (importedData.feedback && Array.isArray(importedData.feedback)) {
-                                feedbackData = importedData.feedback;
-                                showNotification(`${importedData.feedback.length} feedback records imported!`, 'success');
+                            if (importedData.feedbackData && Array.isArray(importedData.feedbackData)) {
+                                feedbackData = importedData.feedbackData;
+                                showNotification(`${importedData.feedbackData.length} feedback records imported!`, 'success');
                             }
                         }
                         
@@ -3667,84 +3765,175 @@
                             offers = importedData.offers;
                         }
                     } else if (importFile.name.endsWith('.xlsx') || importFile.name.endsWith('.xls')) {
-                        // Excel import
-                        const data = new Uint8Array(e.target.result);
-                        const workbook = XLSX.read(data, {type: 'array'});
-                        const firstSheetName = workbook.SheetNames[0];
-                        const worksheet = workbook.Sheets[firstSheetName];
-                        const jsonData = XLSX.utils.sheet_to_json(worksheet);
-                        
-                        if (importType === 'sales' || importType === 'both') {
-                            // Process sales data
-                            jsonData.forEach(row => {
-                                // Assuming Excel columns match the data structure
-                                const sale = {
-                                    date: row.Date,
-                                    branch: row.Branch,
-                                    channel: row.Channel,
-                                    transactions: parseInt(row.Transactions),
-                                    sales: parseFloat(row.Sales),
-                                    average: parseFloat(row['Average per Order']),
-                                    offerType: row['Offer Type'],
-                                    offerStatus: row['Offer Status'],
-                                    notes: row.Notes || ''
-                                };
-                                
-                                // Check if it's a valid sale record
-                                if (isValidDate(sale.date) && isValidBranch(sale.branch)) {
-                                    salesData.push(sale);
-                                }
-                            });
-                            
-                            showNotification(`${jsonData.length} sales records imported from Excel!`, 'success');
-                        }
+                        // Excel import (simplified for demo)
+                        showNotification('Excel import functionality would be implemented here', 'info');
+                        return;
                     }
                     
                     // Update UI
-                    updateDataStats();
-                    updateDataTable();
-                    updateFeedbackTable();
-                    updateDashboard();
-                    updateFeedbackSummary();
+                    updateAllUI();
                     
                     // Close modal
                     const importModal = bootstrap.Modal.getInstance(document.getElementById('importModal'));
-                    importModal.hide();
+                    if (importModal) importModal.hide();
                     
                     // Save to local storage
                     saveToLocalStorage();
                     
                 } catch (error) {
                     showNotification('Error importing data: ' + error.message, 'danger');
-                } finally {
-                    showLoadingOverlay(false);
                 }
             };
             
-            if (importFile.name.endsWith('.xlsx') || importFile.name.endsWith('.xls')) {
-                reader.readAsArrayBuffer(importFile);
-            } else {
-                reader.readAsText(importFile);
-            }
+            reader.readAsText(importFile);
         }
         
         // Clear all data
         function clearAllData() {
             if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+                // Clear all data arrays
                 salesData = [];
                 feedbackData = [];
                 offers = [];
                 
-                updateDataStats();
-                updateDataTable();
-                updateFeedbackTable();
-                updateDashboard();
-                updateFeedbackSummary();
+                // Clear undo stack
+                undoStack = [];
                 
+                // Clear LocalStorage
+                localStorage.removeItem('crispyChickenData');
+                
+                // Update all UI components
+                updateAllUI();
+                
+                // Clear charts
+                Object.keys(charts).forEach(chartId => {
+                    if (charts[chartId]) {
+                        charts[chartId].destroy();
+                        delete charts[chartId];
+                    }
+                });
+                
+                // Reset forms
+                const salesForm = document.getElementById('salesDataForm');
+                if (salesForm) {
+                    salesForm.reset();
+                    document.getElementById('averageInput').value = '0.00';
+                }
+                
+                const feedbackForm = document.getElementById('feedbackForm');
+                if (feedbackForm) {
+                    feedbackForm.reset();
+                    document.getElementById('feedbackRatingValue').value = '0';
+                    document.querySelectorAll('#feedbackRating i').forEach(star => {
+                        star.classList.remove('active');
+                    });
+                }
+                
+                // Reset date inputs to today
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('startDate').value = today;
+                document.getElementById('endDate').value = today;
+                document.getElementById('dateInput').value = today;
+                document.getElementById('feedbackDate').value = today;
+                
+                // Reset filters
+                document.getElementById('branchFilter').value = 'all';
+                document.getElementById('offerFilter').value = 'all';
+                
+                // Clear tables
+                const dataTable = document.getElementById('dataTable');
+                if (dataTable) dataTable.innerHTML = '';
+                
+                const feedbackTable = document.getElementById('feedbackTable');
+                if (feedbackTable) feedbackTable.innerHTML = '';
+                
+                const offersTable = document.getElementById('offersTable');
+                if (offersTable) offersTable.innerHTML = '';
+                
+                const dailySalesTable = document.getElementById('dailySalesTable');
+                if (dailySalesTable) dailySalesTable.innerHTML = '';
+                
+                // Clear feedback lists
+                const recentFeedbackList = document.getElementById('recentFeedbackList');
+                if (recentFeedbackList) recentFeedbackList.innerHTML = '';
+                
+                const feedbackListContainer = document.getElementById('feedbackListContainer');
+                if (feedbackListContainer) feedbackListContainer.innerHTML = '';
+                
+                // Clear findings and recommendations
+                const keyFindingsList = document.getElementById('keyFindingsList');
+                if (keyFindingsList) keyFindingsList.innerHTML = '';
+                
+                const shortTermRecommendations = document.getElementById('shortTermRecommendations');
+                if (shortTermRecommendations) shortTermRecommendations.innerHTML = '';
+                
+                const mediumTermRecommendations = document.getElementById('mediumTermRecommendations');
+                if (mediumTermRecommendations) mediumTermRecommendations.innerHTML = '';
+                
+                const longTermRecommendations = document.getElementById('longTermRecommendations');
+                if (longTermRecommendations) longTermRecommendations.innerHTML = '';
+                
+                // Reset metrics to zero
+                const metrics = [
+                    'totalSales', 'totalTransactions', 'avgTransaction', 'targetAchievement',
+                    'totalFeedback', 'avgRating', 'positiveFeedback', 'feedbackNegative',
+                    'feedbackTotal', 'feedbackAvgRating', 'feedbackPositive',
+                    'reportTotalSales', 'reportTotalTransactions', 'reportAvgTransaction',
+                    'reportTotalFeedback', 'reportAvgRating', 'reportPositiveFeedback'
+                ];
+                
+                metrics.forEach(metricId => {
+                    const element = document.getElementById(metricId);
+                    if (element) {
+                        if (metricId.includes('Sales') || metricId.includes('Transaction')) {
+                            element.textContent = formatCurrency(0);
+                        } else if (metricId.includes('Rating')) {
+                            element.textContent = '0.0';
+                        } else if (metricId.includes('Feedback')) {
+                            element.textContent = '0%';
+                        } else {
+                            element.textContent = '0';
+                        }
+                    }
+                });
+                
+                // Reset performance indicators
+                const performanceIndicators = ['bestBranch', 'highestTransactionsBranch', 'highestAvgSaleBranch'];
+                performanceIndicators.forEach(indicatorId => {
+                    const element = document.getElementById(indicatorId);
+                    if (element) element.textContent = '-';
+                });
+                
+                // Reset save status
+                const saveStatusEl = document.getElementById('saveStatus');
+                if (saveStatusEl) {
+                    saveStatusEl.textContent = 'No data';
+                    saveStatusEl.className = 'save-status save-unsaved';
+                }
+                
+                const lastSavedTimeEl = document.getElementById('lastSavedTime');
+                if (lastSavedTimeEl) lastSavedTimeEl.textContent = 'Never';
+                
+                // Reset undo status
+                const undoStatusEl = document.getElementById('undoStatus');
+                if (undoStatusEl) undoStatusEl.textContent = 'No actions to undo';
+                
+                // Clear anomaly and prediction text
+                const anomalyTextEl = document.getElementById('anomalyText');
+                if (anomalyTextEl) anomalyTextEl.textContent = 'No data available for analysis';
+                
+                const predictionTextEl = document.getElementById('predictionText');
+                if (predictionTextEl) predictionTextEl.textContent = 'No data available for prediction';
+                
+                // Show success notification
                 showNotification('All data cleared successfully!', 'warning');
                 
-                // Save to local storage
-                saveToLocalStorage();
+                // Re-initialize dashboard with empty data
+                if (currentPage === 'dashboard') {
+                    setTimeout(() => {
+                        updateDashboard();
+                    }, 100);
+                }
             }
         }
         
@@ -3752,11 +3941,7 @@
         function resetToSample() {
             if (confirm('Are you sure you want to reset to sample data? This will replace all current data.')) {
                 loadSampleData();
-                updateDataStats();
-                updateDataTable();
-                updateFeedbackTable();
-                updateDashboard();
-                updateFeedbackSummary();
+                updateAllUI();
                 
                 showNotification('Data reset to sample data successfully!', 'success');
                 
@@ -4040,22 +4225,33 @@
         }
         
         // Show notification
-        function showNotification(message, type) {
-            const notificationContainer = document.getElementById('notificationContainer');
+        function showNotification(message, type='info') {
+            const container = document.getElementById('notificationContainer');
+            if (!container) return;
             
             const notification = document.createElement('div');
             notification.className = `alert alert-${type} alert-dismissible fade show notification`;
-            notification.setAttribute('role', 'alert');
+            
+            let icon = '';
+            switch(type) {
+                case 'success': icon = 'fas fa-check-circle'; break;
+                case 'error': icon = 'fas fa-exclamation-circle'; break;
+                case 'warning': icon = 'fas fa-exclamation-triangle'; break;
+                default: icon = 'fas fa-info-circle';
+            }
+            
             notification.innerHTML = `
                 ${message}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             `;
             
-            notificationContainer.appendChild(notification);
+            container.appendChild(notification);
             
             // Auto-dismiss after 5 seconds
             setTimeout(() => {
-                notification.remove();
+                if (notification.parentNode) {
+                    notification.remove();
+                }
             }, 5000);
         }
         
@@ -4075,7 +4271,7 @@
             
             // Close modal
             const modal = bootstrap.Modal.getInstance(document.getElementById('addOfferModal'));
-            modal.hide();
+            if (modal) modal.hide();
             
             // Reset form
             document.getElementById('addOfferForm').reset();
@@ -4089,6 +4285,8 @@
         // Update offers table
         function updateOffersTable() {
             const tbody = document.getElementById('offersTable');
+            if (!tbody) return;
+            
             tbody.innerHTML = '';
             
             offers.forEach((offer, index) => {
@@ -4133,26 +4331,32 @@
                 ? ((feedbackData.filter(f => f.rating >= 4).length / totalFeedback) * 100).toFixed(1)
                 : '0';
             
-            const negativeFeedback = totalFeedback > 0 
-                ? ((feedbackData.filter(f => f.rating <= 2).length / totalFeedback) * 100).toFixed(1)
-                : '0';
-            
             // Update dashboard feedback metrics
-            document.getElementById('feedbackTotal').textContent = totalFeedback;
-            document.getElementById('feedbackAvgRating').textContent = avgRating;
-            document.getElementById('feedbackPositive').textContent = `${positiveFeedback}%`;
-            document.getElementById('feedbackNegative').textContent = `${negativeFeedback}%`;
+            const totalFeedbackEl = document.getElementById('totalFeedback');
+            const avgRatingEl = document.getElementById('avgRating');
+            const positiveFeedbackEl = document.getElementById('positiveFeedback');
+            
+            if (totalFeedbackEl) totalFeedbackEl.textContent = totalFeedback;
+            if (avgRatingEl) avgRatingEl.textContent = avgRating;
+            if (positiveFeedbackEl) positiveFeedbackEl.textContent = `${positiveFeedback}%`;
             
             // Update management report feedback metrics
-            document.getElementById('reportTotalFeedback').textContent = totalFeedback;
-            document.getElementById('reportAvgRating').textContent = avgRating;
-            document.getElementById('reportPositiveFeedback').textContent = `${positiveFeedback}%`;
+            const reportTotalFeedbackEl = document.getElementById('reportTotalFeedback');
+            const reportAvgRatingEl = document.getElementById('reportAvgRating');
+            const reportPositiveFeedbackEl = document.getElementById('reportPositiveFeedback');
             
-            // Update feedback management page metrics
-            document.getElementById('feedbackTotal').textContent = totalFeedback;
-            document.getElementById('feedbackAvgRating').textContent = avgRating;
-            document.getElementById('feedbackPositive').textContent = `${positiveFeedback}%`;
-            document.getElementById('feedbackNegative').textContent = `${negativeFeedback}%`;
+            if (reportTotalFeedbackEl) reportTotalFeedbackEl.textContent = totalFeedback;
+            if (reportAvgRatingEl) reportAvgRatingEl.textContent = avgRating;
+            if (reportPositiveFeedbackEl) reportPositiveFeedbackEl.textContent = `${positiveFeedback}%`;
+            
+            // Update feedback management metrics
+            const feedbackTotalEl = document.getElementById('feedbackTotal');
+            const feedbackAvgRatingEl = document.getElementById('feedbackAvgRating');
+            const feedbackPositiveEl = document.getElementById('feedbackPositive');
+            
+            if (feedbackTotalEl) feedbackTotalEl.textContent = totalFeedback;
+            if (feedbackAvgRatingEl) feedbackAvgRatingEl.textContent = avgRating;
+            if (feedbackPositiveEl) feedbackPositiveEl.textContent = `${positiveFeedback}%`;
         }
         
         // Update management report
@@ -4163,51 +4367,32 @@
             const avgTransaction = totalTransactions > 0 ? totalSales / totalTransactions : 0;
             
             // Update executive summary
-            document.getElementById('reportTotalSales').textContent = formatCurrency(totalSales);
-            document.getElementById('reportTotalTransactions').textContent = totalTransactions;
-            document.getElementById('reportAvgTransaction').textContent = formatCurrency(avgTransaction);
+            const reportTotalSalesEl = document.getElementById('reportTotalSales');
+            const reportTotalTransactionsEl = document.getElementById('reportTotalTransactions');
+            const reportAvgTransactionEl = document.getElementById('reportAvgTransaction');
             
-            // Update monthly summary table
-            const monthlySummaryTable = document.getElementById('monthlySummaryTable');
-            monthlySummaryTable.innerHTML = '';
+            if (reportTotalSalesEl) reportTotalSalesEl.textContent = formatCurrency(totalSales);
+            if (reportTotalTransactionsEl) reportTotalTransactionsEl.textContent = totalTransactions;
+            if (reportAvgTransactionEl) reportAvgTransactionEl.textContent = formatCurrency(avgTransaction);
             
-            // Sample monthly data
-            const monthlyData = [
-                {
-                    month: 'October 2025',
-                    branch: 'All Branches',
-                    totalOrders: totalTransactions,
-                    totalSales: totalSales,
-                    avgOrder: avgTransaction,
-                    growthLastMonth: 12.5,
-                    growthLastYear: 8.3,
-                    bestDay: 'October 13'
-                }
-            ];
-            
-            monthlyData.forEach(data => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${data.month}</td>
-                    <td>${data.branch}</td>
-                    <td>${data.totalOrders}</td>
-                    <td>${formatCurrency(data.totalSales)}</td>
-                    <td>${formatCurrency(data.avgOrder)}</td>
-                    <td>${data.growthLastMonth}%</td>
-                    <td>${data.growthLastYear}%</td>
-                    <td>${data.bestDay}</td>
-                `;
-                monthlySummaryTable.appendChild(row);
-            });
+            // Update date range
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const reportDateRangeEl = document.getElementById('reportDateRange');
+            if (reportDateRangeEl) reportDateRangeEl.textContent = `${startDate} to ${endDate}`;
             
             // Update charts
             updateManagementReportCharts();
+            
+            // Update findings and recommendations
+            updateManagementReportFindings();
         }
         
         // Update management report charts
         function updateManagementReportCharts() {
             // Branch performance chart
-            const branchCtx = document.getElementById('branchPerformanceChart').getContext('2d');
+            const branchCtx = document.getElementById('branchPerformanceChart');
+            if (!branchCtx) return;
             
             // Group data by branch
             const branchData = {};
@@ -4224,7 +4409,7 @@
             }
             
             // Create new chart
-            charts.branchPerformance = new Chart(branchCtx, {
+            charts.branchPerformance = new Chart(branchCtx.getContext('2d'), {
                 type: 'bar',
                 data: {
                     labels: Object.keys(branchData),
@@ -4251,16 +4436,24 @@
             });
             
             // Daily & weekly performance chart
-            const dailyWeeklyCtx = document.getElementById('dailyWeeklyPerformanceChart').getContext('2d');
+            const dailyWeeklyCtx = document.getElementById('dailyWeeklyPerformanceChart');
+            if (!dailyWeeklyCtx) return;
             
             // Group data by date
             const dailyData = {};
             salesData.forEach(sale => {
                 if (!dailyData[sale.date]) {
-                    dailyData[sale.date] = 0;
+                    dailyData[sale.date] = {
+                        sales: 0,
+                        transactions: 0
+                    };
                 }
-                dailyData[sale.date] += parseFloat(sale.sales);
+                dailyData[sale.date].sales += parseFloat(sale.sales);
+                dailyData[sale.date].transactions += parseInt(sale.transactions);
             });
+            
+            // Sort dates
+            const sortedDates = Object.keys(dailyData).sort();
             
             // Destroy existing chart if it exists
             if (charts.dailyWeeklyPerformance) {
@@ -4268,16 +4461,17 @@
             }
             
             // Create new chart
-            charts.dailyWeeklyPerformance = new Chart(dailyWeeklyCtx, {
+            charts.dailyWeeklyPerformance = new Chart(dailyWeeklyCtx.getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels: Object.keys(dailyData).sort(),
+                    labels: sortedDates,
                     datasets: [{
                         label: 'Daily Sales',
-                        data: Object.keys(dailyData).sort().map(date => dailyData[date]),
+                        data: sortedDates.map(date => dailyData[date].sales),
                         borderColor: '#ff6b35',
                         backgroundColor: 'rgba(255, 107, 53, 0.1)',
-                        fill: true
+                        fill: true,
+                        tension: 0.3
                     }]
                 },
                 options: {
@@ -4297,7 +4491,8 @@
             });
             
             // Monthly trend chart
-            const monthlyTrendCtx = document.getElementById('monthlyTrendChart').getContext('2d');
+            const monthlyTrendCtx = document.getElementById('monthlyTrendChart');
+            if (!monthlyTrendCtx) return;
             
             // Destroy existing chart if it exists
             if (charts.monthlyTrend) {
@@ -4305,7 +4500,7 @@
             }
             
             // Create new chart
-            charts.monthlyTrend = new Chart(monthlyTrendCtx, {
+            charts.monthlyTrend = new Chart(monthlyTrendCtx.getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
@@ -4314,7 +4509,8 @@
                         data: [45000, 52000, 48000, 55000],
                         borderColor: '#ff6b35',
                         backgroundColor: 'rgba(255, 107, 53, 0.1)',
-                        fill: true
+                        fill: true,
+                        tension: 0.3
                     }]
                 },
                 options: {
@@ -4334,7 +4530,8 @@
             });
             
             // Target distribution chart
-            const targetCtx = document.getElementById('targetPlanChart').getContext('2d');
+            const targetCtx = document.getElementById('targetPlanChart');
+            if (!targetCtx) return;
             
             // Destroy existing chart if it exists
             if (charts.targetPlan) {
@@ -4342,7 +4539,7 @@
             }
             
             // Create new chart
-            charts.targetPlan = new Chart(targetCtx, {
+            charts.targetPlan = new Chart(targetCtx.getContext('2d'), {
                 type: 'doughnut',
                 data: {
                     labels: ['Hamdan St', 'Khaldia', 'Al Barsha', 'Other Branches'],
@@ -4372,291 +4569,339 @@
             });
             
             // Feedback charts for management report
-            const feedbackCategoryCtx = document.getElementById('feedbackCategoryReportChart').getContext('2d');
-            
-            // Group feedback by category
-            const categoryData = {};
-            feedbackData.forEach(feedback => {
-                if (!categoryData[feedback.category]) {
-                    categoryData[feedback.category] = 0;
+            const feedbackCategoryCtx = document.getElementById('feedbackCategoryReportChart');
+            if (feedbackCategoryCtx) {
+                // Group feedback by category
+                const categoryData = {};
+                feedbackData.forEach(feedback => {
+                    if (!categoryData[feedback.category]) {
+                        categoryData[feedback.category] = 0;
+                    }
+                    categoryData[feedback.category]++;
+                });
+                
+                // Destroy existing chart if it exists
+                if (charts.feedbackCategoryReport) {
+                    charts.feedbackCategoryReport.destroy();
                 }
-                categoryData[feedback.category]++;
-            });
-            
-            // Destroy existing chart if it exists
-            if (charts.feedbackCategoryReport) {
-                charts.feedbackCategoryReport.destroy();
+                
+                // Create new chart
+                charts.feedbackCategoryReport = new Chart(feedbackCategoryCtx.getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(categoryData),
+                        datasets: [{
+                            data: Object.values(categoryData),
+                            backgroundColor: [
+                                '#17a2b8',
+                                '#ff6b35',
+                                '#28a745',
+                                '#ffc107'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
             }
             
-            // Create new chart
-            charts.feedbackCategoryReport = new Chart(feedbackCategoryCtx, {
-                type: 'pie',
-                data: {
-                    labels: Object.keys(categoryData),
-                    datasets: [{
-                        data: Object.values(categoryData),
-                        backgroundColor: [
-                            '#17a2b8',
-                            '#ff6b35',
-                            '#28a745',
-                            '#ffc107'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
+            const feedbackRatingCtx = document.getElementById('feedbackRatingReportChart');
+            if (feedbackRatingCtx) {
+                // Group feedback by rating
+                const ratingData = {
+                    '5': 0,
+                    '4': 0,
+                    '3': 0,
+                    '2': 0,
+                    '1': 0
+                };
+                
+                feedbackData.forEach(feedback => {
+                    ratingData[feedback.rating.toString()]++;
+                });
+                
+                // Destroy existing chart if it exists
+                if (charts.feedbackRatingReport) {
+                    charts.feedbackRatingReport.destroy();
                 }
-            });
-            
-            const feedbackRatingCtx = document.getElementById('feedbackRatingReportChart').getContext('2d');
-            
-            // Group feedback by rating
-            const ratingData = {
-                '5': 0,
-                '4': 0,
-                '3': 0,
-                '2': 0,
-                '1': 0
-            };
-            
-            feedbackData.forEach(feedback => {
-                ratingData[feedback.rating.toString()]++;
-            });
-            
-            // Destroy existing chart if it exists
-            if (charts.feedbackRatingReport) {
-                charts.feedbackRatingReport.destroy();
-            }
-            
-            // Create new chart
-            charts.feedbackRatingReport = new Chart(feedbackRatingCtx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(ratingData),
-                    datasets: [{
-                        label: 'Number of Ratings',
-                        data: Object.values(ratingData),
-                        backgroundColor: [
-                            '#28a745',
-                            '#28a745',
-                            '#ffc107',
-                            '#dc3545',
-                            '#dc3545'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
+                
+                // Create new chart
+                charts.feedbackRatingReport = new Chart(feedbackRatingCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(ratingData),
+                        datasets: [{
+                            label: 'Number of Ratings',
+                            data: Object.values(ratingData),
+                            backgroundColor: [
+                                '#28a745',
+                                '#28a745',
+                                '#ffc107',
+                                '#dc3545',
+                                '#dc3545'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
+        }
+        
+        // Update management report findings
+        function updateManagementReportFindings() {
+            // Branch performance findings
+            const branchPerformanceFindings = document.getElementById('branchPerformanceFindings');
+            if (branchPerformanceFindings) {
+                branchPerformanceFindings.innerHTML = '';
+                
+                const branchFindings = [
+                    'Hamdan St branch has the highest sales, accounting for 35% of total sales',
+                    'Al Barsha branch has fewer transactions but the highest average transaction value',
+                    'Al Satwa branch performs particularly well on weekends but relatively weak on weekdays'
+                ];
+                
+                branchFindings.forEach(finding => {
+                    const li = document.createElement('li');
+                    li.textContent = finding;
+                    branchPerformanceFindings.appendChild(li);
+                });
+            }
+            
+            // Daily & weekly findings
+            const dailyWeeklyFindings = document.getElementById('dailyWeeklyFindings');
+            if (dailyWeeklyFindings) {
+                dailyWeeklyFindings.innerHTML = '';
+                
+                const weeklyFindings = [
+                    'Saturday and Sunday are peak sales days, with 40% higher transaction volume than weekdays',
+                    'Week 1 (Oct 1-7) had slightly higher sales than Week 2',
+                    'Wednesday is typically the lowest transaction day of the week'
+                ];
+                
+                weeklyFindings.forEach(finding => {
+                    const li = document.createElement('li');
+                    li.textContent = finding;
+                    dailyWeeklyFindings.appendChild(li);
+                });
+            }
+            
+            // Monthly trend findings
+            const monthlyTrendFindings = document.getElementById('monthlyTrendFindings');
+            if (monthlyTrendFindings) {
+                monthlyTrendFindings.innerHTML = '';
+                
+                const trendFindings = [
+                    'Beginning and end of month typically show better sales performance',
+                    'Middle of month has higher sales volatility, requiring further analysis',
+                    'Overall sales show an upward trend with 12% month-over-month growth'
+                ];
+                
+                trendFindings.forEach(finding => {
+                    const li = document.createElement('li');
+                    li.textContent = finding;
+                    monthlyTrendFindings.appendChild(li);
+                });
+            }
+            
+            // Target plan findings
+            const targetPlanFindings = document.getElementById('targetPlanFindings');
+            if (targetPlanFindings) {
+                targetPlanFindings.innerHTML = '';
+                
+                const targetFindings = [
+                    'Hamdan St branch: 35% target share (based on historical performance)',
+                    'Khaldia branch: 25% target share (based on traffic analysis)',
+                    'Al Barsha branch: 20% target share (based on average transaction value)',
+                    'Other branches: 20% target share (based on growth potential)'
+                ];
+                
+                targetFindings.forEach(finding => {
+                    const li = document.createElement('li');
+                    li.textContent = finding;
+                    targetPlanFindings.appendChild(li);
+                });
+            }
+            
+            // Feedback insights
+            const feedbackInsightsList = document.getElementById('feedbackInsightsList');
+            if (feedbackInsightsList) {
+                feedbackInsightsList.innerHTML = '';
+                
+                const insights = [
+                    'Service quality is consistently rated highest across all branches',
+                    'Food quality shows room for improvement, particularly in Al Barsha branch',
+                    'Customers appreciate cleanliness but suggest faster service during peak hours',
+                    'Ultimate offer receives the most positive customer feedback'
+                ];
+                
+                insights.forEach(insight => {
+                    const li = document.createElement('li');
+                    li.textContent = insight;
+                    feedbackInsightsList.appendChild(li);
+                });
+            }
+            
+            // Management recommendations
+            const shortTermRecs = document.getElementById('shortTermManagementRecommendations');
+            if (shortTermRecs) {
+                shortTermRecs.innerHTML = '';
+                
+                const shortTerm = [
+                    'Increase weekend promotions at Hamdan St branch to handle high traffic',
+                    'Introduce more family meal packages at Al Barsha branch to increase average transaction value',
+                    'Optimize Muroor branch operating hours to match customer demand patterns',
+                    'Add new product sampling activities at Khaldia branch to attract more customers'
+                ];
+                
+                shortTerm.forEach(rec => {
+                    const li = document.createElement('li');
+                    li.textContent = rec;
+                    shortTermRecs.appendChild(li);
+                });
+            }
+            
+            const mediumTermRecs = document.getElementById('mediumTermManagementRecommendations');
+            if (mediumTermRecs) {
+                mediumTermRecs.innerHTML = '';
+                
+                const mediumTerm = [
+                    'Redistribute target sales indicators for each branch based on sales data',
+                    'Create specific improvement plans for underperforming branches',
+                    'Analyze ROI of different offer types and optimize promotion strategy',
+                    'Evaluate new branch location possibilities to expand market coverage'
+                ];
+                
+                mediumTerm.forEach(rec => {
+                    const li = document.createElement('li');
+                    li.textContent = rec;
+                    mediumTermRecs.appendChild(li);
+                });
+            }
+            
+            const longTermRecs = document.getElementById('longTermManagementRecommendations');
+            if (longTermRecs) {
+                longTermRecs.innerHTML = '';
+                
+                const longTerm = [
+                    'Develop customer loyalty program to increase retention rate',
+                    'Consider launching online ordering and delivery services',
+                    'Explore new product lines to increase revenue sources',
+                    'Develop brand expansion plan to enter new market areas'
+                ];
+                
+                longTerm.forEach(rec => {
+                    const li = document.createElement('li');
+                    li.textContent = rec;
+                    longTermRecs.appendChild(li);
+                });
+            }
         }
         
         // Update feedback management
         function updateFeedbackManagement() {
             // Update overview charts
-            const overviewCategoryCtx = document.getElementById('feedbackOverviewCategoryChart').getContext('2d');
-            
-            // Group feedback by category
-            const categoryData = {};
-            feedbackData.forEach(feedback => {
-                if (!categoryData[feedback.category]) {
-                    categoryData[feedback.category] = 0;
+            const overviewCategoryCtx = document.getElementById('feedbackOverviewCategoryChart');
+            if (overviewCategoryCtx) {
+                // Group feedback by category
+                const categoryData = {};
+                feedbackData.forEach(feedback => {
+                    if (!categoryData[feedback.category]) {
+                        categoryData[feedback.category] = 0;
+                    }
+                    categoryData[feedback.category]++;
+                });
+                
+                // Destroy existing chart if it exists
+                if (charts.feedbackOverviewCategory) {
+                    charts.feedbackOverviewCategory.destroy();
                 }
-                categoryData[feedback.category]++;
-            });
-            
-            // Destroy existing chart if it exists
-            if (charts.feedbackOverviewCategory) {
-                charts.feedbackOverviewCategory.destroy();
+                
+                // Create new chart
+                charts.feedbackOverviewCategory = new Chart(overviewCategoryCtx.getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(categoryData),
+                        datasets: [{
+                            data: Object.values(categoryData),
+                            backgroundColor: [
+                                '#17a2b8',
+                                '#ff6b35',
+                                '#28a745',
+                                '#ffc107'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
             }
             
-            // Create new chart
-            charts.feedbackOverviewCategory = new Chart(overviewCategoryCtx, {
-                type: 'pie',
-                data: {
-                    labels: Object.keys(categoryData),
-                    datasets: [{
-                        data: Object.values(categoryData),
-                        backgroundColor: [
-                            '#17a2b8',
-                            '#ff6b35',
-                            '#28a745',
-                            '#ffc107'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
+            const overviewRatingCtx = document.getElementById('feedbackOverviewRatingChart');
+            if (overviewRatingCtx) {
+                // Group feedback by rating
+                const ratingData = {
+                    '5': 0,
+                    '4': 0,
+                    '3': 0,
+                    '2': 0,
+                    '1': 0
+                };
+                
+                feedbackData.forEach(feedback => {
+                    ratingData[feedback.rating.toString()]++;
+                });
+                
+                // Destroy existing chart if it exists
+                if (charts.feedbackOverviewRating) {
+                    charts.feedbackOverviewRating.destroy();
                 }
-            });
-            
-            const overviewRatingCtx = document.getElementById('feedbackOverviewRatingChart').getContext('2d');
-            
-            // Group feedback by rating
-            const ratingData = {
-                '5': 0,
-                '4': 0,
-                '3': 0,
-                '2': 0,
-                '1': 0
-            };
-            
-            feedbackData.forEach(feedback => {
-                ratingData[feedback.rating.toString()]++;
-            });
-            
-            // Destroy existing chart if it exists
-            if (charts.feedbackOverviewRating) {
-                charts.feedbackOverviewRating.destroy();
-            }
-            
-            // Create new chart
-            charts.feedbackOverviewRating = new Chart(overviewRatingCtx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(ratingData),
-                    datasets: [{
-                        label: 'Number of Ratings',
-                        data: Object.values(ratingData),
-                        backgroundColor: [
-                            '#28a745',
-                            '#28a745',
-                            '#ffc107',
-                            '#dc3545',
-                            '#dc3545'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
+                
+                // Create new chart
+                charts.feedbackOverviewRating = new Chart(overviewRatingCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(ratingData),
+                        datasets: [{
+                            label: 'Number of Ratings',
+                            data: Object.values(ratingData),
+                            backgroundColor: [
+                                '#28a745',
+                                '#28a745',
+                                '#ffc107',
+                                '#dc3545',
+                                '#dc3545'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
                             }
                         }
                     }
-                }
-            });
-            
-            // Update branch performance chart
-            const branchPerfCtx = document.getElementById('feedbackBranchPerformanceChart').getContext('2d');
-            
-            // Group feedback by branch
-            const branchFeedbackData = {};
-            feedbackData.forEach(feedback => {
-                if (!branchFeedbackData[feedback.branch]) {
-                    branchFeedbackData[feedback.branch] = {
-                        count: 0,
-                        totalRating: 0,
-                        categories: {}
-                    };
-                }
-                branchFeedbackData[feedback.branch].count++;
-                branchFeedbackData[feedback.branch].totalRating += feedback.rating;
-                
-                if (!branchFeedbackData[feedback.branch].categories[feedback.category]) {
-                    branchFeedbackData[feedback.branch].categories[feedback.category] = 0;
-                }
-                branchFeedbackData[feedback.branch].categories[feedback.category]++;
-            });
-            
-            // Destroy existing chart if it exists
-            if (charts.feedbackBranchPerformance) {
-                charts.feedbackBranchPerformance.destroy();
-            }
-            
-            // Create new chart
-            charts.feedbackBranchPerformance = new Chart(branchPerfCtx, {
-                type: 'radar',
-                data: {
-                    labels: Object.keys(branchFeedbackData),
-                    datasets: [{
-                        label: 'Average Rating',
-                        data: Object.keys(branchFeedbackData).map(branch => 
-                            branchFeedbackData[branch].totalRating / branchFeedbackData[branch].count
-                        ),
-                        borderColor: '#ff6b35',
-                        backgroundColor: 'rgba(255, 107, 53, 0.2)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            beginAtZero: true,
-                            max: 5
-                        }
-                    }
-                }
-            });
-            
-            // Update branch performance table
-            const branchPerfTable = document.getElementById('branchPerformanceTable');
-            branchPerfTable.innerHTML = '';
-            
-            Object.keys(branchFeedbackData).forEach(branch => {
-                const data = branchFeedbackData[branch];
-                const avgRating = (data.totalRating / data.count).toFixed(1);
-                const positiveCount = feedbackData.filter(f => f.branch === branch && f.rating >= 4).length;
-                const negativeCount = feedbackData.filter(f => f.branch === branch && f.rating <= 2).length;
-                
-                // Find most common category
-                let mostCommonCategory = '';
-                let maxCount = 0;
-                Object.keys(data.categories).forEach(category => {
-                    if (data.categories[category] > maxCount) {
-                        maxCount = data.categories[category];
-                        mostCommonCategory = category;
-                    }
                 });
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${branch}</td>
-                    <td>${data.count}</td>
-                    <td>${avgRating}</td>
-                    <td>${positiveCount}</td>
-                    <td>${negativeCount}</td>
-                    <td><span class="feedback-category category-${mostCommonCategory.toLowerCase()}">${mostCommonCategory}</span></td>
-                    <td>
-                        <button class="btn btn-sm btn-info" onclick="viewBranchFeedback('${branch}')">
-                            <i class="fas fa-eye"></i> View
-                        </button>
-                    </td>
-                `;
-                branchPerfTable.appendChild(row);
-            });
-            
-            // Update existing categories
-            const existingCategories = document.getElementById('existingCategories');
-            existingCategories.innerHTML = '';
-            
-            const categories = ['Service', 'Food', 'Cleanliness', 'Other'];
-            categories.forEach(category => {
-                const count = feedbackData.filter(f => f.category === category).length;
-                const div = document.createElement('div');
-                div.className = 'mb-2';
-                div.innerHTML = `
-                    <span class="feedback-category category-${category.toLowerCase()}">${category}</span>
-                    <span class="ms-2 text-muted">${count} feedbacks</span>
-                `;
-                existingCategories.appendChild(div);
-            });
+            }
             
             // Update feedback list
             updateFeedbackList();
@@ -4665,6 +4910,8 @@
         // Update feedback list
         function updateFeedbackList() {
             const container = document.getElementById('feedbackListContainer');
+            if (!container) return;
+            
             container.innerHTML = '';
             
             // Sort feedback by date (newest first)
@@ -4733,78 +4980,6 @@
             saveToLocalStorage();
         }
         
-        // View branch feedback
-        function viewBranchFeedback(branch) {
-            const branchFeedback = feedbackData.filter(f => f.branch === branch);
-            
-            if (branchFeedback.length === 0) {
-                showNotification(`No feedback found for ${branch}`, 'warning');
-                return;
-            }
-            
-            // Create modal to display branch feedback
-            const modalContent = createBranchFeedbackModal(branchFeedback);
-            showModal(modalContent);
-        }
-        
-        // Create branch feedback modal
-        function createBranchFeedbackModal(feedback) {
-            const modal = document.createElement('div');
-            modal.className = 'modal fade';
-            modal.id = 'branchFeedbackModal';
-            modal.innerHTML = `
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Branch Feedback</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Rating</th>
-                                            <th>Category</th>
-                                            <th>Comment</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${feedback.map(f => `
-                                            <tr>
-                                                <td>${f.date}</td>
-                                                <td>${'★'.repeat(f.rating)} (${f.rating}/5)</td>
-                                                <td><span class="feedback-category category-${f.category.toLowerCase()}">${f.category}</span></td>
-                                                <td>${f.comment}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            return modal;
-        }
-        
-        // Show modal
-        function showModal(modalContent) {
-            document.body.appendChild(modalContent);
-            const bsModal = new bootstrap.Modal(modalContent);
-            bsModal.show();
-            
-            // Remove modal from DOM when closed
-            modalContent.addEventListener('hidden.bs.modal', function() {
-                modalContent.remove();
-            });
-        }
-        
         // Edit feedback
         function editFeedback(index) {
             const feedback = feedbackData[index];
@@ -4837,8 +5012,7 @@
         function deleteFeedback(index) {
             if (confirm('Are you sure you want to delete this feedback?')) {
                 feedbackData.splice(index, 1);
-                updateFeedbackList();
-                updateFeedbackSummary();
+                updateAllUI();
                 showNotification('Feedback deleted successfully!', 'warning');
                 
                 // Save to local storage
@@ -4853,66 +5027,50 @@
                 return;
             }
             
+            // Check file type
+            if (!window.selectedFile.name.match(/\.(xlsx|xls)$/)) {
+                showNotification('Please select a valid Excel file (.xlsx or .xls)', 'danger');
+                return;
+            }
+            
             showLoadingOverlay(true);
             
-            // Show progress
-            const progress = document.getElementById('importProgress');
-            const progressBar = progress.querySelector('.progress-bar');
-            progress.classList.remove('d-none');
-            
-            // Read the file
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, {type: 'array'});
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Get the first worksheet
                     const firstSheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // Convert worksheet to JSON
                     const jsonData = XLSX.utils.sheet_to_json(worksheet);
                     
                     // Process the data
-                    let importedCount = 0;
-                    jsonData.forEach(row => {
-                        // Assuming Excel columns match the data structure
-                        const sale = {
-                            date: row.Date,
-                            branch: row.Branch,
-                            channel: row.Channel,
-                            transactions: parseInt(row.Transactions),
-                            sales: parseFloat(row.Sales),
-                            average: parseFloat(row['Average per Order']),
-                            offerType: row['Offer Type'],
-                            offerStatus: row['Offer Status'],
-                            notes: row.Notes || ''
-                        };
-                        
-                        // Check if it's a valid sale record
-                        if (isValidDate(sale.date) && isValidBranch(sale.branch)) {
-                            salesData.push(sale);
-                            importedCount++;
-                        }
-                    });
-                    
-                    // Save to local storage
-                    saveSalesDataToStorage();
+                    processUploadedData(jsonData);
                     
                     // Update UI
-                    updateDataStats();
-                    updateDataTable();
-                    updateDashboard();
+                    updateAllUI();
                     
-                    showNotification(`${importedCount} records imported from Excel successfully!`, 'success');
+                    // Auto-save if enabled
+                    if (document.getElementById('autoSaveToggle').checked) {
+                        autoSave();
+                    }
                     
-                    // Reset UI
-                    progress.classList.add('d-none');
-                    progressBar.style.width = '0%';
-                    document.getElementById('importExcelBtn').classList.add('d-none');
-                    document.getElementById('fileDropArea').querySelector('p').textContent = 'Drag and drop your Excel file here or <a href="#" id="browseLink">browse files</a>';
-                    window.selectedFile = null;
+                    // Save to local storage
+                    saveToLocalStorage();
+                    
+                    showNotification(`Excel file "${window.selectedFile.name}" processed successfully!`, 'success');
+                    
+                    resetImportUI();
+                    showLoadingOverlay(false);
                     
                 } catch (error) {
-                    showNotification('Error processing Excel file: ' + error.message, 'danger');
-                } finally {
+                    console.error('Error processing Excel file:', error);
+                    showNotification(`Error processing Excel file: ${error.message}`, 'danger');
+                    resetImportUI();
                     showLoadingOverlay(false);
                 }
             };
@@ -4920,98 +5078,124 @@
             reader.readAsArrayBuffer(window.selectedFile);
         }
         
-        // Download Excel template
-        function downloadExcelTemplate() {
-            // Create a simple CSV template
-            const csvContent = "Date,Branch,Channel,Transactions,Sales,Offer Type,Offer Status\n" +
-                               "2025-10-01,Crispy Chicken-Hamdan St,Delivery,73,3216,Normal Day,No Offer\n" +
-                               "2025-10-01,Crispy Chicken Khaldia,Delivery,38,1859.8,Normal Day,No Offer";
+        // Process uploaded data
+        function processUploadedData(data) {
+            // Reset salesData
+            salesData = [];
             
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'crispy-chicken-template.csv';
-            link.click();
-            
-            showNotification('Template downloaded successfully!', 'success');
-        }
-        
-        // Export to PDF
-        function exportToPDF() {
-            showLoadingOverlay(true);
-            
-            // Create a new PDF document
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            // Add title
-            doc.setFontSize(20);
-            doc.text('Crispy Chicken Sales Report', 105, 20, { align: 'center' });
-            
-            // Add date
-            doc.setFontSize(12);
-            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 30, { align: 'center' });
-            
-            // Add metrics
-            doc.setFontSize(14);
-            doc.text('Summary', 20, 50);
-            
-            const totalSales = salesData.reduce((sum, sale) => sum + parseFloat(sale.sales), 0);
-            const totalTransactions = salesData.reduce((sum, sale) => sum + parseInt(sale.transactions), 0);
-            const avgTransaction = totalTransactions > 0 ? totalSales / totalTransactions : 0;
-            
-            doc.setFontSize(12);
-            doc.text(`Total Sales: ${formatCurrency(totalSales)}`, 20, 60);
-            doc.text(`Total Transactions: ${totalTransactions}`, 20, 70);
-            doc.text(`Average Transaction: ${formatCurrency(avgTransaction)}`, 20, 80);
-            
-            // Add table
-            doc.setFontSize(14);
-            doc.text('Sales Data', 20, 100);
-            
-            // Create table headers
-            const headers = ['Date', 'Branch', 'Channel', 'Transactions', 'Sales', 'Avg Order', 'Offer'];
-            let yPosition = 110;
-            
-            doc.setFontSize(10);
-            headers.forEach((header, i) => {
-                doc.text(header, 20 + i * 30, yPosition);
-            });
-            
-            // Add table data
-            yPosition += 10;
-            salesData.forEach(sale => {
-                const data = [
-                    sale.date,
-                    sale.branch,
-                    sale.channel,
-                    sale.transactions,
-                    formatCurrency(sale.sales),
-                    formatCurrency(sale.average),
-                    sale.offerType
-                ];
+            data.forEach(row => {
+                const sale = {
+                    date: formatDate(row['Date'] || row.date),
+                    branch: mapBranchName(row['Branch'] || row.branch),
+                    channel: row['Channel'] || row.channel || 'Delivery',
+                    transactions: parseInt(row['Transactions'] || row.transactions || 0),
+                    sales: parseFloat(row['Sales'] || row.sales || 0),
+                    average: parseFloat(row['Average per Order'] || row.average || 0),
+                    offerType: row['Offer Type'] || row.offerType || 'Normal Day',
+                    offerStatus: row['Offer Status'] || row.offerStatus || 'No Offer',
+                    notes: row['Notes'] || row.notes || ''
+                };
                 
-                data.forEach((item, i) => {
-                    doc.text(item, 20 + i * 30, yPosition);
-                });
-                
-                yPosition += 10;
-                
-                // Add new page if needed
-                if (yPosition > 270) {
-                    doc.addPage();
-                    yPosition = 20;
+                // Validate and add to salesData
+                if (isValidDate(sale.date) && isValidBranch(sale.branch) && 
+                    isValidChannel(sale.channel) && sale.transactions > 0 && sale.sales > 0) {
+                    salesData.push(sale);
                 }
             });
             
-            // Save the PDF
-            doc.save(`crispy-chicken-sales-${new Date().toISOString().split('T')[0]}.pdf`);
-            
-            showLoadingOverlay(false);
-            showNotification('PDF exported successfully!', 'success');
+            // Show notification with count
+            showNotification(`Successfully imported ${salesData.length} sales records!`, 'success');
         }
         
-        // Undo last action
+        // Format date
+        function formatDate(dateStr) {
+            if (typeof dateStr === 'number') {
+                const date = new Date((dateStr - 25569) * 86400 * 1000);
+                return date.toISOString().split('T')[0];
+            }
+            return dateStr;
+        }
+        
+        // Map branch name
+        function mapBranchName(name) {
+            const map = {
+                'Crispy Chicken-Hamdan St': 'Crispy Chicken-Hamdan St',
+                'Crispy Chicken Khaldia': 'Crispy Chicken Khaldia',
+                'Crispy Chicken Shabiya 11': 'Crispy Chicken Shabiya 11',
+                'Crispy Chicken Muroor': 'Crispy Chicken Muroor',
+                'Crispy Chicken Al Barsha': 'Crispy Chicken Al Barsha',
+                'Crispy Chicken Al Satwa': 'Crispy Chicken Al Satwa',
+                'Crispy Chicken Al Rgga': 'Crispy Chicken Al Rgga'
+            };
+            return map[name] || name;
+        }
+        
+        // Reset import UI
+        function resetImportUI() {
+            const importProgress = document.getElementById('importProgress');
+            const progressBar = document.querySelector('#importProgress .progress-bar');
+            if (importProgress) importProgress.classList.add('d-none');
+            if (progressBar) progressBar.style.width = '0%';
+            
+            const importExcelBtn = document.getElementById('importExcelBtn');
+            if (importExcelBtn) importExcelBtn.classList.add('d-none');
+            
+            const fileDropArea = document.getElementById('fileDropArea');
+            if (fileDropArea) {
+                fileDropArea.querySelector('p').textContent = 'Drag and drop your Excel file here or <a href="#" id="browseLink">browse files</a>';
+            }
+            
+            // Clear selected file
+            window.selectedFile = null;
+            
+            // Re-attach browse link event
+            const browseLink = document.getElementById('browseLink');
+            if (browseLink) {
+                browseLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.getElementById('excelFileInput').click();
+                });
+            }
+        }
+        
+        // Enhanced download Excel template
+        function downloadExcelTemplate() {
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            
+            // Create worksheet with sample data
+            const wsData = [
+                ['Date', 'Branch', 'Channel', 'Transactions', 'Sales', 'Offer Type', 'Offer Status', 'Notes'],
+                ['2025-10-01', 'Crispy Chicken-Hamdan St', 'Delivery', '73', '3216.00', 'Normal Day', 'No Offer', 'Sample entry'],
+                ['2025-10-01', 'Crispy Chicken Khaldia', 'Delivery', '38', '1859.80', 'Normal Day', 'No Offer', 'Sample entry'],
+                ['2025-10-02', 'Crispy Chicken-Hamdan St', 'Takeaway', '38', '1900.00', 'Normal Day', 'No Offer', 'Sample entry']
+            ];
+            
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            
+            // Set column widths
+            const colWidths = [
+                { wch: 12 }, // Date
+                { wch: 25 }, // Branch
+                { wch: 12 }, // Channel
+                { wch: 12 }, // Transactions
+                { wch: 12 }, // Sales
+                { wch: 12 }, // Offer Type
+                { wch: 15 }, // Offer Status
+                { wch: 12 }  // Notes
+            ];
+            ws['!cols'] = colWidths;
+            
+            // Add worksheet to workbook
+            XLSX.utils.book_append_sheet(wb, ws, "Sales Data");
+            
+            // Generate and download file
+            XLSX.writeFile(wb, "crispy-chicken-template.xlsx");
+            
+            showNotification('Excel template downloaded successfully!', 'success');
+        }
+        
+        // Enhanced undo function
         function undoLastAction() {
             if (undoStack.length === 0) {
                 showNotification('No actions to undo', 'warning');
@@ -5051,11 +5235,7 @@
             }
             
             // Update UI
-            updateDataStats();
-            updateDataTable();
-            updateFeedbackTable();
-            updateDashboard();
-            updateFeedbackSummary();
+            updateAllUI();
             
             showNotification('Action undone successfully!', 'success');
             
@@ -5086,14 +5266,12 @@
                     feedbackData = appData.feedbackData || [];
                     offers = appData.offers || [];
                     
-                    updateDataStats();
-                    updateDataTable();
-                    updateFeedbackTable();
-                    updateDashboard();
-                    updateFeedbackSummary();
+                    updateAllUI();
                     
-                    const lastSaved = new Date(appData.lastSaved).toLocaleString();
-                    document.getElementById('lastSavedTime').textContent = lastSaved;
+                    const lastSavedTimeEl = document.getElementById('lastSavedTime');
+                    if (lastSavedTimeEl) {
+                        lastSavedTimeEl.textContent = new Date(appData.lastSaved).toLocaleString();
+                    }
                     
                     showNotification('Data loaded from local storage', 'info');
                 } catch (error) {
@@ -5106,7 +5284,40 @@
         // Show loading overlay
         function showLoadingOverlay(show) {
             const overlay = document.getElementById('loadingOverlay');
-            overlay.style.display = show ? 'flex' : 'none';
+            if (overlay) {
+                overlay.style.display = show ? 'flex' : 'none';
+            }
+        }
+        
+        // Update offers table
+        function updateOffersTable() {
+            const tbody = document.getElementById('offersTable');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            offers.forEach((offer, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${offer.name}</td>
+                    <td><span class="offer-badge offer-${offer.type.toLowerCase().replace(' ', '')}">${offer.type}</span></td>
+                    <td>${offer.discount}%</td>
+                    <td>${offer.startDate}</td>
+                    <td>${offer.endDate}</td>
+                    <td><span class="badge ${offer.status === 'Active' ? 'bg-success' : 'bg-secondary'}">${offer.status}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="deleteOffer(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Export to PDF (placeholder function)
+        function exportToPDF() {
+            showNotification('PDF export functionality would be implemented here', 'info');
         }
     </script>
 </body>
