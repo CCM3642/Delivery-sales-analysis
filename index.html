@@ -2368,7 +2368,7 @@
             const endDate = document.getElementById('endDate').value;
             
             // Filter data based on date range
-            const filteredSales = salesData.filter(sale => {
+            let filteredSales = salesData.filter(sale => {
                 const saleDate = new Date(sale.date);
                 return saleDate >= new Date(startDate) && saleDate <= new Date(endDate);
             });
@@ -2376,13 +2376,13 @@
             // Apply branch filter
             const branchFilter = document.getElementById('branchFilter').value;
             if (branchFilter !== 'all') {
-                filteredSales.filter(sale => sale.branch === branchFilter);
+                filteredSales = filteredSales.filter(sale => sale.branch === branchFilter);
             }
             
             // Apply offer filter
             const offerFilter = document.getElementById('offerFilter').value;
             if (offerFilter !== 'all') {
-                filteredSales.filter(sale => sale.offerType === offerFilter);
+                filteredSales = filteredSales.filter(sale => sale.offerType === offerFilter);
             }
             
             // Calculate metrics
