@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crispy Chicken Sales Dashboard</title>
+    <title>Crispy Chicken Analytics Dashboard</title>
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -16,6 +16,10 @@
     
     <!-- SheetJS for Excel Import -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- jsPDF for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
         :root {
@@ -643,13 +647,300 @@
                 margin-bottom: 0.5rem;
             }
         }
+        
+        /* Target Plan Styles */
+        .target-plan-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .target-metric-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .target-metric-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .target-metric-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .target-progress {
+            height: 25px;
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: #e9ecef;
+            margin-bottom: 0.5rem;
+        }
+        
+        .target-progress-bar {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            transition: width 0.5s ease;
+        }
+        
+        .target-status-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .status-achieved {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .status-on-track {
+            background-color: var(--info-color);
+            color: white;
+        }
+        
+        .status-at-risk {
+            background-color: var(--warning-color);
+            color: darkslategray;
+        }
+        
+        .status-behind {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .target-allocation-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .allocation-input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .allocation-input-group label {
+            flex: 0 0 150px;
+            font-weight: 500;
+        }
+        
+        .allocation-input-group input {
+            flex: 1;
+            margin-right: 1rem;
+        }
+        
+        .allocation-input-group .input-group-text {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .target-action-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+        
+        .action-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .action-timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #e9ecef;
+        }
+        
+        .action-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .action-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+        }
+        
+        .action-date {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 0.25rem;
+        }
+        
+        .action-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .action-description {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .target-comparison-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .target-comparison-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+        }
+        
+        .target-comparison-table td {
+            vertical-align: middle;
+        }
+        
+        .target-chart-container {
+            position: relative;
+            height: 350px;
+            margin-bottom: 2rem;
+        }
+        
+        .target-summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .target-summary-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .target-summary-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .total-target-input {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+        
+        .total-target-input .input-group-lg {
+            font-size: 1.25rem;
+        }
+        
+        .total-target-input .input-group-lg .form-control {
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+        
+        .total-target-input .input-group-lg .input-group-text {
+            font-size: 1.25rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .distribution-method {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+        
+        .method-option {
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .method-option:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 107, 53, 0.05);
+        }
+        
+        .method-option.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 107, 53, 0.1);
+        }
+        
+        .method-option h6 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .method-option p {
+            color: #6c757d;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+        
+        .preset-targets {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .preset-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .preset-btn:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 107, 53, 0.05);
+        }
+        
+        .preset-btn.active {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: white;
+        }
     </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"><i class="fas fa-drumstick-bite"></i> Crispy Chicken Dashboard</a>
+            <a class="navbar-brand" href="#"><i class="fas fa-drumstick-bite"></i> Crispy Chicken Analytics</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -677,7 +968,7 @@
         <!-- Dashboard Page -->
         <div id="dashboard-page" class="page-content">
             <div class="page-header">
-                <h1>Sales Data Analysis Dashboard</h1>
+                <h1>Sales Analytics Dashboard</h1>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -813,6 +1104,9 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="feedback-analysis-tab" data-bs-toggle="tab" data-bs-target="#feedback-analysis" type="button" role="tab" aria-selected="false">Feedback Analysis</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="target-plan-tab" data-bs-toggle="tab" data-bs-target="#target-plan" type="button" role="tab" aria-selected="false">Monthly Target Plan</button>
                 </li>
             </ul>
 
@@ -1169,6 +1463,232 @@
                                 <div class="card-body">
                                     <div id="recentFeedbackList">
                                         <!-- Recent feedback will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monthly Target Plan Tab -->
+                <div class="tab-pane fade" id="target-plan" role="tabpanel">
+                    <!-- Target Plan Header -->
+                    <div class="target-plan-header">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h2 class="mb-2">Monthly Target Plan</h2>
+                                <p class="mb-0">Set, track, and analyze monthly sales targets for each branch</p>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="mb-2">
+                                    <label for="targetMonth" class="form-label">Select Month</label>
+                                    <input type="month" class="form-control" id="targetMonth" value="2025-10">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Target Overview Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="target-summary-card">
+                                <div class="target-summary-value" id="totalMonthlyTarget">0</div>
+                                <div class="target-summary-label">Total Monthly Target (AED)</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="target-summary-card">
+                                <div class="target-summary-value" id="currentMonthSales">0</div>
+                                <div class="target-summary-label">Current Month Sales (AED)</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="target-summary-card">
+                                <div class="target-summary-value" id="overallAchievement">0%</div>
+                                <div class="target-summary-label">Overall Achievement</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="target-summary-card">
+                                <div class="target-summary-value" id="daysRemaining">0</div>
+                                <div class="target-summary-label">Days Remaining</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Target Input Section -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Set Monthly Target</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="total-target-input">
+                                        <label for="totalTargetInput" class="form-label">Enter Total Monthly Target (AED)</label>
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-text">AED</span>
+                                            <input type="number" class="form-control" id="totalTargetInput" 
+                                                   placeholder="360000" min="0" step="1000">
+                                            <button class="btn btn-primary" onclick="setTotalTarget()">
+                                                <i class="fas fa-check"></i> Set Target
+                                            </button>
+                                        </div>
+                                        <div class="form-text">Enter the total target amount for the selected month</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="distribution-method">
+                                        <label class="form-label">Distribution Method</label>
+                                        <div class="method-option" onclick="selectDistributionMethod('performance')">
+                                            <h6><i class="fas fa-chart-line"></i> Based on Performance</h6>
+                                            <p>Distribute targets based on historical performance data</p>
+                                        </div>
+                                        <div class="method-option" onclick="selectDistributionMethod('equal')">
+                                            <h6><i class="fas fa-balance-scale"></i> Equal Distribution</h6>
+                                            <p>Distribute targets equally across all branches</p>
+                                        </div>
+                                        <div class="method-option" onclick="selectDistributionMethod('custom')">
+                                            <h6><i class="fas fa-edit"></i> Custom Distribution</h6>
+                                            <p>Manually set targets for each branch</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Preset Targets -->
+                            <div class="preset-targets">
+                                <button class="preset-btn" onclick="setPresetTarget(300000)">300K</button>
+                                <button class="preset-btn" onclick="setPresetTarget(350000)">350K</button>
+                                <button class="preset-btn active" onclick="setPresetTarget(360000)">360K</button>
+                                <button class="preset-btn" onclick="setPresetTarget(400000)">400K</button>
+                                <button class="preset-btn" onclick="setPresetTarget(450000)">450K</button>
+                                <button class="preset-btn" onclick="setPresetTarget(500000)">500K</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Branch Target Allocation -->
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Branch Target Allocation</h5>
+                            <button class="btn btn-primary" onclick="saveTargetAllocation()">
+                                <i class="fas fa-save"></i> Save Allocation
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="target-allocation-card">
+                                        <h6>Branch Targets</h6>
+                                        <div id="branchTargetInputs">
+                                            <!-- Branch target inputs will be populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="target-allocation-card">
+                                        <h6>Target Distribution</h6>
+                                        <div class="target-chart-container">
+                                            <canvas id="targetDistributionChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Target Progress Tracking -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Target Progress Tracking</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="branchProgressCards">
+                                <!-- Progress cards will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Target Comparison Table -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Target vs Actual Comparison</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover target-comparison-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Branch</th>
+                                            <th>Monthly Target (AED)</th>
+                                            <th>Current Sales (AED)</th>
+                                            <th>Achievement %</th>
+                                            <th>Remaining (AED)</th>
+                                            <th>Daily Required (AED)</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="targetComparisonTable">
+                                        <!-- Table content will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Target Achievement Chart -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Target Achievement Analysis</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="target-chart-container">
+                                        <canvas id="targetAchievementChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="target-metric-card">
+                                        <div class="target-metric-value" id="bestPerformer">-</div>
+                                        <div class="target-metric-label">Best Performer</div>
+                                    </div>
+                                    <div class="target-metric-card">
+                                        <div class="target-metric-value" id="needsImprovement">-</div>
+                                        <div class="target-metric-label">Needs Improvement</div>
+                                    </div>
+                                    <div class="target-metric-card">
+                                        <div class="target-metric-value" id="onTrackBranches">0</div>
+                                        <div class="target-metric-label">Branches On Track</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Plan -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Target Achievement Action Plan</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="target-action-card">
+                                        <h6>Immediate Actions (This Week)</h6>
+                                        <div class="action-timeline" id="immediateActions">
+                                            <!-- Actions will be populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="target-action-card">
+                                        <h6>Strategic Actions (This Month)</h6>
+                                        <div class="action-timeline" id="strategicActions">
+                                            <!-- Actions will be populated by JavaScript -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -2101,6 +2621,8 @@
         let charts = {};
         let undoStack = [];
         let currentPage = 'dashboard';
+        let monthlyTargets = {};
+        let selectedDistributionMethod = 'performance';
         
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
@@ -2111,6 +2633,7 @@
             updateDashboard();
             updateFeedbackSummary();
             loadFromLocalStorage();
+            initializeTargetPlan();
         });
         
         // Initialize the application
@@ -2191,6 +2714,16 @@
             // Calculate average when sales or transactions change
             document.getElementById('salesInput').addEventListener('input', calculateAverage);
             document.getElementById('transactionsInput').addEventListener('input', calculateAverage);
+            
+            // Target month change event
+            document.getElementById('targetMonth').addEventListener('change', function() {
+                updateTargetPlan();
+            });
+            
+            // Total target input change event
+            document.getElementById('totalTargetInput').addEventListener('input', function() {
+                updateTargetPreview();
+            });
         }
         
         // Initialize rating input
@@ -4222,6 +4755,26 @@
                     status: 'Inactive'
                 }
             ];
+            
+            // Initialize sample monthly targets
+            const branches = [
+                'Crispy Chicken-Hamdan St',
+                'Crispy Chicken Khaldia',
+                'Crispy Chicken Shabiya 11',
+                'Crispy Chicken Muroor',
+                'Crispy Chicken Al Barsha',
+                'Crispy Chicken Al Satwa',
+                'Crispy Chicken Al Rgga'
+            ];
+            
+            monthlyTargets = {};
+            branches.forEach(branch => {
+                monthlyTargets[branch] = {
+                    target: 50000 + Math.floor(Math.random() * 30000),
+                    achieved: 0,
+                    percentage: 0
+                };
+            });
         }
         
         // Show notification
@@ -5249,6 +5802,7 @@
                 salesData: salesData,
                 feedbackData: feedbackData,
                 offers: offers,
+                monthlyTargets: monthlyTargets,
                 lastSaved: new Date().toISOString()
             };
             
@@ -5265,6 +5819,7 @@
                     salesData = appData.salesData || [];
                     feedbackData = appData.feedbackData || [];
                     offers = appData.offers || [];
+                    monthlyTargets = appData.monthlyTargets || {};
                     
                     updateAllUI();
                     
@@ -5315,9 +5870,745 @@
             });
         }
         
-        // Export to PDF (placeholder function)
+        // Export to PDF
         function exportToPDF() {
-            showNotification('PDF export functionality would be implemented here', 'info');
+            showLoadingOverlay(true);
+            
+            // Create a new jsPDF instance
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(18);
+            doc.text('Crispy Chicken Analytics Report', 105, 15, { align: 'center' });
+            
+            // Add date range
+            doc.setFontSize(12);
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            doc.text(`Report Period: ${startDate} to ${endDate}`, 105, 25, { align: 'center' });
+            
+            // Add sales summary
+            doc.setFontSize(14);
+            doc.text('Sales Summary', 20, 40);
+            
+            doc.setFontSize(11);
+            const totalSales = salesData.reduce((sum, sale) => sum + parseFloat(sale.sales), 0);
+            const totalTransactions = salesData.reduce((sum, sale) => sum + parseInt(sale.transactions), 0);
+            const avgTransaction = totalTransactions > 0 ? totalSales / totalTransactions : 0;
+            
+            doc.text(`Total Sales: ${formatCurrency(totalSales)}`, 20, 50);
+            doc.text(`Total Transactions: ${totalTransactions}`, 20, 57);
+            doc.text(`Average Transaction: ${formatCurrency(avgTransaction)}`, 20, 64);
+            
+            // Add branch performance
+            doc.setFontSize(14);
+            doc.text('Branch Performance', 20, 80);
+            
+            doc.setFontSize(11);
+            const branchData = {};
+            salesData.forEach(sale => {
+                if (!branchData[sale.branch]) {
+                    branchData[sale.branch] = 0;
+                }
+                branchData[sale.branch] += parseFloat(sale.sales);
+            });
+            
+            let yPos = 90;
+            Object.keys(branchData).forEach(branch => {
+                doc.text(`${branch}: ${formatCurrency(branchData[branch])}`, 20, yPos);
+                yPos += 7;
+            });
+            
+            // Add feedback summary
+            doc.setFontSize(14);
+            doc.text('Customer Feedback', 20, yPos + 10);
+            
+            doc.setFontSize(11);
+            const totalFeedback = feedbackData.length;
+            const avgRating = totalFeedback > 0 
+                ? (feedbackData.reduce((sum, f) => sum + f.rating, 0) / totalFeedback).toFixed(1)
+                : '0.0';
+            
+            doc.text(`Total Feedback: ${totalFeedback}`, 20, yPos + 20);
+            doc.text(`Average Rating: ${avgRating}/5`, 20, yPos + 27);
+            
+            // Save the PDF
+            doc.save(`crispy-chicken-report-${new Date().toISOString().split('T')[0]}.pdf`);
+            
+            showLoadingOverlay(false);
+            showNotification('PDF report exported successfully!', 'success');
+        }
+        
+        // Initialize Target Plan
+        function initializeTargetPlan() {
+            // Set current month
+            const today = new Date();
+            const currentMonth = today.toISOString().slice(0, 7);
+            document.getElementById('targetMonth').value = currentMonth;
+            
+            // Initialize branch target inputs
+            updateBranchTargetInputs();
+            
+            // Update target plan
+            updateTargetPlan();
+        }
+        
+        // Update Branch Target Inputs
+        function updateBranchTargetInputs() {
+            const container = document.getElementById('branchTargetInputs');
+            if (!container) return;
+            
+            const branches = [
+                'Crispy Chicken-Hamdan St',
+                'Crispy Chicken Khaldia',
+                'Crispy Chicken Shabiya 11',
+                'Crispy Chicken Muroor',
+                'Crispy Chicken Al Barsha',
+                'Crispy Chicken Al Satwa',
+                'Crispy Chicken Al Rgga'
+            ];
+            
+            container.innerHTML = '';
+            
+            branches.forEach(branch => {
+                const targetValue = monthlyTargets[branch] ? monthlyTargets[branch].target : 50000;
+                
+                const inputGroup = document.createElement('div');
+                inputGroup.className = 'allocation-input-group';
+                inputGroup.innerHTML = `
+                    <label>${branch}:</label>
+                    <input type="number" class="form-control" id="target-${branch.replace(/\s+/g, '-')}" 
+                           value="${targetValue}" min="0" step="1000" onchange="updateTargetDistribution()">
+                    <span class="input-group-text">AED</span>
+                `;
+                container.appendChild(inputGroup);
+            });
+        }
+        
+        // Update Target Distribution
+        function updateTargetDistribution() {
+            const branches = [
+                'Crispy Chicken-Hamdan St',
+                'Crispy Chicken Khaldia',
+                'Crispy Chicken Shabiya 11',
+                'Crispy Chicken Muroor',
+                'Crispy Chicken Al Barsha',
+                'Crispy Chicken Al Satwa',
+                'Crispy Chicken Al Rgga'
+            ];
+            
+            let totalTarget = 0;
+            const targetData = {};
+            
+            branches.forEach(branch => {
+                const inputId = `target-${branch.replace(/\s+/g, '-')}`;
+                const input = document.getElementById(inputId);
+                if (input) {
+                    const value = parseFloat(input.value) || 0;
+                    targetData[branch] = value;
+                    totalTarget += value;
+                }
+            });
+            
+            // Update distribution chart
+            updateTargetDistributionChart(targetData);
+            
+            // Update total target display
+            const totalTargetEl = document.getElementById('totalMonthlyTarget');
+            if (totalTargetEl) {
+                totalTargetEl.textContent = formatCurrency(totalTarget);
+            }
+        }
+        
+        // Update Target Distribution Chart
+        function updateTargetDistributionChart(targetData) {
+            const ctx = document.getElementById('targetDistributionChart');
+            if (!ctx) return;
+            
+            // Destroy existing chart if it exists
+            if (charts.targetDistribution) {
+                charts.targetDistribution.destroy();
+            }
+            
+            // Create new chart
+            charts.targetDistribution = new Chart(ctx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(targetData),
+                    datasets: [{
+                        data: Object.values(targetData),
+                        backgroundColor: [
+                            '#ff6b35',
+                            '#f7931e',
+                            '#ffc107',
+                            '#28a745',
+                            '#17a2b8',
+                            '#6f42c1',
+                            '#dc3545'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${formatCurrency(context.parsed)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Update Target Plan
+        function updateTargetPlan() {
+            const targetMonth = document.getElementById('targetMonth').value;
+            const [year, month] = targetMonth.split('-');
+            
+            // Get current month sales data
+            const currentMonthSales = salesData.filter(sale => {
+                const saleDate = new Date(sale.date);
+                return saleDate.getFullYear() === parseInt(year) && 
+                       (saleDate.getMonth() + 1) === parseInt(month);
+            });
+            
+            // Calculate current month sales by branch
+            const branchSales = {};
+            currentMonthSales.forEach(sale => {
+                if (!branchSales[sale.branch]) {
+                    branchSales[sale.branch] = 0;
+                }
+                branchSales[sale.branch] += parseFloat(sale.sales);
+            });
+            
+            // Update current month sales
+            const totalCurrentSales = Object.values(branchSales).reduce((sum, sale) => sum + sale, 0);
+            const currentMonthSalesEl = document.getElementById('currentMonthSales');
+            if (currentMonthSalesEl) {
+                currentMonthSalesEl.textContent = formatCurrency(totalCurrentSales);
+            }
+            
+            // Calculate days remaining
+            const today = new Date();
+            const lastDayOfMonth = new Date(year, month, 0);
+            const daysRemaining = Math.max(0, lastDayOfMonth.getDate() - today.getDate());
+            const daysRemainingEl = document.getElementById('daysRemaining');
+            if (daysRemainingEl) {
+                daysRemainingEl.textContent = daysRemaining;
+            }
+            
+            // Update branch progress cards
+            updateBranchProgressCards(branchSales);
+            
+            // Update target comparison table
+            updateTargetComparisonTable(branchSales);
+            
+            // Update target achievement chart
+            updateTargetAchievementChart(branchSales);
+            
+            // Update action plans
+            updateActionPlans(branchSales);
+        }
+        
+        // Update Branch Progress Cards
+        function updateBranchProgressCards(branchSales) {
+            const container = document.getElementById('branchProgressCards');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            Object.keys(monthlyTargets).forEach(branch => {
+                const target = monthlyTargets[branch].target;
+                const achieved = branchSales[branch] || 0;
+                const percentage = target > 0 ? (achieved / target) * 100 : 0;
+                
+                // Determine status
+                let statusClass = 'status-behind';
+                let statusText = 'Behind Target';
+                
+                if (percentage >= 100) {
+                    statusClass = 'status-achieved';
+                    statusText = 'Achieved';
+                } else if (percentage >= 80) {
+                    statusClass = 'status-on-track';
+                    statusText = 'On Track';
+                } else if (percentage >= 60) {
+                    statusClass = 'status-at-risk';
+                    statusText = 'At Risk';
+                }
+                
+                const card = document.createElement('div');
+                card.className = 'col-md-6 col-lg-4 mb-3';
+                card.innerHTML = `
+                    <div class="target-metric-card">
+                        <h6>${branch}</h6>
+                        <div class="target-progress">
+                            <div class="target-progress-bar ${statusClass}" style="width: ${Math.min(100, percentage)}%">
+                                ${percentage.toFixed(1)}%
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">Target: ${formatCurrency(target)}</small>
+                            <small class="text-muted">Achieved: ${formatCurrency(achieved)}</small>
+                        </div>
+                        <div class="mt-2">
+                            <span class="target-status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        // Update Target Comparison Table
+        function updateTargetComparisonTable(branchSales) {
+            const tbody = document.getElementById('targetComparisonTable');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            const today = new Date();
+            const targetMonth = document.getElementById('targetMonth').value;
+            const [year, month] = targetMonth.split('-');
+            const lastDayOfMonth = new Date(year, month, 0);
+            const daysRemaining = Math.max(0, lastDayOfMonth.getDate() - today.getDate());
+            const daysPassed = today.getDate() - 1;
+            
+            Object.keys(monthlyTargets).forEach(branch => {
+                const target = monthlyTargets[branch].target;
+                const achieved = branchSales[branch] || 0;
+                const percentage = target > 0 ? (achieved / target) * 100 : 0;
+                const remaining = Math.max(0, target - achieved);
+                const dailyRequired = daysRemaining > 0 ? remaining / daysRemaining : 0;
+                
+                // Determine status
+                let statusClass = 'status-behind';
+                let statusText = 'Behind Target';
+                
+                if (percentage >= 100) {
+                    statusClass = 'status-achieved';
+                    statusText = 'Achieved';
+                } else if (percentage >= 80) {
+                    statusClass = 'status-on-track';
+                    statusText = 'On Track';
+                } else if (percentage >= 60) {
+                    statusClass = 'status-at-risk';
+                    statusText = 'At Risk';
+                }
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${branch}</td>
+                    <td>${formatCurrency(target)}</td>
+                    <td>${formatCurrency(achieved)}</td>
+                    <td>${percentage.toFixed(1)}%</td>
+                    <td>${formatCurrency(remaining)}</td>
+                    <td>${formatCurrency(dailyRequired)}</td>
+                    <td><span class="target-status-badge ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="viewBranchDetails('${branch}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Update Target Achievement Chart
+        function updateTargetAchievementChart(branchSales) {
+            const ctx = document.getElementById('targetAchievementChart');
+            if (!ctx) return;
+            
+            const branches = Object.keys(monthlyTargets);
+            const targetData = branches.map(branch => monthlyTargets[branch].target);
+            const achievedData = branches.map(branch => branchSales[branch] || 0);
+            
+            // Destroy existing chart if it exists
+            if (charts.targetAchievement) {
+                charts.targetAchievement.destroy();
+            }
+            
+            // Create new chart
+            charts.targetAchievement = new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: branches,
+                    datasets: [{
+                        label: 'Target',
+                        data: targetData,
+                        backgroundColor: 'rgba(255, 107, 53, 0.3)',
+                        borderColor: '#ff6b35',
+                        borderWidth: 2
+                    }, {
+                        label: 'Achieved',
+                        data: achievedData,
+                        backgroundColor: '#28a745',
+                        borderColor: '#28a745',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Update performance metrics
+            updatePerformanceMetrics(branchSales);
+        }
+        
+        // Update Performance Metrics
+        function updatePerformanceMetrics(branchSales) {
+            let bestPerformer = '-';
+            let needsImprovement = '-';
+            let onTrackCount = 0;
+            
+            Object.keys(monthlyTargets).forEach(branch => {
+                const target = monthlyTargets[branch].target;
+                const achieved = branchSales[branch] || 0;
+                const percentage = target > 0 ? (achieved / target) * 100 : 0;
+                
+                if (percentage >= 100) {
+                    if (bestPerformer === '-' || achieved > (branchSales[bestPerformer] || 0)) {
+                        bestPerformer = branch;
+                    }
+                }
+                
+                if (percentage < 60) {
+                    if (needsImprovement === '-' || percentage < (monthlyTargets[needsImprovement] ? (branchSales[needsImprovement] || 0) / monthlyTargets[needsImprovement].target * 100 : 100)) {
+                        needsImprovement = branch;
+                    }
+                }
+                
+                if (percentage >= 80) {
+                    onTrackCount++;
+                }
+            });
+            
+            // Update display elements
+            const bestPerformerEl = document.getElementById('bestPerformer');
+            if (bestPerformerEl) bestPerformerEl.textContent = bestPerformer;
+            
+            const needsImprovementEl = document.getElementById('needsImprovement');
+            if (needsImprovementEl) needsImprovementEl.textContent = needsImprovement;
+            
+            const onTrackBranchesEl = document.getElementById('onTrackBranches');
+            if (onTrackBranchesEl) onTrackBranchesEl.textContent = onTrackCount;
+            
+            // Update overall achievement
+            const totalTarget = Object.values(monthlyTargets).reduce((sum, t) => sum + t.target, 0);
+            const totalAchieved = Object.values(branchSales).reduce((sum, s) => sum + s, 0);
+            const overallPercentage = totalTarget > 0 ? (totalAchieved / totalTarget) * 100 : 0;
+            
+            const overallAchievementEl = document.getElementById('overallAchievement');
+            if (overallAchievementEl) overallAchievementEl.textContent = `${overallPercentage.toFixed(1)}%`;
+        }
+        
+        // Update Action Plans
+        function updateActionPlans(branchSales) {
+            // Immediate actions
+            const immediateActions = document.getElementById('immediateActions');
+            if (immediateActions) {
+                immediateActions.innerHTML = '';
+                
+                const actions = [
+                    {
+                        date: new Date().toISOString().split('T')[0],
+                        title: 'Review Underperforming Branches',
+                        description: 'Schedule meetings with branches below 60% target achievement'
+                    },
+                    {
+                        date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+                        title: 'Launch Weekend Promotion',
+                        description: 'Implement special offers for branches with high weekend potential'
+                    },
+                    {
+                        date: new Date(Date.now() + 172800000).toISOString().split('T')[0],
+                        title: 'Staff Training Session',
+                        description: 'Conduct service improvement training for all branch managers'
+                    }
+                ];
+                
+                actions.forEach(action => {
+                    const actionItem = document.createElement('div');
+                    actionItem.className = 'action-item';
+                    actionItem.innerHTML = `
+                        <div class="action-date">${action.date}</div>
+                        <div class="action-title">${action.title}</div>
+                        <div class="action-description">${action.description}</div>
+                    `;
+                    immediateActions.appendChild(actionItem);
+                });
+            }
+            
+            // Strategic actions
+            const strategicActions = document.getElementById('strategicActions');
+            if (strategicActions) {
+                strategicActions.innerHTML = '';
+                
+                const actions = [
+                    {
+                        date: new Date(Date.now() + 604800000).toISOString().split('T')[0],
+                        title: 'Mid-Month Performance Review',
+                        description: 'Analyze progress and adjust targets if necessary'
+                    },
+                    {
+                        date: new Date(Date.now() + 1209600000).toISOString().split('T')[0],
+                        title: 'Customer Feedback Analysis',
+                        description: 'Review feedback and implement improvements based on insights'
+                    },
+                    {
+                        date: new Date(Date.now() + 1814400000).toISOString().split('T')[0],
+                        title: 'Final Push Campaign',
+                        description: 'Launch end-of-month promotional campaign to meet targets'
+                    }
+                ];
+                
+                actions.forEach(action => {
+                    const actionItem = document.createElement('div');
+                    actionItem.className = 'action-item';
+                    actionItem.innerHTML = `
+                        <div class="action-date">${action.date}</div>
+                        <div class="action-title">${action.title}</div>
+                        <div class="action-description">${action.description}</div>
+                    `;
+                    strategicActions.appendChild(actionItem);
+                });
+            }
+        }
+        
+        // Save Target Allocation
+        function saveTargetAllocation() {
+            const branches = [
+                'Crispy Chicken-Hamdan St',
+                'Crispy Chicken Khaldia',
+                'Crispy Chicken Shabiya 11',
+                'Crispy Chicken Muroor',
+                'Crispy Chicken Al Barsha',
+                'Crispy Chicken Al Satwa',
+                'Crispy Chicken Al Rgga'
+            ];
+            
+            branches.forEach(branch => {
+                const inputId = `target-${branch.replace(/\s+/g, '-')}`;
+                const input = document.getElementById(inputId);
+                if (input) {
+                    const value = parseFloat(input.value) || 0;
+                    if (!monthlyTargets[branch]) {
+                        monthlyTargets[branch] = {};
+                    }
+                    monthlyTargets[branch].target = value;
+                }
+            });
+            
+            // Update target plan
+            updateTargetPlan();
+            
+            // Save to local storage
+            saveToLocalStorage();
+            
+            showNotification('Target allocation saved successfully!', 'success');
+        }
+        
+        // View Branch Details
+        function viewBranchDetails(branch) {
+            // This would open a modal or navigate to a detailed view
+            showNotification(`Viewing details for ${branch}`, 'info');
+        }
+        
+        // Set Total Target
+        function setTotalTarget() {
+            const totalTargetInput = document.getElementById('totalTargetInput');
+            const totalTarget = parseFloat(totalTargetInput.value) || 0;
+            
+            if (totalTarget <= 0) {
+                showNotification('Please enter a valid target amount', 'warning');
+                return;
+            }
+            
+            // Distribute target based on selected method
+            distributeTarget(totalTarget);
+            
+            // Update UI
+            updateTargetPlan();
+            
+            // Save to local storage
+            saveToLocalStorage();
+            
+            showNotification(`Monthly target set to ${formatCurrency(totalTarget)}`, 'success');
+        }
+        
+        // Select Distribution Method
+        function selectDistributionMethod(method) {
+            selectedDistributionMethod = method;
+            
+            // Update UI
+            document.querySelectorAll('.method-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // Get current total target
+            const totalTargetInput = document.getElementById('totalTargetInput');
+            const totalTarget = parseFloat(totalTargetInput.value) || 0;
+            
+            if (totalTarget > 0) {
+                distributeTarget(totalTarget);
+            }
+        }
+        
+        // Set Preset Target
+        function setPresetTarget(amount) {
+            document.getElementById('totalTargetInput').value = amount;
+            
+            // Update UI
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Distribute target
+            distributeTarget(amount);
+        }
+        
+        // Distribute Target
+        function distributeTarget(totalTarget) {
+            const branches = [
+                'Crispy Chicken-Hamdan St',
+                'Crispy Chicken Khaldia',
+                'Crispy Chicken Shabiya 11',
+                'Crispy Chicken Muroor',
+                'Crispy Chicken Al Barsha',
+                'Crispy Chicken Al Satwa',
+                'Crispy Chicken Al Rgga'
+            ];
+            
+            let distribution = {};
+            
+            switch(selectedDistributionMethod) {
+                case 'equal':
+                    // Equal distribution
+                    const equalShare = totalTarget / branches.length;
+                    branches.forEach(branch => {
+                        distribution[branch] = equalShare;
+                    });
+                    break;
+                    
+                case 'performance':
+                    // Performance-based distribution
+                    const branchPerformance = calculateBranchPerformance();
+                    const totalPerformance = Object.values(branchPerformance).reduce((sum, perf) => sum + perf, 0);
+                    
+                    branches.forEach(branch => {
+                        const performance = branchPerformance[branch] || 0;
+                        distribution[branch] = totalTarget * (performance / totalPerformance);
+                    });
+                    break;
+                    
+                case 'custom':
+                    // Keep current custom values
+                    branches.forEach(branch => {
+                        distribution[branch] = monthlyTargets[branch] ? monthlyTargets[branch].target : 0;
+                    });
+                    break;
+                    
+                default:
+                    // Default to equal distribution
+                    const defaultShare = totalTarget / branches.length;
+                    branches.forEach(branch => {
+                        distribution[branch] = defaultShare;
+                    });
+            }
+            
+            // Update monthly targets
+            branches.forEach(branch => {
+                if (!monthlyTargets[branch]) {
+                    monthlyTargets[branch] = {};
+                }
+                monthlyTargets[branch].target = distribution[branch];
+            });
+            
+            // Update UI
+            updateBranchTargetInputs();
+            updateTargetDistribution();
+            updateTargetPlan();
+        }
+        
+        // Calculate Branch Performance
+        function calculateBranchPerformance() {
+            const performance = {};
+            
+            // Get last 30 days of sales data
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            
+            const recentSales = salesData.filter(sale => {
+                const saleDate = new Date(sale.date);
+                return saleDate >= thirtyDaysAgo;
+            });
+            
+            // Calculate performance for each branch
+            const branches = [
+                'Crispy Chicken-Hamdan St',
+                'Crispy Chicken Khaldia',
+                'Crispy Chicken Shabiya 11',
+                'Crispy Chicken Muroor',
+                'Crispy Chicken Al Barsha',
+                'Crispy Chicken Al Satwa',
+                'Crispy Chicken Al Rgga'
+            ];
+            
+            branches.forEach(branch => {
+                const branchSales = recentSales.filter(sale => sale.branch === branch);
+                const totalSales = branchSales.reduce((sum, sale) => sum + parseFloat(sale.sales), 0);
+                const totalTransactions = branchSales.reduce((sum, sale) => sum + parseInt(sale.transactions), 0);
+                
+                // Performance score based on sales and transaction count
+                performance[branch] = totalSales + (totalTransactions * 10);
+            });
+            
+            return performance;
+        }
+        
+        // Update Target Preview
+        function updateTargetPreview() {
+            const totalTarget = parseFloat(document.getElementById('totalTargetInput').value) || 0;
+            
+            if (totalTarget > 0) {
+                // Update preview without actually distributing
+                const totalTargetEl = document.getElementById('totalMonthlyTarget');
+                if (totalTargetEl) {
+                    totalTargetEl.textContent = formatCurrency(totalTarget);
+                }
+            }
         }
     </script>
 </body>
