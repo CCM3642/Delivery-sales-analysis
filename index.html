@@ -1558,7 +1558,7 @@
                                         <div class="alert alert-warning">
                                             <i class="fas fa-exclamation-triangle"></i> 
                                             <strong>Anomaly Detection:</strong> 
-                                            <p id="anomalyText">Analyzing data...</p>
+                                            <p id="anomalyText">No data available for analysis</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1568,7 +1568,7 @@
                                         <div class="alert alert-info">
                                             <i class="fas fa-chart-line"></i> 
                                             <strong>Sales Prediction:</strong> 
-                                            <p id="predictionText">Generating prediction...</p>
+                                            <p id="predictionText">No data available for prediction</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1578,7 +1578,7 @@
                                     <h6>Key Findings</h6>
                                     <div id="keyFindings">
                                         <ul class="list-group" id="keyFindingsList">
-                                            <!-- Key findings will be populated by JavaScript -->
+                                            <li class="list-group-item">No data available for analysis</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -1604,7 +1604,7 @@
                                     <div id="recommendations1" class="accordion-collapse collapse show" data-bs-parent="#recommendationsAccordion">
                                         <div class="accordion-body">
                                             <ul id="shortTermRecommendations">
-                                                <!-- Recommendations will be populated by JavaScript -->
+                                                <li>No data available for recommendations</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -1618,7 +1618,7 @@
                                     <div id="recommendations2" class="accordion-collapse collapse" data-bs-parent="#recommendationsAccordion">
                                         <div class="accordion-body">
                                             <ul id="mediumTermRecommendations">
-                                                <!-- Recommendations will be populated by JavaScript -->
+                                                <li>No data available for recommendations</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -1632,7 +1632,7 @@
                                     <div id="recommendations3" class="accordion-collapse collapse" data-bs-parent="#recommendationsAccordion">
                                         <div class="accordion-body">
                                             <ul id="longTermRecommendations">
-                                                <!-- Recommendations will be populated by JavaScript -->
+                                                <li>No data available for recommendations</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -1808,13 +1808,13 @@
                             <button type="button" class="btn btn-outline-info" onclick="showImportModal()">
                                 <i class="fas fa-upload"></i> Import Data
                             </button>
-                            <button type="button" class="btn btn-outline-warning" onclick="clearAllData()">
+                            <button type="button" class="btn btn-outline-danger" onclick="clearAllData()">
                                 <i class="fas fa-trash-alt"></i> Clear All Data
                             </button>
-                            <button type="button" class="btn btn-outline-secondary" onclick="resetToSample()">
-                                <i class="fas fa-undo"></i> Reset to Sample
+                            <button type="button" class="btn btn-outline-danger" onclick="resetToSample()">
+                                <i class="fas fa-trash-alt"></i> Clear All Data
                             </button>
-                            <button type="button" class="btn btn-outline-danger" onclick="exportToPDF()">
+                            <button type="button" class="btn btn-outline-secondary" onclick="exportToPDF()">
                                 <i class="fas fa-file-pdf"></i> Export PDF
                             </button>
                         </div>
@@ -2439,8 +2439,8 @@
                                     <canvas id="feedbackCategoryReportChart"></canvas>
                                 </div>
                             </div>
-="col-md-6">
-                                <                            <div classdiv class="chart-container" style="height: 250px;">
+                            <div class="col-md-6">
+                                <div class="chart-container" style="height: 250px;">
                                     <canvas id="feedbackRatingReportChart"></canvas>
                                 </div>
                             </div>
@@ -3556,15 +3556,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
             setupEventListeners();
-            loadSampleData();
-            loadSampleTargetPlan();
             initializeDataManagement();
             updateDataStats();
-            updateDashboard();
-            updateFeedbackSummary();
-            updateTargetPlan();
-            updateRecommendations();
             loadFromLocalStorage();
+            showEmptyState();
         });
         
         // Initialize the application
@@ -4005,6 +4000,40 @@
             const offerFilter = document.getElementById('offerFilter').value;
             if (offerFilter !== 'all') {
                 filteredSales = filteredSales.filter(sale => sale.offerType === offerFilter);
+            }
+            
+            // If no data, show empty state
+            if (filteredSales.length === 0) {
+                // Update metric cards with zeros
+                document.getElementById('totalSales').textContent = formatCurrency(0);
+                document.getElementById('totalTransactions').textContent = '0';
+                document.getElementById('avgTransaction').textContent = formatCurrency(0);
+                document.getElementById('targetAchievement').textContent = '0%';
+                
+                // Clear charts
+                Object.values(charts).forEach(chart => {
+                    if (chart) chart.destroy();
+                });
+                
+                // Clear tables
+                const dailySalesTable = document.getElementById('dailySalesTable');
+                if (dailySalesTable) {
+                    dailySalesTable.innerHTML = '<tr><td colspan="8" class="text-center">No data available for the selected date range</td></tr>';
+                }
+                
+                // Clear insights
+                const anomalyText = document.getElementById('anomalyText');
+                if (anomalyText) anomalyText.textContent = 'No data available for analysis';
+                
+                const predictionText = document.getElementById('predictionText');
+                if (predictionText) predictionText.textContent = 'No data available for prediction';
+                
+                const keyFindingsList = document.getElementById('keyFindingsList');
+                if (keyFindingsList) {
+                    keyFindingsList.innerHTML = '<li class="list-group-item">No data available for analysis</li>';
+                }
+                
+                return;
             }
             
             // Calculate metrics
@@ -5496,310 +5525,11 @@
             }
         }
         
-        // Reset to sample data
+        // Reset to sample data (now clears all data)
         function resetToSample() {
-            if (confirm('Are you sure you want to reset to sample data? This will replace all current data.')) {
-                loadSampleData();
-                loadSampleTargetPlan();
-                updateAllUI();
-                
-                showNotification('Data reset to sample data successfully!', 'success');
-                
-                // Save to local storage
-                saveToLocalStorage();
+            if (confirm('Are you sure you want to clear all data? This will remove all sales, feedback, offers, and target plans.')) {
+                clearAllData();
             }
-        }
-        
-        // Load sample data
-        function loadSampleData() {
-            // Sample sales data
-            salesData = [
-                {
-                    date: '2025-10-01',
-                    branch: 'Crispy Chicken-Hamdan St',
-                    channel: 'Dine-in',
-                    transactions: 45,
-                    sales: 2250.00,
-                    average: 50.00,
-                    offerType: 'Normal Day',
-                    offerStatus: 'No Offer',
-                    notes: 'Good start to the month'
-                },
-                {
-                    date: '2025-10-01',
-                    branch: 'Crispy Chicken Khaldia',
-                    channel: 'Delivery',
-                    transactions: 32,
-                    sales: 1600.00,
-                    average: 50.00,
-                    offerType: 'Normal Day',
-                    offerStatus: 'No Offer',
-                    notes: ''
-                },
-                {
-                    date: '2025-10-02',
-                    branch: 'Crispy Chicken-Hamdan St',
-                    channel: 'Takeaway',
-                    transactions: 38,
-                    sales: 1900.00,
-                    average: 50.00,
-                    offerType: 'Chicken Day',
-                    offerStatus: 'Active',
-                    notes: 'Chicken Day promotion successful'
-                },
-                {
-                    date: '2025-10-03',
-                    branch: 'Crispy Chicken Al Barsha',
-                    channel: 'Dine-in',
-                    transactions: 28,
-                    sales: 1680.00,
-                    average: 60.00,
-                    offerType: 'Ultimate',
-                    offerStatus: 'Active',
-                    notes: 'Higher average transaction value'
-                },
-                {
-                    date: '2025-10-04',
-                    branch: 'Crispy Chicken-Hamdan St',
-                    channel: 'Delivery',
-                    transactions: 52,
-                    sales: 2600.00,
-                    average: 50.00,
-                    offerType: 'Normal Day',
-                    offerStatus: 'No Offer',
-                    notes: 'High delivery volume'
-                },
-                {
-                    date: '2025-10-05',
-                    branch: 'Crispy Chicken Khaldia',
-                    channel: 'Dine-in',
-                    transactions: 41,
-                    sales: 2050.00,
-                    average: 50.00,
-                    offerType: 'Normal Day',
-                    offerStatus: 'No Offer',
-                    notes: ''
-                },
-                {
-                    date: '2025-10-06',
-                    branch: 'Crispy Chicken-Hamdan St',
-                    channel: 'Takeaway',
-                    transactions: 58,
-                    sales: 2900.00,
-                    average: 50.00,
-                    offerType: 'Ultimate',
-                    offerStatus: 'Active',
-                    notes: 'Ultimate offer performing well'
-                },
-                {
-                    date: '2025-10-07',
-                    branch: 'Crispy Chicken Al Barsha',
-                    channel: 'Delivery',
-                    transactions: 35,
-                    sales: 2100.00,
-                    average: 60.00,
-                    offerType: 'Chicken Day',
-                    offerStatus: 'Active',
-                    notes: 'Strong delivery performance'
-                },
-                {
-                    date: '2025-10-08',
-                    branch: 'Crispy Chicken-Hamdan St',
-                    channel: 'Dine-in',
-                    transactions: 49,
-                    sales: 2450.00,
-                    average: 50.00,
-                    offerType: 'Normal Day',
-                    offerStatus: 'No Offer',
-                    notes: 'Weekend dine-in traffic up'
-                },
-                {
-                    date: '2025-10-09',
-                    branch: 'Crispy Chicken Khaldia',
-                    channel: 'Takeaway',
-                    transactions: 36,
-                    sales: 1800.00,
-                    average: 50.00,
-                    offerType: 'Normal Day',
-                    offerStatus: 'No Offer',
-                    notes: ''
-                },
-                {
-                    date: '2025-10-10',
-                    branch: 'Crispy Chicken-Hamdan St',
-                    channel: 'Delivery',
-                    transactions: 55,
-                    sales: 2750.00,
-                    average: 50.00,
-                    offerType: 'Chicken Day',
-                    offerStatus: 'Active',
-                    notes: 'Excellent delivery numbers'
-                },
-                {
-                    date: '2025-10-11',
-                    branch: 'Crispy Chicken Al Barsha',
-                    channel: 'Dine-in',
-                    transactions: 30,
-                    sales: 1800.00,
-                    average: 60.00,
-                    offerType: 'Ultimate',
-                    offerStatus: 'Active',
-                    notes: 'Consistent high average'
-                },
-                {
-                    date: '2025-10-12',
-                    branch: 'Crispy Chicken-Hamdan St',
-                    channel: 'Takeaway',
-                    transactions: 42,
-                    sales: 2100.00,
-                    average: 50.00,
-                    offerType: 'Normal Day',
-                    offerStatus: 'No Offer',
-                    notes: 'Mid-week slowdown'
-                },
-                {
-                    date: '2025-10-13',
-                    branch: 'Crispy Chicken Khaldia',
-                    channel: 'Delivery',
-                    transactions: 48,
-                    sales: 2400.00,
-                    average: 50.00,
-                    offerType: 'Ultimate',
-                    offerStatus: 'Active',
-                    notes: 'Ultimate offer popular'
-                },
-                {
-                    date: '2025-10-14',
-                    branch: 'Crispy Chicken-Hamdan St',
-                    channel: 'Dine-in',
-                    transactions: 52,
-                    sales: 2600.00,
-                    average: 50.00,
-                    offerType: 'Chicken Day',
-                    offerStatus: 'Active',
-                    notes: 'Strong weekend performance'
-                }
-            ];
-            
-            // Sample feedback data
-            feedbackData = [
-                {
-                    date: '2025-10-01',
-                    branch: 'Crispy Chicken-Hamdan St',
-                    rating: 5,
-                    category: 'Service',
-                    comment: 'Excellent service and friendly staff. Will definitely return!'
-                },
-                {
-                    date: '2025-10-02',
-                    branch: 'Crispy Chicken Khaldia',
-                    rating: 4,
-                    category: 'Food',
-                    comment: 'Food quality is good but could be hotter when served.'
-                },
-                {
-                    date: '2025-10-03',
-                    branch: 'Crispy Chicken Al Barsha',
-                    rating: 5,
-                    category: 'Cleanliness',
-                    comment: 'The restaurant was spotless and well-maintained.'
-                },
-                {
-                    date: '2025-10-04',
-                    branch: 'Crispy Chicken-Hamdan St',
-                    rating: 3,
-                    category: 'Service',
-                    comment: 'Service was a bit slow during peak hours.'
-                },
-                {
-                    date: '2025-10-05',
-                    branch: 'Crispy Chicken Khaldia',
-                    rating: 4,
-                    category: 'Food',
-                    comment: 'Great flavors and generous portions.'
-                },
-                {
-                    date: '2025-10-06',
-                    branch: 'Crispy Chicken Al Barsha',
-                    rating: 5,
-                    category: 'Service',
-                    comment: 'Staff went above and beyond to accommodate our large group.'
-                },
-                {
-                    date: '2025-10-07',
-                    branch: 'Crispy Chicken-Hamdan St',
-                    rating: 4,
-                    category: 'Cleanliness',
-                    comment: 'Clean environment but tables could be wiped more frequently.'
-                },
-                {
-                    date: '2025-10-08',
-                    branch: 'Crispy Chicken Khaldia',
-                    rating: 5,
-                    category: 'Food',
-                    comment: 'Best chicken in town! The Ultimate offer is fantastic value.'
-                },
-                {
-                    date: '2025-10-09',
-                    branch: 'Crispy Chicken Al Barsha',
-                    rating: 3,
-                    category: 'Service',
-                    comment: 'Order took longer than expected but staff was apologetic.'
-                },
-                {
-                    date: '2025-10-10',
-                    branch: 'Crispy Chicken-Hamdan St',
-                    rating: 5,
-                    category: 'Service',
-                    comment: 'Outstanding service from the moment we walked in.'
-                }
-            ];
-            
-            // Sample offers data
-            offers = [
-                {
-                    name: 'Ultimate Combo',
-                    type: 'Ultimate',
-                    discount: 25,
-                    startDate: '2025-10-01',
-                    endDate: '2025-10-31',
-                    status: 'Active'
-                },
-                {
-                    name: 'Chicken Day Special',
-                    type: 'Chicken Day',
-                    discount: 15,
-                    startDate: '2025-10-01',
-                    endDate: '2025-10-31',
-                    status: 'Active'
-                },
-                {
-                    name: 'Weekend Family Deal',
-                    type: 'Normal Day',
-                    discount: 10,
-                    startDate: '2025-10-06',
-                    endDate: '2025-10-08',
-                    status: 'Inactive'
-                }
-            ];
-        }
-        
-        // Load sample target plan
-        function loadSampleTargetPlan() {
-            targetPlan = {
-                '2025-10': {
-                    totalTarget: 360000,
-                    branches: {
-                        'Crispy Chicken-Hamdan St': 126000,
-                        'Crispy Chicken Khaldia': 90000,
-                        'Crispy Chicken Shabiya 11': 54000,
-                        'Crispy Chicken Muroor': 36000,
-                        'Crispy Chicken Al Barsha': 36000,
-                        'Crispy Chicken Al Satwa': 18000,
-                        'Crispy Chicken Al Rgga': 18000
-                    }
-                }
-            };
         }
         
         // Update feedback summary
@@ -5847,6 +5577,30 @@
             const currentTargetPlan = targetPlan[currentMonth];
             
             if (!currentTargetPlan) {
+                // Show empty state for target plan
+                const monthlyTargetValueEl = document.getElementById('monthlyTargetValue');
+                const currentAchievementValueEl = document.getElementById('currentAchievementValue');
+                const remainingTargetValueEl = document.getElementById('remainingTargetValue');
+                const daysRemainingEl = document.getElementById('daysRemaining');
+                const dailyTargetNeededEl = document.getElementById('dailyTargetNeeded');
+                const monthlyTargetProgressEl = document.getElementById('monthlyTargetProgress');
+                
+                if (monthlyTargetValueEl) monthlyTargetValueEl.textContent = 'AED 0';
+                if (currentAchievementValueEl) currentAchievementValueEl.textContent = 'AED 0';
+                if (remainingTargetValueEl) remainingTargetValueEl.textContent = 'AED 0';
+                if (daysRemainingEl) daysRemainingEl.textContent = '0';
+                if (dailyTargetNeededEl) dailyTargetNeededEl.textContent = 'AED 0';
+                if (monthlyTargetProgressEl) {
+                    monthlyTargetProgressEl.style.width = '0%';
+                    monthlyTargetProgressEl.textContent = '0%';
+                }
+                
+                // Clear branch targets
+                const branchTargetsContainer = document.getElementById('branchTargetsContainer');
+                if (branchTargetsContainer) {
+                    branchTargetsContainer.innerHTML = '<p class="text-center">No target plan set for this month</p>';
+                }
+                
                 return;
             }
             
@@ -5904,6 +5658,7 @@
             const currentTargetPlan = targetPlan[currentMonth];
             
             if (!currentTargetPlan) {
+                container.innerHTML = '<p class="text-center">No target plan set for this month</p>';
                 return;
             }
             
@@ -6074,8 +5829,15 @@
             if (!container) return;
             
             const currentMonth = '2025-10';
+            const currentTargetPlan = targetPlan[currentMonth];
+            
+            if (!currentTargetPlan) {
+                container.innerHTML = '<p class="text-center">No target milestones available</p>';
+                return;
+            }
+            
             const milestones = [
-                { date: '2025-10-01', text: 'Month starts - Target set at AED 360,000' },
+                { date: '2025-10-01', text: 'Month starts - Target set at AED ' + formatCurrency(currentTargetPlan.totalTarget) },
                 { date: '2025-10-07', text: 'Week 1 - 25% of target achieved' },
                 { date: '2025-10-14', text: 'Week 2 - 50% of target achieved' },
                 { date: '2025-10-21', text: 'Week 3 - 75% of target projected' },
@@ -6403,17 +6165,23 @@
             if (branchPerformanceFindings) {
                 branchPerformanceFindings.innerHTML = '';
                 
-                const branchFindings = [
-                    'Hamdan St branch has the highest sales, accounting for 35% of total sales',
-                    'Al Barsha branch has fewer transactions but the highest average transaction value',
-                    'Al Satwa branch performs particularly well on weekends but relatively weak on weekdays'
-                ];
-                
-                branchFindings.forEach(finding => {
+                if (salesData.length === 0) {
                     const li = document.createElement('li');
-                    li.textContent = finding;
+                    li.textContent = 'No sales data available for analysis';
                     branchPerformanceFindings.appendChild(li);
-                });
+                } else {
+                    const branchFindings = [
+                        'Hamdan St branch has the highest sales, accounting for 35% of total sales',
+                        'Al Barsha branch has fewer transactions but the highest average transaction value',
+                        'Al Satwa branch performs particularly well on weekends but relatively weak on weekdays'
+                    ];
+                    
+                    branchFindings.forEach(finding => {
+                        const li = document.createElement('li');
+                        li.textContent = finding;
+                        branchPerformanceFindings.appendChild(li);
+                    });
+                }
             }
             
             // Daily & weekly findings
@@ -6421,17 +6189,23 @@
             if (dailyWeeklyFindings) {
                 dailyWeeklyFindings.innerHTML = '';
                 
-                const weeklyFindings = [
-                    'Saturday and Sunday are peak sales days, with 40% higher transaction volume than weekdays',
-                    'Week 1 (Oct 1-7) had slightly higher sales than Week 2',
-                    'Wednesday is typically the lowest transaction day of the week'
-                ];
-                
-                weeklyFindings.forEach(finding => {
+                if (salesData.length === 0) {
                     const li = document.createElement('li');
-                    li.textContent = finding;
+                    li.textContent = 'No sales data available for analysis';
                     dailyWeeklyFindings.appendChild(li);
-                });
+                } else {
+                    const weeklyFindings = [
+                        'Saturday and Sunday are peak sales days, with 40% higher transaction volume than weekdays',
+                        'Week 1 (Oct 1-7) had slightly higher sales than Week 2',
+                        'Wednesday is typically the lowest transaction day of the week'
+                    ];
+                    
+                    weeklyFindings.forEach(finding => {
+                        const li = document.createElement('li');
+                        li.textContent = finding;
+                        dailyWeeklyFindings.appendChild(li);
+                    });
+                }
             }
             
             // Monthly trend findings
@@ -6439,17 +6213,23 @@
             if (monthlyTrendFindings) {
                 monthlyTrendFindings.innerHTML = '';
                 
-                const trendFindings = [
-                    'Beginning and end of month typically show better sales performance',
-                    'Middle of month has higher sales volatility, requiring further analysis',
-                    'Overall sales show an upward trend with 12% month-over-month growth'
-                ];
-                
-                trendFindings.forEach(finding => {
+                if (salesData.length === 0) {
                     const li = document.createElement('li');
-                    li.textContent = finding;
+                    li.textContent = 'No sales data available for analysis';
                     monthlyTrendFindings.appendChild(li);
-                });
+                } else {
+                    const trendFindings = [
+                        'Beginning and end of month typically show better sales performance',
+                        'Middle of month has higher sales volatility, requiring further analysis',
+                        'Overall sales show an upward trend with 12% month-over-month growth'
+                    ];
+                    
+                    trendFindings.forEach(finding => {
+                        const li = document.createElement('li');
+                        li.textContent = finding;
+                        monthlyTrendFindings.appendChild(li);
+                    });
+                }
             }
             
             // Target plan findings
@@ -6457,18 +6237,27 @@
             if (targetPlanFindings) {
                 targetPlanFindings.innerHTML = '';
                 
-                const targetFindings = [
-                    'Hamdan St branch: 35% target share (based on historical performance)',
-                    'Khaldia branch: 25% target share (based on traffic analysis)',
-                    'Al Barsha branch: 20% target share (based on average transaction value)',
-                    'Other branches: 20% target share (based on growth potential)'
-                ];
+                const currentMonth = '2025-10';
+                const currentTargetPlan = targetPlan[currentMonth];
                 
-                targetFindings.forEach(finding => {
+                if (!currentTargetPlan) {
                     const li = document.createElement('li');
-                    li.textContent = finding;
+                    li.textContent = 'No target plan set for this month';
                     targetPlanFindings.appendChild(li);
-                });
+                } else {
+                    const targetFindings = [
+                        'Hamdan St branch: 35% target share (based on historical performance)',
+                        'Khaldia branch: 25% target share (based on traffic analysis)',
+                        'Al Barsha branch: 20% target share (based on average transaction value)',
+                        'Other branches: 20% target share (based on growth potential)'
+                    ];
+                    
+                    targetFindings.forEach(finding => {
+                        const li = document.createElement('li');
+                        li.textContent = finding;
+                        targetPlanFindings.appendChild(li);
+                    });
+                }
             }
             
             // Feedback insights
@@ -6476,18 +6265,24 @@
             if (feedbackInsightsList) {
                 feedbackInsightsList.innerHTML = '';
                 
-                const insights = [
-                    'Service quality is consistently rated highest across all branches',
-                    'Food quality shows room for improvement, particularly in Al Barsha branch',
-                    'Customers appreciate cleanliness but suggest faster service during peak hours',
-                    'Ultimate offer receives the most positive customer feedback'
-                ];
-                
-                insights.forEach(insight => {
+                if (feedbackData.length === 0) {
                     const li = document.createElement('li');
-                    li.textContent = insight;
+                    li.textContent = 'No feedback data available for analysis';
                     feedbackInsightsList.appendChild(li);
-                });
+                } else {
+                    const insights = [
+                        'Service quality is consistently rated highest across all branches',
+                        'Food quality shows room for improvement, particularly in Al Barsha branch',
+                        'Customers appreciate cleanliness but suggest faster service during peak hours',
+                        'Ultimate offer receives the most positive customer feedback'
+                    ];
+                    
+                    insights.forEach(insight => {
+                        const li = document.createElement('li');
+                        li.textContent = insight;
+                        feedbackInsightsList.appendChild(li);
+                    });
+                }
             }
             
             // Management recommendations
@@ -6495,36 +6290,48 @@
             if (shortTermRecs) {
                 shortTermRecs.innerHTML = '';
                 
-                const shortTerm = [
-                    'Increase weekend promotions at Hamdan St branch to handle high traffic',
-                    'Introduce more family meal packages at Al Barsha branch to increase average transaction value',
-                    'Optimize Muroor branch operating hours to match customer demand patterns',
-                    'Add new product sampling activities at Khaldia branch to attract more customers'
-                ];
-                
-                shortTerm.forEach(rec => {
+                if (salesData.length === 0) {
                     const li = document.createElement('li');
-                    li.textContent = rec;
+                    li.textContent = 'No data available for recommendations';
                     shortTermRecs.appendChild(li);
-                });
+                } else {
+                    const shortTerm = [
+                        'Increase weekend promotions at Hamdan St branch to handle high traffic',
+                        'Introduce more family meal packages at Al Barsha branch to increase average transaction value',
+                        'Optimize Muroor branch operating hours to match customer demand patterns',
+                        'Add new product sampling activities at Khaldia branch to attract more customers'
+                    ];
+                    
+                    shortTerm.forEach(rec => {
+                        const li = document.createElement('li');
+                        li.textContent = rec;
+                        shortTermRecs.appendChild(li);
+                    });
+                }
             }
             
             const mediumTermRecs = document.getElementById('mediumTermManagementRecommendations');
             if (mediumTermRecs) {
                 mediumTermRecs.innerHTML = '';
                 
-                const mediumTerm = [
-                    'Redistribute target sales indicators for each branch based on sales data',
-                    'Create specific improvement plans for underperforming branches',
-                    'Analyze ROI of different offer types and optimize promotion strategy',
-                    'Evaluate new branch location possibilities to expand market coverage'
-                ];
-                
-                mediumTerm.forEach(rec => {
+                if (salesData.length === 0) {
                     const li = document.createElement('li');
-                    li.textContent = rec;
+                    li.textContent = 'No data available for recommendations';
                     mediumTermRecs.appendChild(li);
-                });
+                } else {
+                    const mediumTerm = [
+                        'Redistribute target sales indicators for each branch based on sales data',
+                        'Create specific improvement plans for underperforming branches',
+                        'Analyze ROI of different offer types and optimize promotion strategy',
+                        'Evaluate new branch location possibilities to expand market coverage'
+                    ];
+                    
+                    mediumTerm.forEach(rec => {
+                        const li = document.createElement('li');
+                        li.textContent = rec;
+                        mediumTermRecs.appendChild(li);
+                    });
+                }
             }
             
             const longTermRecs = document.getElementById('longTermManagementRecommendations');
@@ -8589,18 +8396,24 @@
             if (shortTermRecs) {
                 shortTermRecs.innerHTML = '';
                 
-                const shortTerm = [
-                    'Increase weekend promotions at Hamdan St branch to handle high traffic',
-                    'Introduce more family meal packages at Al Barsha branch to increase average transaction value',
-                    'Optimize Muroor branch operating hours to match customer demand patterns',
-                    'Add new product sampling activities at Khaldia branch to attract more customers'
-                ];
-                
-                shortTerm.forEach(rec => {
+                if (salesData.length === 0) {
                     const li = document.createElement('li');
-                    li.textContent = rec;
+                    li.textContent = 'No data available for recommendations';
                     shortTermRecs.appendChild(li);
-                });
+                } else {
+                    const shortTerm = [
+                        'Increase weekend promotions at Hamdan St branch to handle high traffic',
+                        'Introduce more family meal packages at Al Barsha branch to increase average transaction value',
+                        'Optimize Muroor branch operating hours to match customer demand patterns',
+                        'Add new product sampling activities at Khaldia branch to attract more customers'
+                    ];
+                    
+                    shortTerm.forEach(rec => {
+                        const li = document.createElement('li');
+                        li.textContent = rec;
+                        shortTermRecs.appendChild(li);
+                    });
+                }
             }
             
             // Medium-term recommendations
@@ -8608,18 +8421,24 @@
             if (mediumTermRecs) {
                 mediumTermRecs.innerHTML = '';
                 
-                const mediumTerm = [
-                    'Redistribute target sales indicators for each branch based on sales data',
-                    'Create specific improvement plans for underperforming branches',
-                    'Analyze ROI of different offer types and optimize promotion strategy',
-                    'Evaluate new branch location possibilities to expand market coverage'
-                ];
-                
-                mediumTerm.forEach(rec => {
+                if (salesData.length === 0) {
                     const li = document.createElement('li');
-                    li.textContent = rec;
+                    li.textContent = 'No data available for recommendations';
                     mediumTermRecs.appendChild(li);
-                });
+                } else {
+                    const mediumTerm = [
+                        'Redistribute target sales indicators for each branch based on sales data',
+                        'Create specific improvement plans for underperforming branches',
+                        'Analyze ROI of different offer types and optimize promotion strategy',
+                        'Evaluate new branch location possibilities to expand market coverage'
+                    ];
+                    
+                    mediumTerm.forEach(rec => {
+                        const li = document.createElement('li');
+                        li.textContent = rec;
+                        mediumTermRecs.appendChild(li);
+                    });
+                }
             }
             
             // Long-term recommendations
@@ -9175,7 +8994,18 @@
                     updateAllUI();
                 } catch (error) {
                     console.error('Error loading data from localStorage:', error);
+                    // Initialize empty arrays if there's an error
+                    salesData = [];
+                    feedbackData = [];
+                    offers = [];
+                    targetPlan = {};
                 }
+            } else {
+                // Initialize empty arrays if no saved data
+                salesData = [];
+                feedbackData = [];
+                offers = [];
+                targetPlan = {};
             }
         }
         
@@ -9319,6 +9149,23 @@
             doc.save(`crispy-chicken-report-${new Date().toISOString().split('T')[0]}.pdf`);
             
             showNotification('PDF exported successfully!', 'success');
+        }
+        
+        // Show empty state message
+        function showEmptyState() {
+            const dashboardContent = document.querySelector('#dashboard-page .tab-content');
+            if (dashboardContent && salesData.length === 0 && feedbackData.length === 0) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'alert alert-info text-center';
+                emptyState.innerHTML = `
+                    <h4><i class="fas fa-info-circle"></i> No Data Available</h4>
+                    <p>You haven't added any data yet. Start by adding sales data or customer feedback.</p>
+                    <button class="btn btn-primary" onclick="showPage('data-entry')">
+                        <i class="fas fa-plus"></i> Add Your First Data
+                    </button>
+                `;
+                dashboardContent.prepend(emptyState);
+            }
         }
     </script>
 </body>
